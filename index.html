@@ -1,0 +1,172 @@
+<header>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="javascript/CSVToArray.js"></script>
+    <script src="javascript/javascript.js"></script>
+</header>
+
+<body>
+
+    <div>
+        <h1>Omni Gacha</h1>
+        <h4>Prototype. No design at all and it will only probably work.</h4>
+        <span id="contentOptions" class="floatR">
+            <span>
+                <label for="nsfwCheckbox">NSFW</label><br>
+                <input type="checkbox" id="nsfwCheckbox" name="nsfwCheckbox">
+            </span>
+            <span>
+                <label for="nsfwOnlyCheckbox">NSFW Only</label><br>
+                <input type="checkbox" id="nsfwOnlyCheckbox" name="nsfwOnlyCheckbox">
+            </span>
+        </span>
+    </div>
+    <br>
+    <div>
+        <button onclick="roll()">Get Random Item</button>
+        <button onclick="save()">Save Item</button>
+        <select id="ticketSelector">
+            <option value="0" selected disabled hidden>select ticket</option>
+            <option value="1">1 Star (F-D)</option>
+            <option value="2">2 Star (E-C)</option>
+            <option value="3">3 Star (D-B)</option>
+            <option value="4">4 Star (C-A)</option>
+            <option value="5">5 Star (B-S)</option>
+            <option value="6">6 Star (A-SS)</option>
+            <option value="7">7 Star (S-SSS)</option>
+            <option value="8">EX Star (SS-EX)</option>
+            <option value="0">Just Browsing</option>
+        </select>
+        <button class="floatR" onclick="document.getElementById('rollHistory').style.display = 'block'">History</button>
+        <button class="floatR" onclick="document.getElementById('search').style.display = 'block'">Search</button>
+        <table id="rollTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Series</th>
+                    <th>Short Description</th>
+                    <th>Category</th>
+                    <th>Gender</th>
+                    <th>Magic</th>
+                    <th>Memetic</th>
+                    <th>Might</th>
+                    <th>Mind</th>
+                    <th>Motion</th>
+                    <th>Moxie</th>
+                    <th>Mutation</th>
+                    <th>Myth</th>
+                    <th>Stats</th>
+                    <th>Rank</th>
+                    <th>Growth Type</th>
+                    <th>Growth Rate</th>
+                    <th>Restock</th>
+                    <th>Return</th>
+                    <th>Gift</th>
+                    <th>NSFW</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div>
+        <table id="saveTable">
+            <button onclick="exportSaved()">Export</button>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Series</th>
+                    <th>Short Description</th>
+                    <th>Category</th>
+                    <th>Gender</th>
+                    <th>Magic</th>
+                    <th>Memetic</th>
+                    <th>Might</th>
+                    <th>Mind</th>
+                    <th>Motion</th>
+                    <th>Moxie</th>
+                    <th>Mutation</th>
+                    <th>Myth</th>
+                    <th>Stats</th>
+                    <th>Rank</th>
+                    <th>Growth Type</th>
+                    <th>Growth Rate</th>
+                    <th>Restock</th>
+                    <th>Return</th>
+                    <th>Gift</th>
+                    <th>NSFW</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="rollHistory" class="modal">
+        <div>
+            <table id="historyTable">
+                <tr>
+                    <th>Name</th>
+                    <th>Series</th>
+                    <th>Short Description</th>
+                    <th>Category</th>
+                    <th>Gender</th>
+                    <th>Magic</th>
+                    <th>Memetic</th>
+                    <th>Might</th>
+                    <th>Mind</th>
+                    <th>Motion</th>
+                    <th>Moxie</th>
+                    <th>Mutation</th>
+                    <th>Myth</th>
+                    <th>Stats</th>
+                    <th>Rank</th>
+                    <th>Growth Type</th>
+                    <th>Growth Rate</th>
+                    <th>Restock</th>
+                    <th>Return</th>
+                    <th>Gift</th>
+                    <th>NSFW</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="search" class="modal">
+        <div>
+            <input type="type" placeholder="name, series, or description">
+            <button onclick="searchFor(document.querySelector('#search > div > input').value)">Search</button>
+            <table id="searchTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Series</th>
+                        <th>Short Description</th>
+                        <th>Category</th>
+                        <th>Gender</th>
+                        <th>Magic</th>
+                        <th>Memetic</th>
+                        <th>Might</th>
+                        <th>Mind</th>
+                        <th>Motion</th>
+                        <th>Moxie</th>
+                        <th>Mutation</th>
+                        <th>Myth</th>
+                        <th>Stats</th>
+                        <th>Rank</th>
+                        <th>Growth Type</th>
+                        <th>Growth Rate</th>
+                        <th>Restock</th>
+                        <th>Return</th>
+                        <th>Gift</th>
+                        <th>NSFW</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
