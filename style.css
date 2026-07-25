@@ -1,0 +1,77 @@
+table, th, td {
+  border: 1px solid black;
+}
+
+span {
+    padding: 5px;
+    padding-bottom: 1px;
+}
+
+.floatR {
+    float: right;
+    text-align: center;
+    margin: 1em;
+}
+
+td, th {
+    text-align: center;
+}
+
+div{
+    padding: 1em;
+}
+
+#contentOptions {
+    display: flex;
+}
+
+#contentOptions > span:last-child {
+    visibility:hidden;
+}
+
+button, select {
+    margin-right: 20px;
+    margin-left: 20px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table th {
+    width: 8em 8em;
+
+}
+
+table th:nth-child(1), table th:nth-child(2){
+    width: 14em 14em;
+
+}
+
+table th:nth-child(3) {
+    width: 100% auto;
+
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.modal > div{
+    background-color: grey;
+    border: 2px inset purple;
+    margin: 10% auto;
+    padding: 20px;
+    width: 90%;
+}
