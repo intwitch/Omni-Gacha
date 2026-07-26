@@ -9,7 +9,7 @@ var NSFWOnly = false;
 
 var currentRoll;
 //big string of CSV
-var savedRolls = "Name,Series,Short Description,Category,Gender,Magic,Memetic,Might,Mind,Motion,Moxie,Mutation,Myth,Stats,Rank,Growth Type,Growth Rate,Restock,Return,Gift,NSFW";
+var savedRolls = [];
 
 //designed to be repeatidly callled for multiple filters in search. returns a new array with the filtered data.
 function filterCSVData(csvData, filter) {
@@ -39,11 +39,53 @@ function roll() {
 }
 
 function save() {
-	savedRolls = savedRolls.concat("\n", currentRoll.toString());
+	const saveTable = document.getElementById("saveTable");
+	savedRolls.push(currentRoll);
+	newRow = createRow(currentRoll);
+	var deleteItem = document.createElement("td")
+	var deleteButton = document.createElement("button")
+	deleteButton.innerText = "Remove";
+
+	deleteItem.appendChild(deleteButton);
+	newRow.appendChild(deleteItem);
+	deleteButton.addEventListener("click", function(){
+
+		/*okay, this is weird and complicated.
+		if we pass index of current item in array within two deletes they could get desnycronized
+		index delete buttons will end up looking like:
+		[1, 2, 3, 4] -> [1, 2, 4]
+		so instead, my approach is to figure out how many previous siblings the row element has, and pass that to the splice.
+		previous element loops until null then returns count.
+
+		a better solution may be a map or something but......... idk.
+		*/
+
+		var index = -1; //it's somehow managing to find a previous sibling. I don't get it either.
+		var row = deleteButton.parentElement.parentElement;
+		while (row.previousSibling != null){
+			index++;
+			row = row.previousSibling;
+		}
+
+		savedRolls.splice(index, 1);
+		deleteButton.parentElement.parentElement.remove(); //scary
+	});
+
+	saveTable.getElementsByTagName("tbody")[0].append(newRow);
+}
+//given array convert to tr element with td data
+//TODO: Implement everywhere
+function createRow(array){
 	var newRow = document.createElement("tr");
-	newRow.innerHTML = document.querySelector("#rollTable tbody tr:last-child").innerHTML;
-	if (newRow.childNodes.length <= 1) return; //because an empty element has a blank child node. for some reason. idk.
-	document.querySelector("#saveTable > tbody").appendChild(newRow);
+	newRow.innerHTML = "<td>" + array[0] + "</td><td>" + array[1] + "</td><td>" + array[2] + "</td><td>" + array[3] + "</td><td>" + array[4] + "</td><td>" + array[5] + "</td><td>" + array[6] + "</td><td>" + array[7] + "</td><td>" + array[8] + "</td><td>" + array[9] + "</td><td>" + array[10] + "</td><td>" + array[11] + "</td><td>" + array[12] + "</td><td>" + array[13] + "</td><td>" + array[14] + "</td><td>" + array[15] + "</td><td>" + array[16] + "</td><td>" + array[17] + "</td><td>" + array[18] + "</td><td>" + array[19] + "</td><td>" + array[20] + "</td>";
+	return newRow;
+}
+//given a table and an array of rows (tr element) , clear then draw them to tbody
+function drawTableBody(table, rows){
+	var tbody = table.getElementsByTagName("tbody")[0];
+	rows.forEach(function(row) {
+		tbody.append.Child(row)
+	});
 }
 
 function updateTicketData() {
@@ -107,7 +149,7 @@ function exportSaved(){
 	link.download = "Omni Gacha rolls.csv"
 	link.click();
 	URL.revokeObjectURL(link.href);
-	//console.log(savedRolls);
+	console.log(savedRolls);
 }
 
 window.onload = function() {
