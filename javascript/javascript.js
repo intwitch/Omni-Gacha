@@ -175,7 +175,8 @@ window.onload = function () {
 		if (NSFW) document.querySelector("#contentOptions > span:last-child").style.visibility = "visible";
 		else document.querySelector("#contentOptions > span:last-child").style.visibility = "hidden";
 
-		itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, itemsCSVData.length - 1);
+		itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, itemsCSVDataRaw[0].length - 1);
+		cursesCSVData = NSFWfilter(cursesCSVDataRaw, NSFW, NSFWOnly, 6);
 		updateTicketData();
 	});
 
