@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
 <head>
     <title>Omni Gacha</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,6 @@
 </head>
 
 <body>
-
     <div>
         <h1>Omni Gacha</h1>
         <h4>Prototype. No design at all and it will only probably work.</h4>
@@ -24,126 +24,30 @@
             </span>
         </span>
     </div>
-    <br>
-    <div>
-        <button onclick="roll()">Get Random Item</button>
-        <button onclick="save()">Save Item</button>
-        <select id="ticketSelector">
-            <option value="0" selected disabled hidden>select ticket</option>
-            <option value="1">1 Star (F-D)</option>
-            <option value="2">2 Star (E-C)</option>
-            <option value="3">3 Star (D-B)</option>
-            <option value="4">4 Star (C-A)</option>
-            <option value="5">5 Star (B-S)</option>
-            <option value="6">6 Star (A-SS)</option>
-            <option value="7">7 Star (S-SSS)</option>
-            <option value="8">EX Star (SS-EX)</option>
-            <option value="0">Just Browsing</option>
-        </select>
-        <button class="floatR" onclick="document.getElementById('rollHistory').style.display = 'block'">History</button>
-        <button class="floatR" onclick="document.getElementById('search').style.display = 'block'">Search</button>
-        <table id="rollTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Series</th>
-                    <th>Short Description</th>
-                    <th>Category</th>
-                    <th>Gender</th>
-                    <th>Magic</th>
-                    <th>Memetic</th>
-                    <th>Might</th>
-                    <th>Mind</th>
-                    <th>Motion</th>
-                    <th>Moxie</th>
-                    <th>Mutation</th>
-                    <th>Myth</th>
-                    <th>Stats</th>
-                    <th>Rank</th>
-                    <th>Growth Type</th>
-                    <th>Growth Rate</th>
-                    <th>Restock</th>
-                    <th>Return</th>
-                    <th>Gift</th>
-                    <th>NSFW</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                </tr>
-            </tbody>
-        </table>
-
+    <div id="selector">
+        <button id="itemsButton">items</button>
+        <button id="cursesButton">curses</button>
     </div>
-
-    <div>
-        <table id="saveTable">
-            <button onclick="exportSaved()">Export</button>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Series</th>
-                    <th>Short Description</th>
-                    <th>Category</th>
-                    <th>Gender</th>
-                    <th>Magic</th>
-                    <th>Memetic</th>
-                    <th>Might</th>
-                    <th>Mind</th>
-                    <th>Motion</th>
-                    <th>Moxie</th>
-                    <th>Mutation</th>
-                    <th>Myth</th>
-                    <th>Stats</th>
-                    <th>Rank</th>
-                    <th>Growth Type</th>
-                    <th>Growth Rate</th>
-                    <th>Restock</th>
-                    <th>Return</th>
-                    <th>Gift</th>
-                    <th>NSFW</th>
-                    <th>Remove</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-
-    <div id="rollHistory" class="modal">
+    <div id="items" class="tabcontent">
+        <br>
         <div>
-            <table id="historyTable">
-                <tr>
-                    <th>Name</th>
-                    <th>Series</th>
-                    <th>Short Description</th>
-                    <th>Category</th>
-                    <th>Gender</th>
-                    <th>Magic</th>
-                    <th>Memetic</th>
-                    <th>Might</th>
-                    <th>Mind</th>
-                    <th>Motion</th>
-                    <th>Moxie</th>
-                    <th>Mutation</th>
-                    <th>Myth</th>
-                    <th>Stats</th>
-                    <th>Rank</th>
-                    <th>Growth Type</th>
-                    <th>Growth Rate</th>
-                    <th>Restock</th>
-                    <th>Return</th>
-                    <th>Gift</th>
-                    <th>NSFW</th>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div id="search" class="modal">
-        <div>
-            <input type="type" placeholder="name, series, or description">
-            <button onclick="searchFor(document.querySelector('#search > div > input').value)">Search</button>
-            <table id="searchTable">
+            <button id="rollButton">Get Random Item</button>
+            <button id="saveButton">Save Item</button>
+            <select id="ticketSelector">
+                <option value="0" selected disabled hidden>select ticket</option>
+                <option value="1">1 Star (F-D)</option>
+                <option value="2">2 Star (E-C)</option>
+                <option value="3">3 Star (D-B)</option>
+                <option value="4">4 Star (C-A)</option>
+                <option value="5">5 Star (B-S)</option>
+                <option value="6">6 Star (A-SS)</option>
+                <option value="7">7 Star (S-SSS)</option>
+                <option value="8">EX Star (SS-EX)</option>
+                <option value="0">Just Browsing</option>
+            </select>
+            <button id="historyButton" class="floatR">History</button>
+            <button id="searchOpenButton" class="floatR">Search</button>
+            <table id="rollTable">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -170,13 +74,159 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div>
+            <table id="saveTable">
+                <button id="exportButton">Export</button>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Series</th>
+                        <th>Short Description</th>
+                        <th>Category</th>
+                        <th>Gender</th>
+                        <th>Magic</th>
+                        <th>Memetic</th>
+                        <th>Might</th>
+                        <th>Mind</th>
+                        <th>Motion</th>
+                        <th>Moxie</th>
+                        <th>Mutation</th>
+                        <th>Myth</th>
+                        <th>Stats</th>
+                        <th>Rank</th>
+                        <th>Growth Type</th>
+                        <th>Growth Rate</th>
+                        <th>Restock</th>
+                        <th>Return</th>
+                        <th>Gift</th>
+                        <th>NSFW</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="rollHistory" class="modal">
+            <div>
+                <table id="historyTable">
+                    <tr>
+                        <th>Name</th>
+                        <th>Series</th>
+                        <th>Short Description</th>
+                        <th>Category</th>
+                        <th>Gender</th>
+                        <th>Magic</th>
+                        <th>Memetic</th>
+                        <th>Might</th>
+                        <th>Mind</th>
+                        <th>Motion</th>
+                        <th>Moxie</th>
+                        <th>Mutation</th>
+                        <th>Myth</th>
+                        <th>Stats</th>
+                        <th>Rank</th>
+                        <th>Growth Type</th>
+                        <th>Growth Rate</th>
+                        <th>Restock</th>
+                        <th>Return</th>
+                        <th>Gift</th>
+                        <th>NSFW</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id="search" class="modal">
+            <div>
+                <input type="type" placeholder="name, series, or description">
+                <button id="searchModalButton">Search</button>
+                <table id="searchTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Series</th>
+                            <th>Short Description</th>
+                            <th>Category</th>
+                            <th>Gender</th>
+                            <th>Magic</th>
+                            <th>Memetic</th>
+                            <th>Might</th>
+                            <th>Mind</th>
+                            <th>Motion</th>
+                            <th>Moxie</th>
+                            <th>Mutation</th>
+                            <th>Myth</th>
+                            <th>Stats</th>
+                            <th>Rank</th>
+                            <th>Growth Type</th>
+                            <th>Growth Rate</th>
+                            <th>Restock</th>
+                            <th>Return</th>
+                            <th>Gift</th>
+                            <th>NSFW</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="curses" class="tabcontent">
+        <div>
+            <button id="cursesRollButton">Get Curse</button>
+            <button id="cursesSaveButton">Save Curse</button>
+            <table id="cursesRollTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Resolution</th>
+                        <th>Severity</th>
+                        <th>Target</th>
+                        <th>Affects</th>
+                        <th>NSFW</th>
+                        <th>Reward</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr></tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <button id="cursesExport">Export</button>
+            <table id="cursesSaveTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Resolution</th>
+                        <th>Severity</th>
+                        <th>Target</th>
+                        <th>Affects</th>
+                        <th>NSFW</th>
+                        <th>Reward</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
                 </tbody>
             </table>
         </div>
     </div>
     <footer>
-    <a href="https://github.com/intwitch/Omni-Gacha">GitHub</a>
-</footer>
+        <a href="https://github.com/intwitch/Omni-Gacha">GitHub</a>
+    </footer>
 </body>
 
 </html>

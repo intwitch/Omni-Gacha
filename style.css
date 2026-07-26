@@ -95,3 +95,19 @@ body {
     /* main text color */
     color: #F1F5F9;
 }
+
+.tabcontent {
+  display: none;
+}
+
+#selector {
+    display: flex;
+    background-color: #1E293B;
+    justify-content: space-evenly;
+    align-items: stretch;
+    height: 3em;
+}
+
+#selector > button {
+    width: 10%;
+}
