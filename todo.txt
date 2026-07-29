@@ -1,0 +1,9 @@
+click to copy item to paste and share (reuse code to redo exports in-)
+build section, reuse save tables. redo exports here.
+quickstart section
+proper search section
+Custom roll section
+home section & about section
+refactor sections into individual imported html files.
+
+move onto step 2; layout.
