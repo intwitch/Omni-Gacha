@@ -32,22 +32,83 @@
         <div id="items" class="tabcontent">
             <br>
             <div>
-                <button id="rollButton">Get Random Item</button>
-                <button id="saveButton">Save Item</button>
-                <select id="ticketSelector">
-                    <option value="0" selected disabled hidden>select ticket</option>
-                    <option value="1">1 Star (F-D)</option>
-                    <option value="2">2 Star (E-C)</option>
-                    <option value="3">3 Star (D-B)</option>
-                    <option value="4">4 Star (C-A)</option>
-                    <option value="5">5 Star (B-S)</option>
-                    <option value="6">6 Star (A-SS)</option>
-                    <option value="7">7 Star (S-SSS)</option>
-                    <option value="8">EX Star (SS-EX)</option>
-                    <option value="0">Just Browsing</option>
-                </select>
-                <button id="historyButton" class="floatR">History</button>
-                <button id="searchOpenButton" class="floatR">Search</button>
+                <div class="options">
+                    <button id="rollButton">Get Random Item</button>
+                    <button id="saveButton">Save Item</button>
+                    <select id="ticketSelector">
+                        <option value="0" selected disabled hidden>select ticket</option>
+                        <option value="1">1 Star (F-D)</option>
+                        <option value="2">2 Star (E-C)</option>
+                        <option value="3">3 Star (D-B)</option>
+                        <option value="4">4 Star (C-A)</option>
+                        <option value="5">5 Star (B-S)</option>
+                        <option value="6">6 Star (A-SS)</option>
+                        <option value="7">7 Star (S-SSS)</option>
+                        <option value="8">EX Star (SS-EX)</option>
+                        <option value="0">Just Browsing</option>
+                    </select>
+                    <span>
+                    <details id="itemsCategoryFilter">
+                        <Summary>Category</Summary>
+                        <ul>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterAll" checked value="all">
+                                <label for="itemsCategoryFilterAll">All</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterAbility" checked value="ability">
+                                <label for="itemsCategoryFilterAbility">Ability</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterArsenal" checked value="arsenal">
+                                <label for="itemsCategoryFilterArsenal">Arsenal</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterConsumable" checked value="consumable">
+                                <label for="itemsCategoryFilterConsumable">Consumable</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterFamiliar" checked value="familiar">
+                                <label for="itemsCategoryFilterFamiliar">Familiar</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterFarmable" checked value="farmable">
+                                <label for="itemsCategoryFilterFarmable">Farmable</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterNovelty" checked value="novelty">
+                                <label for="itemsCategoryFilterNovelty">Novelty</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterPassive" checked value="passive">
+                                <label for="itemsCategoryFilterPassive">Passive</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterRace" checked value="race">
+                                <label for="itemsCategoryFilterRace">Race</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterSkill" checked value="skill">
+                                <label for="itemsCategoryFilterSkill">Skill</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterVehicle" checked value="vehicle">
+                                <label for="itemsCategoryFilterVehicle">Vehicle</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterWearable" checked value="wearable">
+                                <label for="itemsCategoryFilterWearable">Wearable</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterWorld" checked value="world">
+                                <label for="itemsCategoryFilterWorld">World</label>
+                            </li>
+                        </ul>
+                    </details>
+                    </span>
+                    <button id="historyButton" class="alignEnd">History</button>
+                    <button id="searchOpenButton">Search</button>
+                </div>
                 <table id="rollTable">
                     <thead>
                         <tr>
@@ -230,4 +291,5 @@
         <a href="https://github.com/intwitch/Omni-Gacha">GitHub</a>
     </footer>
 </body>
+
 </html>

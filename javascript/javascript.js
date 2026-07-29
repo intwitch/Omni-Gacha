@@ -88,14 +88,21 @@ function drawTableBody(table, rows) {
 	});
 }
 
-function updateTicketData() {
+function updateFilterData() {
+	filteredItemsData = itemsCSVData;
+	filteredItemsData = FilterTicketData(filteredItemsData);
+	filteredItemsData = filterItemByCategory(filteredItemsData);
+	console.log(filteredItemsData);
+}
+
+function FilterTicketData(itemsData) {
 	var ticketValue = document.getElementById("ticketSelector").value;
 	var filter;
 	switch (ticketValue) {
 		case "0":
 		default:
-			ticketData = itemsCSVData;
-			return;
+			return itemsData;
+			break;
 		case "1":
 			filter = ["F", "E", "D"];
 			break;
@@ -122,7 +129,20 @@ function updateTicketData() {
 			break;
 	}
 
-	ticketData = filterCSVData(itemsCSVData, function (item) { return filter.includes(item[14]) });
+	return filterCSVData(itemsData, function (item) { return filter.includes(item[14]) });
+}
+
+function filterItemByCategory(itemsData) {
+	var itemsCategoriesFilters = document.querySelectorAll("#itemsCategoryFilter input");
+	var filter = ""
+	
+	if(itemsCategoriesFilters[0].checked) return itemsData;
+
+	for(var item of itemsCategoriesFilters){
+		if (item.checked) filter += item.value;
+	}
+
+	return itemsData.filter((item, index) => filter.search(new RegExp(item[3], "i")) != -1);
 }
 
 function searchFor(string) {
@@ -177,10 +197,9 @@ window.onload = function () {
 
 		itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, itemsCSVDataRaw[0].length - 1);
 		cursesCSVData = NSFWfilter(cursesCSVDataRaw, NSFW, NSFWOnly, 6);
-		updateTicketData();
 	});
 
-	document.getElementById("ticketSelector").addEventListener("change", updateTicketData);
+	document.getElementById("ticketSelector").addEventListener("change", updateFilterData);
 
 	this.itemsTab = document.getElementById("items");
 	this.cursesTab = document.getElementById("curses");
@@ -193,7 +212,7 @@ window.onload = function () {
 		hideAllBut(cursesTab);
 	});
 	document.getElementById("rollButton").addEventListener("click", function () {
-		currentItemRoll = roll(document.getElementById("rollTable"), ticketData);
+		currentItemRoll = roll(document.getElementById("rollTable"), filteredItemsData);
 	});
 	document.getElementById("saveButton").addEventListener("click", function () {
 		savedItemRolls.push(currentItemRoll);
@@ -220,6 +239,28 @@ window.onload = function () {
 	document.getElementById("exportButton").addEventListener("click", exportSavedItems);
 	document.getElementById("cursesExport").addEventListener("click", exportSavedCurses);
 
+	document.getElementById("itemsCategoryFilter").addEventListener("mouseover", function () {
+		document.getElementById("itemsCategoryFilter").open = true;
+	})
+
+	document.getElementById("itemsCategoryFilter").addEventListener("mouseout", function () {
+		document.getElementById("itemsCategoryFilter").open = false;
+	})
+
+	var itemsCategoriesFilters = document.querySelectorAll("#itemsCategoryFilter input");
+	console.log(itemsCategoriesFilters);
+	itemsCategoriesFilters[0].addEventListener("change", function () { //all gets special behavior
+		for (var i = 1; i < itemsCategoriesFilters.length; i++) {
+			itemsCategoriesFilters[i].checked = document.getElementById("itemsCategoryFilterAll").checked;
+		}
+		updateFilterData();
+	})
+	for (var i = 1; i < itemsCategoriesFilters.length; i++) {
+		itemsCategoriesFilters[i].addEventListener("change", function(){
+			itemsCategoriesFilters[0].checked = false;
+			updateFilterData();
+		})
+	}
 
 	hideAllBut(itemsTab);
 };
@@ -235,4 +276,4 @@ window.addEventListener("click", function (event) {
 
 var itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, itemsCSVDataRaw[0].length - 1);
 var cursesCSVData = NSFWfilter(cursesCSVDataRaw, NSFW, NSFWOnly, 6);
-var ticketData = itemsCSVData; //default
+var filteredItemsData = itemsCSVData;
