@@ -10,4 +10,4 @@ No vibecoding though. just make a pull request and if that makes it into main ev
 ## There's a production branch?
 Production branch (prod) is what the site actually runs on, so that it isn't being randomly changed while main gets updated with stuff.
 ## TODO
-Give the website a proper layout and make it not hellish to look at.
+Everything tbh.
