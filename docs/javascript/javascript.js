@@ -27,11 +27,11 @@ function filterCSVData(csvData, filter) {
 	return csvData.filter((item) => filter(item));
 }
 
-function itemToString(item){
+function itemToString(item) {
 	return `「${item[0]}」\n[${item[1]}] Rank ${item[14]}\n${"=".repeat(20)}\n${item[2]}`
 }
 
-function curseToString(curse){
+function curseToString(curse) {
 	return `「${curse[0]}」\nResolution: ${curse[2]}\n${"=".repeat(20)}\n${curse[1]}`
 }
 
@@ -69,12 +69,23 @@ function redrawSaveTable(table, data) {
 			data.splice(index, 1);
 			redrawSaveTable(table, data);
 		});
-
-		
-
 		row.appendChild(deleteItem);
+
+
+		var nameElement = row.querySelector("td p");
+		nameElement.classList.add("saveTableNameData")
+		nameElement.addEventListener("click", function () {
+			var copytext;
+			if (item.length > 14) copytext = itemToString(item);
+			else copytext = curseToString(item);
+
+			navigator.clipboard.writeText(copytext);
+		});
+
 		rows.push(row);
 	})
+
+
 
 	drawTableBody(table, rows);
 }
@@ -83,10 +94,22 @@ function redrawSaveTable(table, data) {
 function createRow(array) {
 	var newRow = document.createElement("tr");
 	var rowData = "";
+
 	for (var i = 0; i < array.length; i++) {
-		rowData += "<td>" + array[i] + "</td>";
+		rowData += "<td><p>" + array[i] + "</p></td>";
 	}
 	newRow.innerHTML = rowData;
+
+	var nameElement = newRow.querySelector("td p");
+	nameElement.classList.add("saveTableNameData")
+	nameElement.addEventListener("click", function () {
+		var copytext;
+		if (array.length > 14) copytext = itemToString(array);
+		else copytext = curseToString(array);
+
+		navigator.clipboard.writeText(copytext);
+	});
+
 	return newRow;
 }
 //given a table and an array of rows (tr element) , clear then draw them to tbody
@@ -145,10 +168,10 @@ function FilterTicketData(itemsData) {
 function filterItemByCategory(itemsData) {
 	var itemsCategoriesFilters = document.querySelectorAll("#itemsCategoryFilter input");
 	var filter = ""
-	
-	if(itemsCategoriesFilters[0].checked) return itemsData;
 
-	for(var item of itemsCategoriesFilters){
+	if (itemsCategoriesFilters[0].checked) return itemsData;
+
+	for (var item of itemsCategoriesFilters) {
 		if (item.checked) filter += item.value;
 	}
 
@@ -266,7 +289,7 @@ window.onload = function () {
 		updateFilterData();
 	})
 	for (var i = 1; i < itemsCategoriesFilters.length; i++) {
-		itemsCategoriesFilters[i].addEventListener("change", function(){
+		itemsCategoriesFilters[i].addEventListener("change", function () {
 			itemsCategoriesFilters[0].checked = false;
 			updateFilterData();
 		})
