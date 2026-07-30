@@ -21,6 +21,7 @@ var savedCurseRolls = [];
 
 var itemsTab;
 var cursesTab;
+var buildTab;
 
 //designed to be repeatidly callled for multiple filters in search. returns a new array with the filtered data.
 function filterCSVData(csvData, filter) {
@@ -114,7 +115,8 @@ function createRow(array) {
 }
 //given a table and an array of rows (tr element) , clear then draw them to tbody
 function drawTableBody(table, rows) {
-	var tbody = table.getElementsByTagName("tbody")[0];
+
+	var tbody = table.querySelector("tbody");
 	tbody.innerHTML = "";
 	rows.forEach(function (row) {
 		tbody.appendChild(row)
@@ -215,9 +217,19 @@ function exportSavedCurses() {
 	console.log(savedCurseRolls);
 }
 
+function tabChange(tab){
+	redrawSaveTable(document.getElementById("saveTable"), savedItemRolls);
+	redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls);
+	redrawSaveTable(document.getElementById("buildItemsTable"), savedItemRolls);
+	redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls);
+
+	hideAllBut(tab);
+}
+
 function hideAllBut(tab) {
 	cursesTab.style.display = "none";
 	itemsTab.style.display = "none";
+	buildTab.style.display = "none";
 	tab.style.display = "block";
 }
 
@@ -236,13 +248,16 @@ window.onload = function () {
 
 	this.itemsTab = document.getElementById("items");
 	this.cursesTab = document.getElementById("curses");
-
+	this.buildTab = document.getElementById("build");
 
 	document.getElementById("itemsButton").addEventListener("click", function () {
-		hideAllBut(itemsTab);
+		tabChange(itemsTab);
 	});
 	document.getElementById("cursesButton").addEventListener("click", function () {
-		hideAllBut(cursesTab);
+		tabChange(cursesTab);
+	});
+	document.getElementById("buildButton").addEventListener("click", function () {
+		tabChange(buildTab);
 	});
 	document.getElementById("rollButton").addEventListener("click", function () {
 		currentItemRoll = roll(document.getElementById("rollTable"), filteredItemsData);
