@@ -21,10 +21,19 @@ var savedCurseRolls = [];
 
 var itemsTab;
 var cursesTab;
+var buildTab;
 
 //designed to be repeatidly callled for multiple filters in search. returns a new array with the filtered data.
 function filterCSVData(csvData, filter) {
 	return csvData.filter((item) => filter(item));
+}
+
+function itemToString(item) {
+	return `「${item[0]}」\n[${item[1]}] Rank ${item[14]}\n${"=".repeat(20)}\n${item[2]}`
+}
+
+function curseToString(curse) {
+	return `「${curse[0]}」\nResolution: ${curse[2]}\n${"=".repeat(20)}\n${curse[1]}`
 }
 
 function NSFWfilter(Data, NSFW, NSFWOnly, index) {
@@ -61,10 +70,23 @@ function redrawSaveTable(table, data) {
 			data.splice(index, 1);
 			redrawSaveTable(table, data);
 		});
-
 		row.appendChild(deleteItem);
+
+
+		var nameElement = row.querySelector("td p");
+		nameElement.classList.add("saveTableNameData")
+		nameElement.addEventListener("click", function () {
+			var copytext;
+			if (item.length > 14) copytext = itemToString(item);
+			else copytext = curseToString(item);
+
+			navigator.clipboard.writeText(copytext);
+		});
+
 		rows.push(row);
 	})
+
+
 
 	drawTableBody(table, rows);
 }
@@ -73,15 +95,28 @@ function redrawSaveTable(table, data) {
 function createRow(array) {
 	var newRow = document.createElement("tr");
 	var rowData = "";
+
 	for (var i = 0; i < array.length; i++) {
-		rowData += "<td>" + array[i] + "</td>";
+		rowData += "<td><p>" + array[i] + "</p></td>";
 	}
 	newRow.innerHTML = rowData;
+
+	var nameElement = newRow.querySelector("td p");
+	nameElement.classList.add("saveTableNameData")
+	nameElement.addEventListener("click", function () {
+		var copytext;
+		if (array.length > 14) copytext = itemToString(array);
+		else copytext = curseToString(array);
+
+		navigator.clipboard.writeText(copytext);
+	});
+
 	return newRow;
 }
 //given a table and an array of rows (tr element) , clear then draw them to tbody
 function drawTableBody(table, rows) {
-	var tbody = table.getElementsByTagName("tbody")[0];
+
+	var tbody = table.querySelector("tbody");
 	tbody.innerHTML = "";
 	rows.forEach(function (row) {
 		tbody.appendChild(row)
@@ -135,10 +170,10 @@ function FilterTicketData(itemsData) {
 function filterItemByCategory(itemsData) {
 	var itemsCategoriesFilters = document.querySelectorAll("#itemsCategoryFilter input");
 	var filter = ""
-	
-	if(itemsCategoriesFilters[0].checked) return itemsData;
 
-	for(var item of itemsCategoriesFilters){
+	if (itemsCategoriesFilters[0].checked) return itemsData;
+
+	for (var item of itemsCategoriesFilters) {
 		if (item.checked) filter += item.value;
 	}
 
@@ -162,29 +197,42 @@ function searchFor(string) {
 	});
 }
 
-function exportSavedItems() {
+function exportSaved() {
+
+	var text = "<ITEMS>\n\n\n";
+
+	for(item of savedItemRolls){
+		text += `${itemToString(item)}\n\n`;
+	}
+
+	text+= "\n<CURSES>\n\n";
+	for(curse of savedCurseRolls){
+		text += `${curseToString(curse)}\n\n`;
+	}
+
+	console.log(text)
+
 	var link = document.createElement("a");
-	var file = new Blob([savedItemRolls], { type: 'text/plan' });
+	var file = new Blob([text], { type: 'text/plan' });
 	link.href = URL.createObjectURL(file)
-	link.download = "Omni Gacha rolls.csv"
+	link.download = "Omni Gacha rolls.txt"
 	link.click();
 	URL.revokeObjectURL(link.href);
-	console.log(savedItemRolls);
 }
 
-function exportSavedCurses() {
-	var link = document.createElement("a");
-	var file = new Blob([savedCurseRolls], { type: 'text/plan' });
-	link.href = URL.createObjectURL(file)
-	link.download = "Omni Gacha curses.csv"
-	link.click();
-	URL.revokeObjectURL(link.href);
-	console.log(savedCurseRolls);
+function tabChange(tab){
+	redrawSaveTable(document.getElementById("saveTable"), savedItemRolls);
+	redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls);
+	redrawSaveTable(document.getElementById("buildItemsTable"), savedItemRolls);
+	redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls);
+
+	hideAllBut(tab);
 }
 
 function hideAllBut(tab) {
 	cursesTab.style.display = "none";
 	itemsTab.style.display = "none";
+	buildTab.style.display = "none";
 	tab.style.display = "block";
 }
 
@@ -203,13 +251,16 @@ window.onload = function () {
 
 	this.itemsTab = document.getElementById("items");
 	this.cursesTab = document.getElementById("curses");
-
+	this.buildTab = document.getElementById("build");
 
 	document.getElementById("itemsButton").addEventListener("click", function () {
-		hideAllBut(itemsTab);
+		tabChange(itemsTab);
 	});
 	document.getElementById("cursesButton").addEventListener("click", function () {
-		hideAllBut(cursesTab);
+		tabChange(cursesTab);
+	});
+	document.getElementById("buildButton").addEventListener("click", function () {
+		tabChange(buildTab);
 	});
 	document.getElementById("rollButton").addEventListener("click", function () {
 		currentItemRoll = roll(document.getElementById("rollTable"), filteredItemsData);
@@ -236,8 +287,7 @@ window.onload = function () {
 	document.getElementById("searchModalButton").addEventListener("click", function () {
 		searchFor(document.querySelector("#search > div > input").value);
 	});
-	document.getElementById("exportButton").addEventListener("click", exportSavedItems);
-	document.getElementById("cursesExport").addEventListener("click", exportSavedCurses);
+	document.getElementById("buildExportButton").addEventListener("click", exportSaved);
 
 	document.getElementById("itemsCategoryFilter").addEventListener("mouseover", function () {
 		document.getElementById("itemsCategoryFilter").open = true;
@@ -256,7 +306,7 @@ window.onload = function () {
 		updateFilterData();
 	})
 	for (var i = 1; i < itemsCategoriesFilters.length; i++) {
-		itemsCategoriesFilters[i].addEventListener("change", function(){
+		itemsCategoriesFilters[i].addEventListener("change", function () {
 			itemsCategoriesFilters[0].checked = false;
 			updateFilterData();
 		})

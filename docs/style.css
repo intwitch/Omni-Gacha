@@ -141,3 +141,17 @@ details {
 .alignEnd {
  margin-left: auto; 
 }
+
+.saveTableNameData{
+    text-decoration-line:underline
+}
+
+.saveTableNameData:hover {
+    font-style: italic;
+    text-shadow: 2px 2px 5px #38BDF8;
+    cursor: pointer;
+}
+
+.saveTableNameData:active {
+    text-shadow: 2px 2px 5px #FFFF00;
+}
