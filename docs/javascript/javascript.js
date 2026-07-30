@@ -27,6 +27,14 @@ function filterCSVData(csvData, filter) {
 	return csvData.filter((item) => filter(item));
 }
 
+function itemToString(item){
+	return `「${item[0]}」\n[${item[1]}] Rank ${item[14]}\n${"=".repeat(20)}\n${item[2]}`
+}
+
+function curseToString(curse){
+	return `「${curse[0]}」\nResolution: ${curse[2]}\n${"=".repeat(20)}\n${curse[1]}`
+}
+
 function NSFWfilter(Data, NSFW, NSFWOnly, index) {
 	if (NSFW == false) return filterCSVData(Data, function (item) { return item[index] == "FALSE" });
 	if (NSFWOnly == true) return filterCSVData(Data, function (item) { return item[index] == "TRUE" });
@@ -61,6 +69,8 @@ function redrawSaveTable(table, data) {
 			data.splice(index, 1);
 			redrawSaveTable(table, data);
 		});
+
+		
 
 		row.appendChild(deleteItem);
 		rows.push(row);
