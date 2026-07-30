@@ -102,7 +102,8 @@ function createRow(array) {
 	newRow.innerHTML = rowData;
 
 	var nameElement = newRow.querySelector("td p");
-	nameElement.classList.add("saveTableNameData")
+	nameElement.classList.add("saveTableNameData");
+	nameElement.title = "copy";
 	nameElement.addEventListener("click", function () {
 		var copytext;
 		if (array.length > 14) copytext = itemToString(array);
