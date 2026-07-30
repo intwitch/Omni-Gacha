@@ -197,24 +197,27 @@ function searchFor(string) {
 	});
 }
 
-function exportSavedItems() {
-	var link = document.createElement("a");
-	var file = new Blob([savedItemRolls], { type: 'text/plan' });
-	link.href = URL.createObjectURL(file)
-	link.download = "Omni Gacha rolls.csv"
-	link.click();
-	URL.revokeObjectURL(link.href);
-	console.log(savedItemRolls);
-}
+function exportSaved() {
 
-function exportSavedCurses() {
+	var text = "<ITEMS>\n\n\n";
+
+	for(item of savedItemRolls){
+		text += `${itemToString(item)}\n\n`;
+	}
+
+	text+= "\n<CURSES>\n\n";
+	for(curse of savedCurseRolls){
+		text += `${curseToString(curse)}\n\n`;
+	}
+
+	console.log(text)
+
 	var link = document.createElement("a");
-	var file = new Blob([savedCurseRolls], { type: 'text/plan' });
+	var file = new Blob([text], { type: 'text/plan' });
 	link.href = URL.createObjectURL(file)
-	link.download = "Omni Gacha curses.csv"
+	link.download = "Omni Gacha rolls.txt"
 	link.click();
 	URL.revokeObjectURL(link.href);
-	console.log(savedCurseRolls);
 }
 
 function tabChange(tab){
@@ -284,8 +287,7 @@ window.onload = function () {
 	document.getElementById("searchModalButton").addEventListener("click", function () {
 		searchFor(document.querySelector("#search > div > input").value);
 	});
-	document.getElementById("exportButton").addEventListener("click", exportSavedItems);
-	document.getElementById("cursesExport").addEventListener("click", exportSavedCurses);
+	document.getElementById("buildExportButton").addEventListener("click", exportSaved);
 
 	document.getElementById("itemsCategoryFilter").addEventListener("mouseover", function () {
 		document.getElementById("itemsCategoryFilter").open = true;
