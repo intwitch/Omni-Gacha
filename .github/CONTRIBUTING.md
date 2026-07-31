@@ -36,13 +36,7 @@ Obviously, do not do one mega commit or a commit per line.
 
 # version numbering
 
-[x].[y][z]
+[x].[y].[z]
 - x: main version number, should increment when dev merges into main.
 - y: hotfix number, should increment when a hotfix is merged into main and reset when the main version number changes.
-- z: minor revision letter. increments on item/curse list update. will reset on main version change. will not reset on hotfix.
-- in the event of over 26 minor reversions, letters will start being used in combination (y -> z -> aa)
-
-examples
-- 2.3a
-- 4.10c
-- 1.21aa
+- z: minor revision number. increments on item/curse list update. will reset on main version change. will not reset on hotfix.
