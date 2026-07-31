@@ -29,11 +29,15 @@ function filterCSVData(csvData, filter) {
 }
 
 function itemToString(item) {
-	return `「${item[0]}」\n[${item[1]}] Rank ${item[14]}\n${"=".repeat(20)}\n${item[2]}`
+	var sfw = ""
+	if (item[20] === "TRUE") sfw = " | NSFW"
+	return `${item[0]} | ${item[1]}\nRank ${item[14]} | ${item[3]}${sfw}\n${item[2]}`
 }
 
 function curseToString(curse) {
-	return `「${curse[0]}」\nResolution: ${curse[2]}\n${"=".repeat(20)}\n${curse[1]}`
+	var sfw = ""
+	if (curse[6] === "TRUE") sfw = " | NSFW"
+	return `${curse[0]} | ${curse[3]}${sfw}\n${curse[1]}\nResolution: ${curse[2]}`
 }
 
 function NSFWfilter(Data, NSFW, NSFWOnly, index) {
