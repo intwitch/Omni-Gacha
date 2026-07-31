@@ -65,14 +65,14 @@ function filterCSVData(csvData, filter) {
 
 function itemToString(item) {
 	var sfw = ""
-	if (item[20] === "TRUE") sfw = " | NSFW"
-	return `${item[0]} | ${item[1]}\nRank ${item[14]} | ${item[3]}${sfw}\n${item[2]}`
+	if (item[ITEMS.NSFW] === "TRUE") sfw = " | NSFW"
+	return `${item[ITEMS.NAME]} | ${item[ITEMS.SERIES]}\nRank ${item[ITEMS.RANK]} | ${item[ITEMS.CATEGORY]}${sfw}\n${item[ITEMS.DESCRIPTION]}`
 }
 
 function curseToString(curse) {
 	var sfw = ""
-	if (curse[6] === "TRUE") sfw = " | NSFW"
-	return `${curse[0]} | ${curse[3]}${sfw}\n${curse[1]}\nResolution: ${curse[2]}`
+	if (curse[CURSES.NSFW] === "TRUE") sfw = " | NSFW"
+	return `${curse[CURSES.NAME]} | ${curse[CURSES.LEVEL]}${sfw}\n${curse[CURSES.DESCRIPTION]}\nResolution: ${curse[CURSES.RESOLUTION]}`
 }
 
 function NSFWfilter(Data, NSFW, NSFWOnly, index) {
@@ -217,13 +217,13 @@ function filterItemByCategory(itemsData) {
 		if (item.checked) filter += item.value;
 	}
 
-	return itemsData.filter((item, index) => filter.search(new RegExp(item[3], "i")) != -1);
+	return itemsData.filter((item, index) => filter.search(new RegExp(item[ITEMS.CATEGORY], "i")) != -1);
 }
 
 function searchFor(string) {
 	var regex = new RegExp(string, "i");
 	var searchResults = itemsCSVData.filter(function (item) {
-		return item[0].concat(item[1], item[2]).search(regex) != -1;
+		return item[ITEMS.NAME].concat(item[ITEMS.SERIES], item[ITEMS.DESCRIPTION]).search(regex) != -1;
 	});
 
 	var tbody = document.querySelector("#searchTable > tbody");
@@ -365,6 +365,6 @@ window.addEventListener("click", function (event) {
 	}
 });
 
-var itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, itemsCSVDataRaw[0].length - 1);
-var cursesCSVData = NSFWfilter(cursesCSVDataRaw, NSFW, NSFWOnly, 6);
+var itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, ITEMS.NSFW);
+var cursesCSVData = NSFWfilter(cursesCSVDataRaw, NSFW, NSFWOnly, CURSES.NSFW);
 var filteredItemsData = itemsCSVData;
