@@ -128,7 +128,7 @@ function drawTableBody(table, rows) {
 	});
 }
 
-function updateFilterData() {
+function updateItemFilterData() {
 	filteredItemsData = itemsCSVData;
 	filteredItemsData = FilterTicketData(filteredItemsData);
 	filteredItemsData = filterItemByCategory(filteredItemsData);
@@ -250,9 +250,10 @@ window.onload = function () {
 
 		itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, itemsCSVDataRaw[0].length - 1);
 		cursesCSVData = NSFWfilter(cursesCSVDataRaw, NSFW, NSFWOnly, 6);
+		updateItemFilterData();
 	});
 
-	document.getElementById("ticketSelector").addEventListener("change", updateFilterData);
+	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
 
 	this.itemsTab = document.getElementById("items");
 	this.cursesTab = document.getElementById("curses");
@@ -308,12 +309,12 @@ window.onload = function () {
 		for (var i = 1; i < itemsCategoriesFilters.length; i++) {
 			itemsCategoriesFilters[i].checked = document.getElementById("itemsCategoryFilterAll").checked;
 		}
-		updateFilterData();
+		updateItemFilterData();
 	})
 	for (var i = 1; i < itemsCategoriesFilters.length; i++) {
 		itemsCategoriesFilters[i].addEventListener("change", function () {
 			itemsCategoriesFilters[0].checked = false;
-			updateFilterData();
+			updateItemFilterData();
 		})
 	}
 
