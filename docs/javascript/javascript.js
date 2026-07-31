@@ -8,6 +8,41 @@ var xhr = new XMLHttpRequest();
 xhr.open("GET", "data/OmniGachaCurses.csv", false);
 xhr.send(null);
 
+const ITEMS = {
+	NAME: 0,
+	SERIES: 1,
+	DESCRIPTION: 2,
+	CATEGORY: 3,
+	GENDER: 4,
+	MAGIC: 5,
+	MEMETIC: 6,
+	MIGHT: 7,
+	MIND: 8,
+	MOTION: 9,
+	MOXIE: 10,
+	MUTATION: 11,
+	MYTH: 12,
+	STATS: 13,
+	RANK: 14,
+	GROWTH_TYPE: 15,
+	GROWTH_RATE: 16,
+	RESTOCK: 17,
+	RETURN: 18,
+	GIFT: 19,
+	NSFW: 20,
+}
+
+const CURSES = {
+	NAME=0,
+	DESCRIPTION=1,
+	RESOLUTION=2,
+	LEVEL=3,
+	TARGET=4,
+	AFFECTS=5,
+	NSFW=6,
+	REWARD=7
+}
+
 var cursesCSVDataRaw = CSVToArray(xhr.responseText);
 
 var NSFW = false;
