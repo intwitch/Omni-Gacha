@@ -1,0 +1,27 @@
+{
+  "name": "omni-gacha",
+  "version": "1.0.0",
+  "description": "build utility to pull csv data",
+  "homepage": "https://github.com/intwitch/Omni-Gacha#readme",
+  "bugs": {
+    "url": "https://github.com/intwitch/Omni-Gacha/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intwitch/Omni-Gacha.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "",
+    "start": "node CSVbuild.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}
