@@ -29,11 +29,15 @@ function filterCSVData(csvData, filter) {
 }
 
 function itemToString(item) {
-	return `「${item[0]}」\n[${item[1]}] Rank ${item[14]}\n${"=".repeat(20)}\n${item[2]}`
+	var sfw = ""
+	if (item[20] === "TRUE") sfw = " | NSFW"
+	return `${item[0]} | ${item[1]}\nRank ${item[14]} | ${item[3]}${sfw}\n${item[2]}`
 }
 
 function curseToString(curse) {
-	return `「${curse[0]}」\nResolution: ${curse[2]}\n${"=".repeat(20)}\n${curse[1]}`
+	var sfw = ""
+	if (curse[6] === "TRUE") sfw = " | NSFW"
+	return `${curse[0]} | ${curse[3]}${sfw}\n${curse[1]}\nResolution: ${curse[2]}`
 }
 
 function NSFWfilter(Data, NSFW, NSFWOnly, index) {
@@ -124,7 +128,7 @@ function drawTableBody(table, rows) {
 	});
 }
 
-function updateFilterData() {
+function updateItemFilterData() {
 	filteredItemsData = itemsCSVData;
 	filteredItemsData = FilterTicketData(filteredItemsData);
 	filteredItemsData = filterItemByCategory(filteredItemsData);
@@ -246,9 +250,10 @@ window.onload = function () {
 
 		itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, itemsCSVDataRaw[0].length - 1);
 		cursesCSVData = NSFWfilter(cursesCSVDataRaw, NSFW, NSFWOnly, 6);
+		updateItemFilterData();
 	});
 
-	document.getElementById("ticketSelector").addEventListener("change", updateFilterData);
+	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
 
 	this.itemsTab = document.getElementById("items");
 	this.cursesTab = document.getElementById("curses");
@@ -304,12 +309,12 @@ window.onload = function () {
 		for (var i = 1; i < itemsCategoriesFilters.length; i++) {
 			itemsCategoriesFilters[i].checked = document.getElementById("itemsCategoryFilterAll").checked;
 		}
-		updateFilterData();
+		updateItemFilterData();
 	})
 	for (var i = 1; i < itemsCategoriesFilters.length; i++) {
 		itemsCategoriesFilters[i].addEventListener("change", function () {
 			itemsCategoriesFilters[0].checked = false;
-			updateFilterData();
+			updateItemFilterData();
 		})
 	}
 
