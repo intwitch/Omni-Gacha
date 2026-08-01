@@ -1,2 +1,5 @@
 .vscode/*
 .vscode
+.env
+node_modules/
+docs/data/values.json
