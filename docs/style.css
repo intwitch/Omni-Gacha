@@ -60,25 +60,6 @@ table th:nth-child(3) {
 
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-}
-
-.modal > div{
-    background-color: #1E293B;
-    border: 2px inset purple;
-    margin: 10% auto;
-    padding: 20px;
-    width: 90%;
-}
-
 footer {
     width: 100%;
     background-color: #38BDF8;
