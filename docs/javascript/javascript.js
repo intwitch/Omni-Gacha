@@ -1,13 +1,3 @@
-var xhr = new XMLHttpRequest();
-xhr.open("GET", "data/OmniGachaItemList.csv", false);
-xhr.send(null);
-
-var itemsCSVDataRaw = CSVToArray(xhr.responseText);
-
-var xhr = new XMLHttpRequest();
-xhr.open("GET", "data/OmniGachaCurses.csv", false);
-xhr.send(null);
-
 const ITEMS = {
 	NAME: 0,
 	SERIES: 1,
@@ -42,11 +32,11 @@ const CURSES = {
 	NSFW=6,
 	REWARD=7
 }
-
-var cursesCSVDataRaw = CSVToArray(xhr.responseText);
-
 var NSFW = false;
 var NSFWOnly = false;
+
+var rawItemsData;
+var rawCursesData;
 
 var currentItemRoll;
 var savedItemRolls = [];
@@ -57,6 +47,26 @@ var savedCurseRolls = [];
 var itemsTab;
 var cursesTab;
 var buildTab;
+
+//incredibly important, nothing can be done without.
+loadParseJSON()
+
+/*
+load, parse and set raw data variables.
+I have come to despsise async and await and then and promises and general
+I do not want to deal with ANY of that.
+so we use a xml request for my own sanity.
+*/
+function loadParseJSON() {
+	const xhr = new XMLHttpRequest();
+	xhr.open("GET", "data/values.json", false); // false = synchronous
+	xhr.send();
+
+	values = JSON.parse(xhr.responseText);
+
+	rawItemsData = values.items
+	rawCursesData = values.curses
+}
 
 //designed to be repeatidly callled for multiple filters in search. returns a new array with the filtered data.
 function filterCSVData(csvData, filter) {
@@ -241,12 +251,12 @@ function exportSaved() {
 
 	var text = "<ITEMS>\n\n\n";
 
-	for(item of savedItemRolls){
+	for (item of savedItemRolls) {
 		text += `${itemToString(item)}\n\n`;
 	}
 
-	text+= "\n<CURSES>\n\n";
-	for(curse of savedCurseRolls){
+	text += "\n<CURSES>\n\n";
+	for (curse of savedCurseRolls) {
 		text += `${curseToString(curse)}\n\n`;
 	}
 
@@ -260,7 +270,7 @@ function exportSaved() {
 	URL.revokeObjectURL(link.href);
 }
 
-function tabChange(tab){
+function tabChange(tab) {
 	redrawSaveTable(document.getElementById("saveTable"), savedItemRolls);
 	redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls);
 	redrawSaveTable(document.getElementById("buildItemsTable"), savedItemRolls);
@@ -364,6 +374,14 @@ window.addEventListener("click", function (event) {
 		searchModal.style.display = "none";
 	}
 });
+
+/*
+variables renamed just to test, should be changed and replaced later
+but thats work for the formatting fixup branch
+for now we just do this for testing, then merge into dev to be fixed in proper branch.
+*/
+var itemsCSVDataRaw = rawItemsData;
+var cursesCSVDataRaw = rawCursesData;
 
 var itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, ITEMS.NSFW);
 var cursesCSVData = NSFWfilter(cursesCSVDataRaw, NSFW, NSFWOnly, CURSES.NSFW);
