@@ -347,7 +347,7 @@ function redrawHistoryTable(tableID, historyArray, saveArray) {
 	//function to pass to additionalButtonTableData
 	function saveButtonFunctionCreator(saveArray, index) {
 		var saveButtonFunction = function () {
-			saveArray.append(historyArray[index])
+			saveArray.push(historyArray[index])
 			redrawAllSaveTables()
 		}
 		return saveButtonFunction
