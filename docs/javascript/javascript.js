@@ -53,9 +53,11 @@ var currentCurseRoll;
 var savedCurseRolls = [];
 var curseRollHistory = [];
 
+var homeTab;
 var itemsTab;
 var cursesTab;
 var buildTab;
+var searchTab;
 
 //incredibly important, nothing can be done without.
 loadParseJSON()
@@ -318,13 +320,25 @@ function exportSaved() {
 	URL.revokeObjectURL(link.href);
 }
 
-//redraw important cross tab tables from source to reflect modifications made on other tabs
-function tabChange(tab) {
-	redrawAllSaveTables();
+//create a handler for selection button to call
+function tabChangeHandlerCreator(targetTab) {
+	var root = getComputedStyle(document.querySelector(":root"))
 
-	hideAllBut(tab);
+	// handle changing the tab, 'this' becomes called button.
+	var tabChangeHandler = function(){
+		document.querySelectorAll("#selector button")
+		for(button of document.querySelectorAll("#selector button")){
+			button.style.backgroundColor = root.getPropertyValue("--unselected-button-color")
+		}
+		this.style.backgroundColor = root.getPropertyValue("--selected-button-color")
+		redrawAllSaveTables();
+		hideAllBut(targetTab);
+	}
+
+	return tabChangeHandler
 }
 
+//redraw important cross tab tables from source to reflect modifications made on other tabs
 function redrawAllSaveTables() {
 	redrawSaveTable(document.getElementById("saveTable"), savedItemRolls);
 	redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls);
@@ -332,13 +346,12 @@ function redrawAllSaveTables() {
 	redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls);
 }
 
-// set all tabs to invisible then set the one wanted tab to visible.
-function hideAllBut(tab) {
-	cursesTab.style.display = "none";
-	itemsTab.style.display = "none";
-	buildTab.style.display = "none";
-
-	tab.style.display = "block";
+// set all tabs display to none then the one targetTab to block
+function hideAllBut(targetTab) {
+	for (tab of document.querySelectorAll(".tabcontent")){
+		tab.style.display = "none"
+	}
+	targetTab.style.display = "block";
 }
 
 /*
@@ -373,19 +386,19 @@ window.onload = function () {
 
 	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
 
-	this.itemsTab = document.getElementById("items");
-	this.cursesTab = document.getElementById("curses");
-	this.buildTab = document.getElementById("build");
+	itemsTab = document.getElementById("items");
+	cursesTab = document.getElementById("curses");
+	buildTab = document.getElementById("build");
+	searchTab = document.getElementById("search")
 
-	document.getElementById("itemsButton").addEventListener("click", function () {
-		tabChange(itemsTab);
-	});
-	document.getElementById("cursesButton").addEventListener("click", function () {
-		tabChange(cursesTab);
-	});
-	document.getElementById("buildButton").addEventListener("click", function () {
-		tabChange(buildTab);
-	});
+	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
+
+	document.getElementById("cursesButton").addEventListener("click", tabChangeHandlerCreator(cursesTab));
+
+	document.getElementById("buildButton").addEventListener("click", tabChangeHandlerCreator(buildTab));
+
+	document.getElementById("searchButton").addEventListener("click", tabChangeHandlerCreator(searchTab));
+
 	document.getElementById("rollButton").addEventListener("click", function () {
 		currentItemRoll = roll(document.getElementById("rollTable"), filteredItemsData, itemRollHistory);
 		redrawHistoryTable("itemRollHistoryTable", itemRollHistory, savedItemRolls)
@@ -397,6 +410,7 @@ window.onload = function () {
 
 	document.getElementById("cursesRollButton").addEventListener("click", function () {
 		currentCurseRoll = roll(document.getElementById("cursesRollTable"), cursesData, curseRollHistory);
+		redrawHistoryTable("curseRollHistoryTable", curseRollHistory, savedCurseRolls)
 	});
 
 	document.getElementById("cursesSaveButton").addEventListener("click", function () {

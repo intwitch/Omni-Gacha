@@ -30,6 +30,7 @@
             <button id="itemsButton">items</button>
             <button id="cursesButton">curses</button>
             <button id="buildButton">build</button>
+            <button id="searchButton">Search</button>
         </div>
 
 
@@ -221,6 +222,7 @@
                 <button id="cursesRollButton">Get Curse</button>
                 <button id="cursesSaveButton">Save Curse</button>
                 <table id="cursesRollTable">
+                    <caption><h2>Rolls</h2></caption>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -240,6 +242,7 @@
             </div>
             <div>
                 <table id="cursesSaveTable">
+                    <caption><h2>Saved Curses</h2></caption>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -254,7 +257,24 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                    </tbody>
+                </table>
+                <table id="curseRollHistoryTable">
+                    <caption><h2>Roll History</h2></caption>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Resolution</th>
+                            <th>Severity</th>
+                            <th>Target</th>
+                            <th>Affects</th>
+                            <th>NSFW</th>
+                            <th>Reward</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     </tbody>
                 </table>
             </div>
@@ -316,6 +336,9 @@
             </div>
         </div>
 
+        <div id="search" class="tabcontent">
+            <p>Hello World!</p>
+        </div>
 
     </main>
     <footer>

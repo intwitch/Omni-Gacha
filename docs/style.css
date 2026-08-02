@@ -1,3 +1,8 @@
+:root {
+    --unselected-button-color: #7A4988;
+    --selected-button-color: #710193;
+}
+
 table, th, td {
   border: 1px solid black;
 }
@@ -101,6 +106,7 @@ main {
 
 #selector > button {
     width: 10%;
+    background-color: var(--unselected-button-color);
 }
 
 ul {
