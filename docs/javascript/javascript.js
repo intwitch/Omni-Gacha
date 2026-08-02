@@ -1,14 +1,57 @@
-var NSFW = false;
-var NSFWOnly = false;
+const ITEMS = {
+	NAME: 0,
+	SERIES: 1,
+	DESCRIPTION: 2,
+	CATEGORY: 3,
+	GENDER: 4,
+	MAGIC: 5,
+	MEMETIC: 6,
+	MIGHT: 7,
+	MIND: 8,
+	MOTION: 9,
+	MOXIE: 10,
+	MUTATION: 11,
+	MYTH: 12,
+	STATS: 13,
+	RANK: 14,
+	GROWTH_TYPE: 15,
+	GROWTH_RATE: 16,
+	RESTOCK: 17,
+	RETURN: 18,
+	GIFT: 19,
+	NSFW: 20,
+}
+
+const CURSES = {
+	NAME: 0,
+	DESCRIPTION: 1,
+	RESOLUTION: 2,
+	LEVEL: 3,
+	TARGET: 4,
+	AFFECTS: 5,
+	NSFW: 6,
+	REWARD: 7
+}
 
 var rawItemsData;
 var rawCursesData;
 
+var itemsData;
+var cursesData;
+
+var filteredItemsData
+var filteredCursesData
+
+var NSFW = false;
+var NSFWOnly = false;
+
 var currentItemRoll;
 var savedItemRolls = [];
+var itemRollHistory = [];
 
 var currentCurseRoll;
 var savedCurseRolls = [];
+var curseRollHistory = [];
 
 var itemsTab;
 var cursesTab;
@@ -34,79 +77,106 @@ function loadParseJSON() {
 	rawCursesData = values.curses
 }
 
-//designed to be repeatidly callled for multiple filters in search. returns a new array with the filtered data.
-function filterCSVData(csvData, filter) {
-	return csvData.filter((item) => filter(item));
-}
-
 function itemToString(item) {
 	var sfw = ""
-	if (item[20] === "TRUE") sfw = " | NSFW"
-	return `${item[0]} | ${item[1]}\nRank ${item[14]} | ${item[3]}${sfw}\n${item[2]}`
+	if (item[ITEMS.NSFW] === "TRUE") sfw = " | NSFW"
+	return `${item[ITEMS.NAME]} | ${item[ITEMS.SERIES]}\nRank ${item[ITEMS.RANK]} | ${item[ITEMS.CATEGORY]}${sfw}\n${item[ITEMS.DESCRIPTION]}`
 }
 
 function curseToString(curse) {
 	var sfw = ""
-	if (curse[6] === "TRUE") sfw = " | NSFW"
-	return `${curse[0]} | ${curse[3]}${sfw}\n${curse[1]}\nResolution: ${curse[2]}`
+	if (curse[CURSES.NSFW] === "TRUE") sfw = " | NSFW"
+	return `${curse[CURSES.NAME]} | ${curse[CURSES.LEVEL]}${sfw}\n${curse[CURSES.DESCRIPTION]}\nResolution: ${curse[CURSES.RESOLUTION]}`
+}
+// check checkbox status and update values acordingly, then call updatefilter for more general
+function updateContentFilter() {
+	NSFWCheckBox = document.getElementById("nsfwCheckbox")
+	NSFWOnlyCheckBox = document.getElementById("nsfwOnlyCheckbox")
+
+	NSFW = NSFWCheckBox.checked
+	NSFWOnly = NSFWOnlyCheckBox.checked
+
+	if (NSFW && !NSFWOnly) {
+		itemsData = rawItemsData;
+		cursesData = rawCursesData;
+		updateItemFilterData();
+		return;
+	}
+
+	var searchParam
+	if (NSFW) {
+		searchParam = "TRUE"
+		NSFWOnlyCheckBox.checked = false
+		NSFWOnlyCheckBox.parentElement.visiblity = "visible"
+	}
+	else {
+		searchParam = "FALSE"
+		NSFWOnlyCheckBox.parentElement.visiblity = "hidden"
+	}
+
+	var filterFunction = function (seekPosition) {
+		var rFunction = function (value, index, array) {
+			return value[seekPosition] === searchParam
+		}
+		return rFunction
+	}
+
+	itemsData = rawItemsData.filter(filterFunction(ITEMS.NSFW))
+	cursesData = rawCursesData.filter(filterFunction(CURSES.NSFW))
+
+	updateItemFilterData();
 }
 
-function NSFWfilter(Data, NSFW, NSFWOnly, index) {
-	if (NSFW == false) return filterCSVData(Data, function (item) { return item[index] == "FALSE" });
-	if (NSFWOnly == true) return filterCSVData(Data, function (item) { return item[index] == "TRUE" });
-	return Data;
+// gets random value from items or curses
+function getRandomValue(array) {
+	var randomIndex = Math.floor(Math.random() * array.length);
+	return array[randomIndex];
 }
-
-
-function getRandomItem(itemArray) {
-	var randomIndex = Math.floor(Math.random() * itemArray.length);
-	return itemArray[randomIndex];
-}
-
-function roll(table, data) {
-	var element = getRandomItem(data);
+// given a table and values, get a single value, put it in a row element, call drawTableBody, push new element to historyArray.
+function roll(table, data, historyArray) {
+	var element = getRandomValue(data);
 	var newRow = createRow(element);
 
-	table.querySelector("tbody tr").replaceWith(newRow);
-
+	drawTableBody(table, [newRow]);
+	historyArray.unshift(element);
 	return element;
 }
 
+//redraw a save table
 function redrawSaveTable(table, data) {
 	var rows = [];
-	data.forEach(function (item, index) {
-		var row = createRow(item)
-		var deleteItem = document.createElement("td");
-		var deleteButton = document.createElement("button");
-		deleteButton.innerText = "Remove"
-		deleteItem.appendChild(deleteButton);
 
-		deleteButton.addEventListener("click", function () {
+	var buttonFunction = function (index) {
+		var rFunction = function () {
 			data.splice(index, 1);
 			redrawSaveTable(table, data);
-		});
-		row.appendChild(deleteItem);
+		}
+		return rFunction
+	}
+	data.forEach(function (item, index) {
+		var row = createRow(item)
 
-
-		var nameElement = row.querySelector("td p");
-		nameElement.classList.add("saveTableNameData")
-		nameElement.addEventListener("click", function () {
-			var copytext;
-			if (item.length > 14) copytext = itemToString(item);
-			else copytext = curseToString(item);
-
-			navigator.clipboard.writeText(copytext);
-		});
+		row.append(additionalButtonTableData(buttonFunction(index), "Remove"));
 
 		rows.push(row);
 	})
 
-
-
 	drawTableBody(table, rows);
 }
+
+//return an additional TD element with an on "click" listener.
+//function and value determined by inputs.
+function additionalButtonTableData(buttonFunction, buttonText) {
+	var additionalItem = document.createElement("td");
+	var itemButton = document.createElement("button");
+	itemButton.innerText = buttonText;
+	additionalItem.appendChild(itemButton);
+
+	itemButton.addEventListener("click", buttonFunction);
+	return additionalItem
+}
+
 //given array convert to tr element with td data
-//TODO: Implement everywhere
 function createRow(array) {
 	var newRow = document.createElement("tr");
 	var rowData = "";
@@ -138,14 +208,23 @@ function drawTableBody(table, rows) {
 		tbody.appendChild(row)
 	});
 }
-
+//calls all filter related functions for items as it updates the global variable
 function updateItemFilterData() {
-	filteredItemsData = itemsCSVData;
+	filteredItemsData = itemsData;
 	filteredItemsData = FilterTicketData(filteredItemsData);
 	filteredItemsData = filterItemByCategory(filteredItemsData);
-	console.log(filteredItemsData);
+	//console.log(filteredItemsData);
 }
 
+// create a function to filter on based on an array of filters and an index to see if the index of the item/curse is in the filter.
+function valueFilter(filterArray, index) {
+	var filterFunction = function (value) {
+		if (filterArray.indexOf(value[index]) > -1) return true
+		else return false
+	}
+}
+
+// get ticket value, determine required filters, call rank filter, then return filtered results.
 function FilterTicketData(itemsData) {
 	var ticketValue = document.getElementById("ticketSelector").value;
 	var filter;
@@ -179,27 +258,26 @@ function FilterTicketData(itemsData) {
 			filter = ["SS", "SSS", "EX"];
 			break;
 	}
-
-	return filterCSVData(itemsData, function (item) { return filter.includes(item[14]) });
+	return itemsData.filter(valueFilter(filter, ITEMS.RANK));
 }
-
+// determine categories to filter by, (if any if all is checked), then call filter with valueFilter
 function filterItemByCategory(itemsData) {
 	var itemsCategoriesFilters = document.querySelectorAll("#itemsCategoryFilter input");
-	var filter = ""
+	var filter = []
 
 	if (itemsCategoriesFilters[0].checked) return itemsData;
 
-	for (var item of itemsCategoriesFilters) {
-		if (item.checked) filter += item.value;
+	for (var category of itemsCategoriesFilters) {
+		if (category.checked) filter.push(category.value);
 	}
 
-	return itemsData.filter((item, index) => filter.search(new RegExp(item[3], "i")) != -1);
+	return itemsData.filter(valueFilter(filter, ITEMS.CATEGORY))
 }
-
+// shabby but technically works.... for now.
 function searchFor(string) {
 	var regex = new RegExp(string, "i");
-	var searchResults = itemsCSVData.filter(function (item) {
-		return item[0].concat(item[1], item[2]).search(regex) != -1;
+	var searchResults = itemsData.filter(function (item) {
+		return item[ITEMS.NAME].concat(item[ITEMS.SERIES], item[ITEMS.DESCRIPTION]).search(regex) != -1;
 	});
 
 	var tbody = document.querySelector("#searchTable > tbody");
@@ -213,6 +291,7 @@ function searchFor(string) {
 	});
 }
 
+// get all items and curses, convert to strings (same as copy paste) then let user download txt file of them.
 function exportSaved() {
 
 	var text = "<ITEMS>\n\n\n";
@@ -236,33 +315,58 @@ function exportSaved() {
 	URL.revokeObjectURL(link.href);
 }
 
+//redraw important cross tab tables from source to reflect modifications made on other tabs
 function tabChange(tab) {
-	redrawSaveTable(document.getElementById("saveTable"), savedItemRolls);
-	redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls);
-	redrawSaveTable(document.getElementById("buildItemsTable"), savedItemRolls);
-	redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls);
+	redrawAllSaveTables();
 
 	hideAllBut(tab);
 }
 
+function redrawAllSaveTables() {
+	redrawSaveTable(document.getElementById("saveTable"), savedItemRolls);
+	redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls);
+	redrawSaveTable(document.getElementById("buildItemsTable"), savedItemRolls);
+	redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls);
+}
+
+// set all tabs to invisible then set the one wanted tab to visible.
 function hideAllBut(tab) {
 	cursesTab.style.display = "none";
 	itemsTab.style.display = "none";
 	buildTab.style.display = "none";
+
 	tab.style.display = "block";
 }
 
-window.onload = function () {
-	document.getElementById("contentOptions").addEventListener("change", function () {
-		NSFW = document.getElementById("nsfwCheckbox").checked;
-		NSFWOnly = document.getElementById("nsfwOnlyCheckbox").checked;
-		if (NSFW) document.querySelector("#contentOptions > span:last-child").style.visibility = "visible";
-		else document.querySelector("#contentOptions > span:last-child").style.visibility = "hidden";
+/*
+History handler creator returns a function to be called on click that will handle history.
+takes divID of the modal to show, history array to use, and save array to save to.
+*/
+function redrawHistoryTable(tableID, historyArray, saveArray) {
 
-		itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, itemsCSVDataRaw[0].length - 1);
-		cursesCSVData = NSFWfilter(cursesCSVDataRaw, NSFW, NSFWOnly, 6);
-		updateItemFilterData();
-	});
+	//function to pass to additionalButtonTableData
+	function saveButtonFunctionCreator(saveArray, index) {
+		var saveButtonFunction = function () {
+			saveArray.push(historyArray[index])
+			redrawAllSaveTables()
+		}
+		return saveButtonFunction
+	}
+
+	var table = document.getElementById(tableID)
+	var rows = [];
+
+	for (var i = 0; i < historyArray.length; i++) {
+		var row = createRow(historyArray[i])
+		row.append(additionalButtonTableData(saveButtonFunctionCreator(saveArray, i), "Save"))
+		rows.push(row)
+	}
+
+	drawTableBody(table, rows)
+}
+
+window.onload = function () {
+	document.getElementById("contentOptions").addEventListener("change", updateContentFilter)
 
 	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
 
@@ -280,7 +384,8 @@ window.onload = function () {
 		tabChange(buildTab);
 	});
 	document.getElementById("rollButton").addEventListener("click", function () {
-		currentItemRoll = roll(document.getElementById("rollTable"), filteredItemsData);
+		currentItemRoll = roll(document.getElementById("rollTable"), filteredItemsData, itemRollHistory);
+		redrawHistoryTable("itemRollHistoryTable", itemRollHistory, savedItemRolls)
 	});
 	document.getElementById("saveButton").addEventListener("click", function () {
 		savedItemRolls.push(currentItemRoll);
@@ -288,22 +393,14 @@ window.onload = function () {
 	});
 
 	document.getElementById("cursesRollButton").addEventListener("click", function () {
-		currentCurseRoll = roll(document.getElementById("cursesRollTable"), cursesCSVData);
+		currentCurseRoll = roll(document.getElementById("cursesRollTable"), cursesData, curseRollHistory);
 	});
+
 	document.getElementById("cursesSaveButton").addEventListener("click", function () {
 		savedCurseRolls.push(currentCurseRoll);
 		redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls)
 	});
 
-	document.getElementById("historyButton").addEventListener("click", function () {
-		document.getElementById("rollHistory").style.display = "block";
-	});
-	document.getElementById("searchOpenButton").addEventListener("click", function () {
-		document.getElementById("search").style.display = "block";
-	});
-	document.getElementById("searchModalButton").addEventListener("click", function () {
-		searchFor(document.querySelector("#search > div > input").value);
-	});
 	document.getElementById("buildExportButton").addEventListener("click", exportSaved);
 
 	document.getElementById("itemsCategoryFilter").addEventListener("mouseover", function () {
@@ -329,6 +426,8 @@ window.onload = function () {
 		})
 	}
 
+	//itialize everything, and let user start rolling.
+	updateContentFilter();
 	hideAllBut(itemsTab);
 };
 
@@ -340,15 +439,3 @@ window.addEventListener("click", function (event) {
 		searchModal.style.display = "none";
 	}
 });
-
-/*
-variables renamed just to test, should be changed and replaced later
-but thats work for the formatting fixup branch
-for now we just do this for testing, then merge into dev to be fixed in proper branch.
-*/
-var itemsCSVDataRaw = rawItemsData;
-var cursesCSVDataRaw = rawCursesData;
-
-var itemsCSVData = NSFWfilter(itemsCSVDataRaw, NSFW, NSFWOnly, itemsCSVDataRaw[0].length - 1);
-var cursesCSVData = NSFWfilter(cursesCSVDataRaw, NSFW, NSFWOnly, 6);
-var filteredItemsData = itemsCSVData;
