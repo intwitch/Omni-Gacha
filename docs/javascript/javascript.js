@@ -96,22 +96,25 @@ function updateContentFilter() {
 	NSFW = NSFWCheckBox.checked
 	NSFWOnly = NSFWOnlyCheckBox.checked
 
-	if (NSFW && !NSFWOnly) {
-		itemsData = rawItemsData;
-		cursesData = rawCursesData;
-		updateItemFilterData();
-		return;
-	}
-
 	var searchParam
-	if (NSFW) {
-		searchParam = "TRUE"
-		NSFWOnlyCheckBox.checked = false
-		NSFWOnlyCheckBox.parentElement.visiblity = "visible"
-	}
-	else {
+
+	if (NSFW == true) {
+		if (NSFWOnly == false) {
+			// NSFW = true and NSFWOnly = false
+			itemsData = rawItemsData;
+			cursesData = rawCursesData;
+			NSFWOnlyCheckBox.parentElement.style.visibility = "visible"
+			updateItemFilterData();
+			return;
+		} else {
+			// NSFWONLY && NSFW
+			searchParam = "TRUE"
+		}
+	} else {
+		// NSFW = false and thus NSFWONLY = false
 		searchParam = "FALSE"
-		NSFWOnlyCheckBox.parentElement.visiblity = "hidden"
+		NSFWOnlyCheckBox.checked = false
+		NSFWOnlyCheckBox.parentElement.style.visibility = "hidden"
 	}
 
 	var filterFunction = function (seekPosition) {
