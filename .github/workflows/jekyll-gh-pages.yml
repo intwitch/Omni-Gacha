@@ -24,17 +24,19 @@ concurrency:
 jobs:
   # Build job
   build:
+    environment: github-pages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Node
         uses: actions/setup-node@v7
-      - name: buildJSON
+      - name: npm clean install
+        run: npm ci
+      - name: create JSON data
         env:
           SHEETSAPIKEY: ${{secrets.SHEETSAPIKEY}}
-        run: npm ci
-        run: npm test
+        run: npm start
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Build with Jekyll
