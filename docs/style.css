@@ -113,6 +113,9 @@ main {
     justify-content: space-evenly;
     align-items: stretch;
     height: 3em;
+
+    position: sticky;
+    top: 0;
 }
 
 #selector > button {
