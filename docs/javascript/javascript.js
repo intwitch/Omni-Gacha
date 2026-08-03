@@ -36,11 +36,11 @@ const CURSES = {
 var rawItemsData;
 var rawCursesData;
 
-var itemsData;
-var cursesData;
+var itemsData = [];
+var cursesData = [];
 
-var filteredItemsData
-var filteredCursesData
+var filteredItemsData = []
+var filteredCursesData = []
 
 var NSFW = false;
 var NSFWOnly = false;
@@ -53,9 +53,11 @@ var currentCurseRoll;
 var savedCurseRolls = [];
 var curseRollHistory = [];
 
+var homeTab;
 var itemsTab;
 var cursesTab;
 var buildTab;
+var searchTab;
 
 //incredibly important, nothing can be done without.
 loadParseJSON()
@@ -149,17 +151,17 @@ function roll(table, data, historyArray) {
 function redrawSaveTable(table, data) {
 	var rows = [];
 
-	var buttonFunction = function (index) {
-		var rFunction = function () {
+	function buttonFunctionCreator(index) {
+		var buttonFunction = function () {
 			data.splice(index, 1);
 			redrawSaveTable(table, data);
 		}
-		return rFunction
+		return buttonFunction
 	}
 	data.forEach(function (item, index) {
 		var row = createRow(item)
 
-		row.append(additionalButtonTableData(buttonFunction(index), "Remove"));
+		row.append(additionalButtonTableData(buttonFunctionCreator(index), "Remove"));
 
 		rows.push(row);
 	})
@@ -222,9 +224,24 @@ function updateItemFilterData() {
 // create a function to filter on based on an array of filters and an index to see if the index of the item/curse is in the filter.
 function valueFilter(filterArray, index) {
 	var filterFunction = function (value) {
-		if (filterArray.indexOf(value[index]) > -1) return true
-		else return false
+		const valuePart = value[index].toLowerCase();
+		for(filter of filterArray){
+			if(valuePart === filter.toLowerCase()) return true
+		}
+		return false;
 	}
+	return filterFunction
+}
+//same as above, but filter function looks for text matching, not exact matching. Unless it's a rank, where it has to be valueFiltered
+function textValueFilter(filterArray, index) {
+	var filterFunction = function (value) {
+		const valuePart = value[index].toLowerCase();
+		for(filter of filterArray){
+			if(valuePart.includes(filter.toLowerCase())) return true
+		}
+		return false;
+	}
+	return filterFunction
 }
 
 // get ticket value, determine required filters, call rank filter, then return filtered results.
@@ -261,6 +278,9 @@ function FilterTicketData(itemsData) {
 			filter = ["SS", "SSS", "EX"];
 			break;
 	}
+
+
+
 	return itemsData.filter(valueFilter(filter, ITEMS.RANK));
 }
 // determine categories to filter by, (if any if all is checked), then call filter with valueFilter
@@ -318,13 +338,25 @@ function exportSaved() {
 	URL.revokeObjectURL(link.href);
 }
 
-//redraw important cross tab tables from source to reflect modifications made on other tabs
-function tabChange(tab) {
-	redrawAllSaveTables();
+//create a handler for selection button to call
+function tabChangeHandlerCreator(targetTab) {
+	var root = getComputedStyle(document.querySelector(":root"))
 
-	hideAllBut(tab);
+	// handle changing the tab, 'this' becomes called button.
+	var tabChangeHandler = function(){
+		document.querySelectorAll("#selector button")
+		for(button of document.querySelectorAll("#selector button")){
+			button.style.backgroundColor = root.getPropertyValue("--unselected-button-color")
+		}
+		this.style.backgroundColor = root.getPropertyValue("--selected-button-color")
+		redrawAllSaveTables();
+		hideAllBut(targetTab);
+	}
+
+	return tabChangeHandler
 }
 
+//redraw important cross tab tables from source to reflect modifications made on other tabs
 function redrawAllSaveTables() {
 	redrawSaveTable(document.getElementById("saveTable"), savedItemRolls);
 	redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls);
@@ -332,18 +364,17 @@ function redrawAllSaveTables() {
 	redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls);
 }
 
-// set all tabs to invisible then set the one wanted tab to visible.
-function hideAllBut(tab) {
-	cursesTab.style.display = "none";
-	itemsTab.style.display = "none";
-	buildTab.style.display = "none";
-
-	tab.style.display = "block";
+// set all tabs display to none then the one targetTab to block
+function hideAllBut(targetTab) {
+	for (tab of document.querySelectorAll(".tabcontent")){
+		tab.style.display = "none"
+	}
+	targetTab.style.display = "block";
 }
 
 /*
 History handler creator returns a function to be called on click that will handle history.
-takes divID of the modal to show, history array to use, and save array to save to.
+takes ID of the table to draw, history array to use, and save array to save to.
 */
 function redrawHistoryTable(tableID, historyArray, saveArray) {
 
@@ -368,24 +399,117 @@ function redrawHistoryTable(tableID, historyArray, saveArray) {
 	drawTableBody(table, rows)
 }
 
+/*
+Handle searching for the items.
+get the specific values from name, series, description, then filter and apply them to search.
+get values from advanced search
+use regex to parse then filter those and apply them to search
+*/
+function searchHandlerCreator(sourceArray, saveArray, tableID){
+
+	//use sourceArray to determine item or curse
+	var headerToIndex
+	var cutoffIndex
+	if(sourceArray[0].length > 10) {
+		headerToIndex = itemHeaderToIndex
+		cutoffIndex = 5
+	}
+	else {
+		headerToIndex = curseHeaderToIndex
+		cutoffIndex = 15
+	}
+
+	//because .split can't ignore spaces inside quotes
+	function smartSplit(input) {
+
+		var insideQuote = false;
+		var splitArray = input.split("");
+		var finalArray = [""]
+		var index = 0;
+
+		for (char of splitArray) {
+			if (char == '\"') {
+				insideQuote = !insideQuote;
+				continue;
+			}
+			if (char == " " && !insideQuote) {
+				finalArray.push("");
+				index++
+			}
+			else {
+				finalArray[index] += char;
+			}
+		}
+		return finalArray
+	}
+
+	var searchHandler = function() {
+		console.log("search")
+		var resultsArray = sourceArray;
+		var inputs = this.parentElement.querySelectorAll("input");
+
+		var advancedSearchValue = smartSplit(inputs[3].value);
+		const advancedSearchVerifyPattern = /^[a-z0-9 ]+(,[a-z0-9 ]+)*:[a-z0-9 ]+(,[a-z0-9 ]+)*$/i;
+
+		advancedSearchValue = advancedSearchValue.filter(function (value) {
+			return (value.match(advancedSearchVerifyPattern) && headerToIndex(value.split(":")[0]) != -1);
+		});
+
+		for(var i = 0; i < 3; i++){
+			if(inputs[i].value == "") continue;
+			resultsArray = resultsArray.filter(textValueFilter(inputs[i].value.toLowerCase().split(","), i))
+		}
+		/*
+		probably not going to be a lot of mixing going on, while it's possible O(n^2) is unlikely.
+		will in all likelyhood be closer to O(n) or best case O(1)
+		*/
+		for(searchValue of advancedSearchValue){
+			const arry = searchValue.split(":")
+			var headers = arry[0].split(",")
+			var terms = arry[1].split(",")
+
+			for(header of headers){
+				const index = headerToIndex(header)
+				if(index < cutoffIndex && index != ITEMS.STATS) resultsArray = resultsArray.filter(textValueFilter(terms, index))
+				else resultsArray = resultsArray.filter(valueFilter(terms, index))
+			}
+		}
+
+		redrawHistoryTable(tableID, resultsArray, saveArray)
+	}
+	return searchHandler
+}
+
+
+//set of functions for search handler that... well.. pretty obvvious.
+function itemHeaderToIndex(header){
+	var headerArray = ["name", "series", "short description", "category", "gender", "magic", "memetic", "might", "mind", "motion", "moxie", "mutation", "myth", "stats", "rank", "growth type", "growth rate", "restock", "return", "gift", "nsfw"]
+	return headerArray.indexOf(header.toLowerCase())
+}
+
+function curseHeaderToIndex(header){
+	var headerArray = ["curse", "short description", "resolution", "level", "target", "affects", "nsfw", "reward"]
+	return headerArray.indexOf(header.toLowerCase())
+}
+
 window.onload = function () {
 	document.getElementById("contentOptions").addEventListener("change", updateContentFilter)
 
 	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
 
-	this.itemsTab = document.getElementById("items");
-	this.cursesTab = document.getElementById("curses");
-	this.buildTab = document.getElementById("build");
+	itemsTab = document.getElementById("items");
+	cursesTab = document.getElementById("curses");
+	buildTab = document.getElementById("build");
+	searchTab = document.getElementById("search")
 
-	document.getElementById("itemsButton").addEventListener("click", function () {
-		tabChange(itemsTab);
-	});
-	document.getElementById("cursesButton").addEventListener("click", function () {
-		tabChange(cursesTab);
-	});
-	document.getElementById("buildButton").addEventListener("click", function () {
-		tabChange(buildTab);
-	});
+	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
+
+	document.getElementById("cursesButton").addEventListener("click", tabChangeHandlerCreator(cursesTab));
+
+	document.getElementById("buildButton").addEventListener("click", tabChangeHandlerCreator(buildTab));
+
+	document.getElementById("searchButton").addEventListener("click", tabChangeHandlerCreator(searchTab));
+
 	document.getElementById("rollButton").addEventListener("click", function () {
 		currentItemRoll = roll(document.getElementById("rollTable"), filteredItemsData, itemRollHistory);
 		redrawHistoryTable("itemRollHistoryTable", itemRollHistory, savedItemRolls)
@@ -397,6 +521,7 @@ window.onload = function () {
 
 	document.getElementById("cursesRollButton").addEventListener("click", function () {
 		currentCurseRoll = roll(document.getElementById("cursesRollTable"), cursesData, curseRollHistory);
+		redrawHistoryTable("curseRollHistoryTable", curseRollHistory, savedCurseRolls)
 	});
 
 	document.getElementById("cursesSaveButton").addEventListener("click", function () {
@@ -405,15 +530,7 @@ window.onload = function () {
 	});
 
 	document.getElementById("buildExportButton").addEventListener("click", exportSaved);
-
-	document.getElementById("itemsCategoryFilter").addEventListener("mouseover", function () {
-		document.getElementById("itemsCategoryFilter").open = true;
-	})
-
-	document.getElementById("itemsCategoryFilter").addEventListener("mouseout", function () {
-		document.getElementById("itemsCategoryFilter").open = false;
-	})
-
+	
 	var itemsCategoriesFilters = document.querySelectorAll("#itemsCategoryFilter input");
 	console.log(itemsCategoriesFilters);
 	itemsCategoriesFilters[0].addEventListener("change", function () { //all gets special behavior
@@ -428,9 +545,12 @@ window.onload = function () {
 			updateItemFilterData();
 		})
 	}
-
-	//itialize everything, and let user start rolling.
+	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
 	updateContentFilter();
+	document.getElementById("searchItemsButton").addEventListener("click", searchHandlerCreator(itemsData, savedItemRolls, "searchItemsTable"))
+	document.getElementById("searchCursesButton").addEventListener("click", searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable"))
+
+	//let user start rolling.
 	hideAllBut(itemsTab);
 };
 
