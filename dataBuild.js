@@ -32,6 +32,13 @@ function buildData() {
 
     console.log(`final data obtained.\nItems: ${itemsData.length}\nCurses: ${cursesData.length}`)
 
+    //item 13 stats.
+    //needs to be a number.
+    //skip header
+    for(var i = 1; i < itemsData.length;i++){
+        itemsData[i][13] = itemsData[i][13].replace(/,/g, "")
+    }
+
     var finalJson = JSON.stringify({
         items: itemsData,
         curses: cursesData

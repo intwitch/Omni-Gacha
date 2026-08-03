@@ -30,6 +30,7 @@
             <button id="itemsButton">items</button>
             <button id="cursesButton">curses</button>
             <button id="buildButton">build</button>
+            <button id="searchButton">Search</button>
         </div>
 
 
@@ -37,8 +38,6 @@
             <br>
             <div>
                 <div class="options">
-                    <button id="rollButton">Get Random Item</button>
-                    <button id="saveButton">Save Item</button>
                     <select id="ticketSelector">
                         <option value="0" selected disabled hidden>select ticket</option>
                         <option value="1">1 Star (F-D)</option>
@@ -51,69 +50,78 @@
                         <option value="8">EX Star (SS-EX)</option>
                         <option value="0">Just Browsing</option>
                     </select>
-                    <span>
-                        <details id="itemsCategoryFilter">
-                            <Summary>Category</Summary>
-                            <ul>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterAll" checked value="all">
-                                    <label for="itemsCategoryFilterAll">All</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterAbility" checked value="ability">
-                                    <label for="itemsCategoryFilterAbility">Ability</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterArsenal" checked value="arsenal">
-                                    <label for="itemsCategoryFilterArsenal">Arsenal</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterConsumable" checked
-                                        value="consumable">
-                                    <label for="itemsCategoryFilterConsumable">Consumable</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterFamiliar" checked value="familiar">
-                                    <label for="itemsCategoryFilterFamiliar">Familiar</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterFarmable" checked value="farmable">
-                                    <label for="itemsCategoryFilterFarmable">Farmable</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterNovelty" checked value="novelty">
-                                    <label for="itemsCategoryFilterNovelty">Novelty</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterPassive" checked value="passive">
-                                    <label for="itemsCategoryFilterPassive">Passive</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterRace" checked value="race">
-                                    <label for="itemsCategoryFilterRace">Race</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterSkill" checked value="skill">
-                                    <label for="itemsCategoryFilterSkill">Skill</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterVehicle" checked value="vehicle">
-                                    <label for="itemsCategoryFilterVehicle">Vehicle</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterWearable" checked value="wearable">
-                                    <label for="itemsCategoryFilterWearable">Wearable</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="itemsCategoryFilterWorld" checked value="world">
-                                    <label for="itemsCategoryFilterWorld">World</label>
-                                </li>
-                            </ul>
-                        </details>
+                    <span class="subElement">
+                        <span id="itemsCategoryFilter" class="typeFilter">
+                            <i>Categories</i>
+                            <span>
+                                <ul>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterAll" checked value="all">
+                                        <label for="itemsCategoryFilterAll">All</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterAbility" checked value="ability">
+                                        <label for="itemsCategoryFilterAbility">Ability</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterArsenal" checked value="arsenal">
+                                        <label for="itemsCategoryFilterArsenal">Arsenal</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterConsumable" checked
+                                            value="consumable">
+                                        <label for="itemsCategoryFilterConsumable">Consumable</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterFamiliar" checked
+                                            value="familiar">
+                                        <label for="itemsCategoryFilterFamiliar">Familiar</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterFarmable" checked
+                                            value="farmable">
+                                        <label for="itemsCategoryFilterFarmable">Farmable</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterNovelty" checked value="novelty">
+                                        <label for="itemsCategoryFilterNovelty">Novelty</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterPassive" checked value="passive">
+                                        <label for="itemsCategoryFilterPassive">Passive</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterRace" checked value="race">
+                                        <label for="itemsCategoryFilterRace">Race</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterSkill" checked value="skill">
+                                        <label for="itemsCategoryFilterSkill">Skill</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterVehicle" checked value="vehicle">
+                                        <label for="itemsCategoryFilterVehicle">Vehicle</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterWearable" checked
+                                            value="wearable">
+                                        <label for="itemsCategoryFilterWearable">Wearable</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="itemsCategoryFilterWorld" checked value="world">
+                                        <label for="itemsCategoryFilterWorld">World</label>
+                                    </li>
+                                </ul>
+                            </span>
+                        </span>
                     </span>
                 </div>
+                <button id="rollButton">Get Random Item</button>
+                <button id="saveButton">Save Item</button>
                 <table id="rollTable">
-                    <caption><h2>Rolls</h2></caption>
+                    <caption>
+                        <h2>Rolls</h2>
+                    </caption>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -149,7 +157,9 @@
 
             <div>
                 <table id="saveTable">
-                    <caption><h2>Saved Rolls</h2></caption>
+                    <caption>
+                        <h2>Saved Rolls</h2>
+                    </caption>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -183,7 +193,9 @@
 
             <div id="itemRollHistory">
                 <table id="itemRollHistoryTable">
-                    <caption><h2>Roll History</h2></caption>
+                    <caption>
+                        <h2>Roll History</h2>
+                    </caption>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -221,6 +233,9 @@
                 <button id="cursesRollButton">Get Curse</button>
                 <button id="cursesSaveButton">Save Curse</button>
                 <table id="cursesRollTable">
+                    <caption>
+                        <h2>Rolls</h2>
+                    </caption>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -240,6 +255,9 @@
             </div>
             <div>
                 <table id="cursesSaveTable">
+                    <caption>
+                        <h2>Saved Curses</h2>
+                    </caption>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -254,7 +272,26 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                    </tbody>
+                </table>
+                <table id="curseRollHistoryTable">
+                    <caption>
+                        <h2>Roll History</h2>
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Resolution</th>
+                            <th>Severity</th>
+                            <th>Target</th>
+                            <th>Affects</th>
+                            <th>NSFW</th>
+                            <th>Reward</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     </tbody>
                 </table>
             </div>
@@ -265,6 +302,7 @@
             <button id="buildExportButton">Export all</button>
             <div>
                 <table id="buildItemsTable">
+                    <caption><h2>Saved Items</h2></caption>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -297,6 +335,7 @@
             </div>
             <div>
                 <table id="buildCursesTable">
+                    <caption><h2>Saved Curses</h2></caption>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -316,6 +355,99 @@
             </div>
         </div>
 
+        <div id="search" class="tabcontent">
+            <div id="searchItems" class="searchSections">
+                <forum class="options" id="searchItemsOptions">
+                    <span class="labelGrid">
+                        <label for="searchItemsName">Name:</label>
+                        <input type="text" id="searchItemsName" placeholder="Search By Name">
+
+                        <label for="searchItemsSeries">Series:</label>
+                        <input type="text" id="searchItemsSeries" placeholder="Search By Series">
+
+                        <label for="searchItemsDescription">Description:</label>
+                        <input type="text" id="searchItemsDescription" placeholder="Search By Description">
+                    </span>
+
+                    <!--TODO, LINK BACK ON HOW TO IN ABOUT-->
+                    <label for="searchItemsAdvanced">Advanced Search: </label>
+                    <input type="text" id="searchItemsAdvanced" class="advancedSearch" placeholder='Magic:F Motion:C,D'>
+                    <button id="searchItemsButton">search</button>
+                </forum>
+                <table id="searchItemsTable">
+                    <caption>
+                        <h2>Items</h2>
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Series</th>
+                            <th>Short Description</th>
+                            <th>Category</th>
+                            <th>Gender</th>
+                            <th>Magic</th>
+                            <th>Memetic</th>
+                            <th>Might</th>
+                            <th>Mind</th>
+                            <th>Motion</th>
+                            <th>Moxie</th>
+                            <th>Mutation</th>
+                            <th>Myth</th>
+                            <th>Stats</th>
+                            <th>Rank</th>
+                            <th>Growth Type</th>
+                            <th>Growth Rate</th>
+                            <th>Restock</th>
+                            <th>Return</th>
+                            <th>Gift</th>
+                            <th>NSFW</th>
+                            <th>Save</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div id="searchCurses" class="searchSections">
+                <forum class="options" id="searchCursesOptions">
+                    <span class="labelGrid">
+                        <label for="searchCursesName">Name:</label>
+                        <input type="text" id="searchCursesName" placeholder="Search By Name">
+
+                        <label for="searchCursesDescription">Description:</label>
+                        <input type="text" id="searchCursesDescription" placeholder="Search By Description">
+
+                        <label for="searchCursesResolution">Resolution:</label>
+                        <input type="text" id="searchCursesResolution" placeholder="Search By Resolution">
+                    </span>
+
+                    <!--TODO, LINK BACK ON HOW TO IN ABOUT-->
+                    <label for="searchCursesAdvanced">Advanced Search: </label>
+                    <input type="text" id="searchCursesAdvanced" class="advancedSearch" placeholder='Target:You,Others Name:sin'>
+                    <button id="searchCursesButton">search</button>
+                </forum>
+                <table id="searchCursesTable">
+                    <caption>
+                        <h2>Curses</h2>
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Resolution</th>
+                            <th>Severity</th>
+                            <th>Target</th>
+                            <th>Affects</th>
+                            <th>NSFW</th>
+                            <th>Reward</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
     </main>
     <footer>
