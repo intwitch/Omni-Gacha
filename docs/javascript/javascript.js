@@ -226,7 +226,7 @@ function valueFilter(filterArray, index) {
 	var filterFunction = function (value) {
 		const valuePart = value[index].toLowerCase();
 		for(filter of filterArray){
-			if(valuePart.indexOf(filter.toLowerCase()) != -1) return true
+			if(valuePart === filter.toLowerCase()) return true
 		}
 		return false;
 	}
@@ -470,7 +470,7 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 
 			for(header of headers){
 				const index = headerToIndex(header)
-				if(index < cutoffIndex) resultsArray = resultsArray.filter(textValueFilter(terms, index))
+				if(index < cutoffIndex && index != ITEMS.STATS) resultsArray = resultsArray.filter(textValueFilter(terms, index))
 				else resultsArray = resultsArray.filter(valueFilter(terms, index))
 			}
 		}
