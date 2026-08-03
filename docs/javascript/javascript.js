@@ -419,13 +419,37 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 		cutoffIndex = 15
 	}
 
+	//because .split can't ignore spaces inside quotes
+	function smartSplit(input) {
+
+		var insideQuote = false;
+		var splitArray = input.split("");
+		var finalArray = [""]
+		var index = 0;
+
+		for (char of splitArray) {
+			if (char == '\"') {
+				insideQuote = !insideQuote;
+				continue;
+			}
+			if (char == " " && !insideQuote) {
+				finalArray.push("");
+				index++
+			}
+			else {
+				finalArray[index] += char;
+			}
+		}
+		return finalArray
+	}
+
 	var searchHandler = function() {
 		console.log("search")
 		var resultsArray = sourceArray;
 		var inputs = this.parentElement.querySelectorAll("input");
 
-		var advancedSearchValue = inputs[3].value.split(" ");
-		const advancedSearchVerifyPattern = /^[a-z]+(,[a-z]+)*:[a-z]+(,[a-z]+)*$/i;
+		var advancedSearchValue = smartSplit(inputs[3].value);
+		const advancedSearchVerifyPattern = /^[a-z ]+(,[a-z ]+)*:[a-z ]+(,[a-z ]+)*$/i;
 
 		advancedSearchValue = advancedSearchValue.filter(function (value) {
 			return (value.match(advancedSearchVerifyPattern) && headerToIndex(value.split(":")[0]) != -1);
@@ -453,7 +477,6 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 
 		redrawHistoryTable(tableID, resultsArray, saveArray)
 	}
-
 	return searchHandler
 }
 
