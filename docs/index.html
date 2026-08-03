@@ -356,7 +356,7 @@
         </div>
 
         <div id="search" class="tabcontent">
-            <div id="searchItems">
+            <div id="searchItems" class="searchSections">
                 <forum class="options" id="searchItemsOptions">
                     <span class="labelGrid">
                         <label for="searchItemsName">Name:</label>
@@ -371,8 +371,8 @@
 
                     <!--TODO, LINK BACK ON HOW TO IN ABOUT-->
                     <label for="searchItemsAdvanced">Advanced Search: </label>
-                    <input type="text" id="searchItemsAdvanced" class="advancedSearch" placeholder='"Magic:F Motion:A,D"'>
-
+                    <input type="text" id="searchItemsAdvanced" class="advancedSearch" placeholder='"Magic:F Motion:C,D"'>
+                    <button id="searchItemsButton">search</button>
                 </forum>
                 <table id="searchItemsTable">
                     <caption>
@@ -408,8 +408,44 @@
                     </tbody>
                 </table>
             </div>
-            <div id="searchCurses">
+            <div id="searchCurses" class="searchSections">
+                <forum class="options" id="searchCursesOptions">
+                    <span class="labelGrid">
+                        <label for="searchCursesName">Name:</label>
+                        <input type="text" id="searchCursesName" placeholder="Search By Name">
 
+                        <label for="searchCursesDescription">Description:</label>
+                        <input type="text" id="searchCursesDescription" placeholder="Search By Description">
+
+                        <label for="searchCursesResolution">Series:</label>
+                        <input type="text" id="searchCursesResolution" placeholder="Search By Resolution">
+                    </span>
+
+                    <!--TODO, LINK BACK ON HOW TO IN ABOUT-->
+                    <label for="searchCursesAdvanced">Advanced Search: </label>
+                    <input type="text" id="searchCursesAdvanced" class="advancedSearch" placeholder='"Magic:F Motion:C,D"'>
+                    <button id="searchCursesButton">search</button>
+                </forum>
+                <table id="searchCursesTable">
+                    <caption>
+                        <h2>Curses</h2>
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Resolution</th>
+                            <th>Severity</th>
+                            <th>Target</th>
+                            <th>Affects</th>
+                            <th>NSFW</th>
+                            <th>Reward</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
 

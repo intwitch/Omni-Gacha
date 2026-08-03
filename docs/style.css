@@ -201,3 +201,16 @@ input.advancedSearch{
     width: 25%;
     margin: 0 1em;
 }
+
+.searchSections{
+    overflow-y: auto;
+    max-height: 60vh;
+    border: 3px solid #94A3B8
+}
+
+.searchSections th {
+    z-index: 1;
+    position: sticky;
+    top: 0;
+    background-color: #1E293B;
+}
