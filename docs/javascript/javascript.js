@@ -443,10 +443,10 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 		return finalArray
 	}
 
-	var searchHandler = function() {
+	var searchHandler = function(trigger) {
 		console.log("search")
 		var resultsArray = sourceArray;
-		var inputs = this.parentElement.querySelectorAll("input");
+		var inputs = trigger.parentElement.querySelectorAll("input");
 
 		var advancedSearchValue = smartSplit(inputs[3].value);
 		const advancedSearchVerifyPattern = /^[a-z0-9 ]+(,[a-z0-9 ]+)*:[a-z0-9 ]+(,[a-z0-9 ]+)*$/i;
@@ -546,9 +546,14 @@ window.onload = function () {
 		})
 	}
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
+	// needs to be double called like this to avoid stale content in itemsData and cursesData
 	updateContentFilter();
-	document.getElementById("searchItemsButton").addEventListener("click", searchHandlerCreator(itemsData, savedItemRolls, "searchItemsTable"))
-	document.getElementById("searchCursesButton").addEventListener("click", searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable"))
+	document.getElementById("searchItemsButton").addEventListener("click", function(){
+		searchHandlerCreator(itemsData, savedItemRolls, "searchItemsTable")(this)
+	})
+	document.getElementById("searchCursesButton").addEventListener("click", function(){
+		searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable")(this)
+	})
 
 	//let user start rolling.
 	hideAllBut(itemsTab);
