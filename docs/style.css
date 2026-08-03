@@ -113,11 +113,36 @@ ul {
     list-style-type: none;
 }
 
-details {
-    width: 10em;
+.subElement {
     background-color: #1E293B;
+    width: 10em;
     z-index: 1;
-    position: absolute;
+}
+
+.typeFilter > span {
+    display: none;
+}
+
+.typeFilter {
+    background-color: #1E293B;
+    position: relative;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.typeFilter > i {
+    text-decoration: underline;
+    font-style: normal;
+    text-align: center;
+}
+
+.typeFilter:hover > span {
+    display: grid;
+}
+
+.innerElement {
+    grid-template-columns: auto auto;
+    align-content: flex-start;
 }
 
 .options {
@@ -126,6 +151,32 @@ details {
     justify-content: flex-start;
     flex-direction: row;
     align-items: start;
+    height: 2em;
+    padding-bottom: 10em;
+}
+
+.subOption {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: start;
+    height: 10em;
+}
+
+.options > span{
+    margin: 0 1em
+}
+
+.subOption > span {
+    margin-bottom: 1em;
+    margin-right: 1em;
+}
+
+.labelGrid {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 1em;
+    row-gap: 1em;
 }
 
 .alignEnd {
@@ -144,4 +195,9 @@ details {
 
 .saveTableNameData:active {
     text-shadow: 2px 2px 5px #FFFF00;
+}
+
+input.advancedSearch{
+    width: 25%;
+    margin: 0 1em;
 }

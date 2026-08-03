@@ -419,7 +419,7 @@ window.onload = function () {
 	});
 
 	document.getElementById("buildExportButton").addEventListener("click", exportSaved);
-
+	/*
 	document.getElementById("itemsCategoryFilter").addEventListener("mouseover", function () {
 		document.getElementById("itemsCategoryFilter").open = true;
 	})
@@ -427,7 +427,7 @@ window.onload = function () {
 	document.getElementById("itemsCategoryFilter").addEventListener("mouseout", function () {
 		document.getElementById("itemsCategoryFilter").open = false;
 	})
-
+	*/
 	var itemsCategoriesFilters = document.querySelectorAll("#itemsCategoryFilter input");
 	console.log(itemsCategoriesFilters);
 	itemsCategoriesFilters[0].addEventListener("change", function () { //all gets special behavior
