@@ -224,9 +224,10 @@ function updateItemFilterData() {
 // create a function to filter on based on an array of filters and an index to see if the index of the item/curse is in the filter.
 function valueFilter(filterArray, index) {
 	var filterFunction = function (value) {
-		if (filterArray.indexOf(value[index]) > -1) return true
+		if (filterArray.indexOf(value[index].toLowerCase()) > -1) return true
 		else return false
 	}
+	return filterFunction
 }
 
 // get ticket value, determine required filters, call rank filter, then return filtered results.
