@@ -449,7 +449,7 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 		var inputs = this.parentElement.querySelectorAll("input");
 
 		var advancedSearchValue = smartSplit(inputs[3].value);
-		const advancedSearchVerifyPattern = /^[a-z ]+(,[a-z ]+)*:[a-z ]+(,[a-z ]+)*$/i;
+		const advancedSearchVerifyPattern = /^[a-z0-9 ]+(,[a-z0-9 ]+)*:[a-z0-9 ]+(,[a-z0-9 ]+)*$/i;
 
 		advancedSearchValue = advancedSearchValue.filter(function (value) {
 			return (value.match(advancedSearchVerifyPattern) && headerToIndex(value.split(":")[0]) != -1);
