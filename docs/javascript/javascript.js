@@ -548,6 +548,7 @@ window.onload = function () {
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
 	updateContentFilter();
 	document.getElementById("searchItemsButton").addEventListener("click", searchHandlerCreator(itemsData, savedItemRolls, "searchItemsTable"))
+	document.getElementById("searchCursesButton").addEventListener("click", searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable"))
 
 	//let user start rolling.
 	hideAllBut(itemsTab);
