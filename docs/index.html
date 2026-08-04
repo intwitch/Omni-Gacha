@@ -4,29 +4,13 @@
 <head>
     <title>Omni Gacha</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="javascript/javascript.js"></script>
-    <link rel="icon" type="image/x-icon" href="assets/logo.webp">
+    <link rel="stylesheet" type="text/css" href="style.css?v=0.0">
+    <script src="javascript/javascript.js?v=0.0"></script>
+    <link rel="icon" type="image/x-icon" href="assets/logo.webp?v=0.0">
 </head>
 
 <body>
-    <main>
-        <div>
-            <h1>Omni Gacha</h1>
-            <h4>Dev Build</h4>
-            <span id="contentOptions" class="floatR">
-                <span>
-                    <label for="nsfwCheckbox">NSFW</label><br>
-                    <input type="checkbox" id="nsfwCheckbox" name="nsfwCheckbox">
-                </span>
-                <span>
-                    <label for="nsfwOnlyCheckbox">NSFW Only</label><br>
-                    <input type="checkbox" id="nsfwOnlyCheckbox" name="nsfwOnlyCheckbox">
-                </span>
-            </span>
-        </div>
-
-
+    <header>
         <div id="selector">
             <span id="logo" class="tabButton">
                 <img src="assets/logo.webp" alt="Omni Gacha Logo, a cirlce in space with gears inside with the text, Omni, overtop.">
@@ -38,7 +22,20 @@
             <button id="buildButton" class="tabButton">Build</button>
             <button id="searchButton" class="tabButton">Search</button>
         </div>
-
+        <span id="contentOptions" class="floatR">
+                <span>
+                    <label for="nsfwCheckbox">NSFW</label><br>
+                    <input type="checkbox" id="nsfwCheckbox" name="nsfwCheckbox">
+                </span>
+                <span>
+                    <label for="nsfwOnlyCheckbox">NSFW Only</label><br>
+                    <input type="checkbox" id="nsfwOnlyCheckbox" name="nsfwOnlyCheckbox">
+                </span>
+        </span>
+    </header>
+    
+    <main>
+            
 
         <div id="home" class="tabcontent">
             <p><h1>Welcome to the Omni Gacha!</h1>
