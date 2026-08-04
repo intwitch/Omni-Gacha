@@ -510,6 +510,8 @@ window.onload = function () {
 
 	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
 
+	document.getElementById("aboutButton").addEventListener("click", tabChangeHandlerCreator(aboutTab));
+
 	document.getElementById("cursesButton").addEventListener("click", tabChangeHandlerCreator(cursesTab));
 
 	document.getElementById("buildButton").addEventListener("click", tabChangeHandlerCreator(buildTab));
