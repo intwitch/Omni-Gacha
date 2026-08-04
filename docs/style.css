@@ -65,22 +65,16 @@ table th:nth-child(3) {
 
 }
 
-footer {
-    width: 100%;
-    background-color: #38BDF8;
-    min-height: 2em;
-}
-
 body {
     display: flex;
     flex-direction: column;
     background-color: #0F172A;
     justify-content: space-between;
+    /* main text color */
+    color: #F1F5F9;
 }
 
 main {
-    /* main text color */
-    color: #F1F5F9;
     min-height: 95vh;
     flex-grow: 1;
 
@@ -104,9 +98,14 @@ main {
     top: 0;
 }
 
-#selector > button {
+#selector > button, #backLink > button{
     width: 5%;
     background-color: var(--unselected-button-color);
+}
+
+#backLink button{
+    width: 5vw;
+    height: 80%;
 }
 
 ul {
@@ -233,4 +232,44 @@ button, #logo {
 
 #logo > img {
     margin-right: 1em;
+}
+
+#home{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#home > h1, #home > h2 {
+    width: 50%;
+    margin: 1em auto;
+    text-wrap: balance;
+}
+
+#homeExtraLinks {
+    margin-top: auto;
+}
+#homeExtraLinks button {
+    width: 10em;
+}
+
+nav{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+}
+
+nav{
+    color: #F1F5F9;
+}
+
+nav a:link{
+    color: #38BDF8;
+}
+
+nav a:visited{
+    color: #94A3B8;
 }
