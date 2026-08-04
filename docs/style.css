@@ -96,7 +96,7 @@ main {
 #selector {
     display: flex;
     background-color: #1E293B;
-    justify-content: space-evenly;
+    justify-content: right;
     align-items: stretch;
     height: 3em;
 
@@ -105,7 +105,7 @@ main {
 }
 
 #selector > button {
-    width: 10%;
+    width: 5%;
     background-color: var(--unselected-button-color);
 }
 
@@ -213,4 +213,20 @@ input.advancedSearch{
     position: sticky;
     top: 0;
     background-color: #1E293B;
+}
+
+#logo img {
+    object-fit: contain;
+}
+
+#logo {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: left;
+    margin-right: auto;
+    align-items: center;
+}
+
+button, #logo {
+    cursor: pointer;
 }
