@@ -230,3 +230,7 @@ input.advancedSearch{
 button, #logo {
     cursor: pointer;
 }
+
+#logo > img {
+    margin-right: 1em;
+}

@@ -497,10 +497,15 @@ window.onload = function () {
 
 	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
 
+	homeTab = document.getElementById("home");
 	itemsTab = document.getElementById("items");
 	cursesTab = document.getElementById("curses");
 	buildTab = document.getElementById("build");
-	searchTab = document.getElementById("search")
+	searchTab = document.getElementById("search");
+
+	homeButton = document.getElementById("homeButton");
+	homeButton.addEventListener("click", tabChangeHandlerCreator(homeTab));
+	document.getElementById("logo").addEventListener("click", function(){ homeButton.click() }) //mirror above event
 
 	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
 
@@ -545,8 +550,12 @@ window.onload = function () {
 			updateItemFilterData();
 		})
 	}
+
+
+
+
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
-	// needs to be double called like this to avoid stale content in itemsData and cursesData
+	// needs to be in a function like this to avoid stale content in itemsData and cursesData
 	updateContentFilter();
 	document.getElementById("searchItemsButton").addEventListener("click", function(){
 		searchHandlerCreator(itemsData, savedItemRolls, "searchItemsTable")(this)
@@ -556,7 +565,7 @@ window.onload = function () {
 	})
 
 	//let user start rolling.
-	hideAllBut(itemsTab);
+	homeButton.click()
 };
 
 window.addEventListener("click", function (event) {
