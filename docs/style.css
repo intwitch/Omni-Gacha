@@ -276,4 +276,7 @@ nav a:visited{
 
 header{
     height: 15vh;
+    position: sticky;
+    top: 0;
+    background-color: #1E293B;;
 }

@@ -498,6 +498,7 @@ window.onload = function () {
 	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
 
 	homeTab = document.getElementById("home");
+	aboutTab = document.getElementById("about");
 	itemsTab = document.getElementById("items");
 	cursesTab = document.getElementById("curses");
 	buildTab = document.getElementById("build");
