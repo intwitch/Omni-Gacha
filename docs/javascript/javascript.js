@@ -452,7 +452,7 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 		const advancedSearchVerifyPattern = /^[a-z0-9 ]+(,[a-z0-9 ]+)*:[a-z0-9 ]+(,[a-z0-9 ]+)*$/i;
 
 		advancedSearchValue = advancedSearchValue.filter(function (value) {
-			return (value.match(advancedSearchVerifyPattern) && headerToIndex(value.split(":")[0]) != -1);
+			return (value.match(advancedSearchVerifyPattern));
 		});
 
 		for(var i = 0; i < 3; i++){
@@ -468,11 +468,15 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 			var headers = arry[0].split(",")
 			var terms = arry[1].split(",")
 
+			var arrays = []
+
 			for(header of headers){
 				const index = headerToIndex(header)
-				if(index < cutoffIndex && index != ITEMS.STATS) resultsArray = resultsArray.filter(textValueFilter(terms, index))
-				else resultsArray = resultsArray.filter(valueFilter(terms, index))
+				if(index < cutoffIndex && index != ITEMS.STATS) arrays.push(resultsArray.filter(textValueFilter(terms, index)))
+				else arrays.push(resultsArray.filter(valueFilter(terms, index)))
 			}
+
+			resultsArray = arrayMerge(arrays);
 		}
 
 		redrawHistoryTable(tableID, resultsArray, saveArray)
@@ -480,15 +484,37 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 	return searchHandler
 }
 
+//merges an array of arrays (if an item is in either array, it's in the new one), discards duplicates, and returns the new merged array
+//will throw an error if you pass in a blank array.
+function arrayMerge(sourceArrays){
+	//recursive base statement
+	if(sourceArrays.length == 1) return sourceArrays[0]
+
+	//get first two arrays
+	var subArray1 = sourceArrays[0]
+	var subArray2 = sourceArrays[1]
+
+	//trim shared elements out of subArray2
+	subArray2 = subArray2.filter(function(element){
+		return !(( subArray1.indexOf(element) != -1 ) && subArray2.indexOf(element) != -1)
+	})
+
+	//merge elements and place back in source.
+	subArray1 = subArray1.concat(subArray2);
+	sourceArrays.splice(0, 2, subArray1)
+	//enter recursion
+	return arrayMerge(sourceArrays)
+}
+
 
 //set of functions for search handler that... well.. pretty obvvious.
 function itemHeaderToIndex(header){
-	var headerArray = ["name", "series", "short description", "category", "gender", "magic", "memetic", "might", "mind", "motion", "moxie", "mutation", "myth", "stats", "rank", "growth type", "growth rate", "restock", "return", "gift", "nsfw"]
+	var headerArray = ["name", "series","description", "category", "gender", "magic", "memetic", "might", "mind", "motion", "moxie", "mutation", "myth", "stats", "rank", "growth type", "growth rate", "restock", "return", "gift", "nsfw"]
 	return headerArray.indexOf(header.toLowerCase())
 }
 
 function curseHeaderToIndex(header){
-	var headerArray = ["curse", "short description", "resolution", "level", "target", "affects", "nsfw", "reward"]
+	var headerArray = ["curse", "description", "resolution", "level", "target", "affects", "nsfw", "reward"]
 	return headerArray.indexOf(header.toLowerCase())
 }
 
