@@ -279,6 +279,7 @@ header{
     position: sticky;
     top: 0;
     background-color: #1E293B;
+    z-index: 2;
 }
 
 .twoWideGrid, .threeWideGrid {
