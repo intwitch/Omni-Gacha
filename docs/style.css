@@ -354,3 +354,10 @@ header{
     grid-row: 1 / span 2;
     grid-column: 3 / span 3;
 }
+
+.ascendingButton, .descendingButton{
+    margin: 0 auto;
+    background: none;
+    border: 1px solid var(--unselected-button-color);
+    color: white;
+}
