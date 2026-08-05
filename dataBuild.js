@@ -37,6 +37,7 @@ function buildData() {
     //skip header
     for(var i = 1; i < itemsData.length;i++){
         itemsData[i][13] = itemsData[i][13].replace(/,/g, "")
+        itemsData[i][13] = parseInt(itemsData[i][13])
     }
 
     var finalJson = JSON.stringify({
