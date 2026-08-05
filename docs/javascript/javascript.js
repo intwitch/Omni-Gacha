@@ -409,14 +409,14 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 
 	//use sourceArray to determine item or curse
 	var headerToIndex
-	var cutoffIndex
+	var isCurse
 	if(sourceArray[0].length > 10) {
 		headerToIndex = itemHeaderToIndex
-		cutoffIndex = 5
+		isCurse = false
 	}
 	else {
 		headerToIndex = curseHeaderToIndex
-		cutoffIndex = 15
+		isCurse = true
 	}
 
 	//because .split can't ignore spaces inside quotes
@@ -472,8 +472,54 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 
 			for(header of headers){
 				const index = headerToIndex(header)
-				if(index < cutoffIndex && index != ITEMS.STATS) arrays.push(resultsArray.filter(textValueFilter(terms, index)))
-				else arrays.push(resultsArray.filter(valueFilter(terms, index)))
+
+				if(isCurse){
+					arrays.push(resultsArray.filter(textValueFilter(terms, index)))
+					continue;
+				}
+				else switch(index){
+					case ITEMS.NAME:
+					case ITEMS.SERIES:
+					case ITEMS.DESCRIPTION:
+					case ITEMS.CATEGORY:
+					case ITEMS.GENDER:
+
+					case ITEMS.GROWTH_RATE:
+					case ITEMS.GROWTH_TYPE:
+					case ITEMS.RESTOCK:
+					case ITEMS.RETURN:
+					case ITEMS.GIFT:
+					case ITEMS.NSFW:
+						arrays.push(resultsArray.filter(textValueFilter(terms, index)))
+						break;
+					case ITEMS.MAGIC:
+					case ITEMS.MEMETIC:
+					case ITEMS.MIGHT:
+					case ITEMS.MIND:
+					case ITEMS.MOTION:
+					case ITEMS.MOXIE:
+					case ITEMS.MUTATION:
+					case ITEMS.MYTH:
+					case ITEMS.STATS:
+					case ITEMS.RANK:
+						arrays.push(resultsArray.filter(ValueFilter(terms, index)))
+						break;
+					default:
+						consolelog("Search Header Index not found, something seems to have gone wrong.")
+				}
+				/*
+				switch inside an else, kinda cursed I know. but javascript doesn't really benifit massively optimization wize from switch statements, or so I heard
+				could have done:
+				switch(true){
+					case: (index < ITEMS.GENDER)
+					case: (isCurse)
+						textValueFilter...
+						break;
+					(etc...)
+				}
+				but I figured the abovce was more readable and easier to change. And if it is worse, I've made worse decisions in this code.
+				TODO: give STATS it's own filter that takes a range of nubmers.
+				*/
 			}
 
 			resultsArray = arrayMerge(arrays);
