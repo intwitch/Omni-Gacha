@@ -5,3 +5,9 @@ home section & about section
 refactor sections into individual imported html files.
 
 move onto step 2; layout.
+
+
+
+
+LATER:
+quickstart, pick a start, pick a number of curses, have the site roll everything for you.
