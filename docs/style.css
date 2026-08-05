@@ -278,5 +278,69 @@ header{
     height: 15vh;
     position: sticky;
     top: 0;
-    background-color: #1E293B;;
+    background-color: #1E293B;
+}
+
+.twoWideGrid, .threeWideGrid {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    grid-auto-rows: minmax(3em, auto);
+    gap: 5px;
+    align-items: stretch;
+}
+
+.twoWideGrid > span, .threeWideGrid > span {
+    align-items: center;
+    justify-content: center;
+    display: flex
+}
+
+.twoWideGrid{
+    grid-template-columns: minmax(5em, 1fr) 5fr;
+    background-color: #1E293B;
+}
+
+.threeWideGrid{
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.threeWideGrid > .threeWideGrid{
+    background-color: #1E293B;
+}
+
+.twoWideGrid > .gridRowHeader{
+    grid-column: 1 / span 2;
+}
+
+.threeWideGrid > .gridRowHeader{
+    grid-column: 1 / span 3;
+}
+
+.gridRowHeader{
+    text-align: center;
+    text-wrap: balance;
+}
+
+.highlightColor{
+    background-color: #5707A1;
+}
+
+.textBoxColor{
+    background-color: #555555;
+}
+
+.gridTextItem{
+    background-color: #52527A;
+    text-wrap: balance;
+    text-align: center;
+    padding: auto;
+}
+
+.gridTextItem:nth-child(4n){
+    background-color: #5C5C70;
+}
+
+.gridRowBackgroundDefault{
+    background-color: #800000;
 }
