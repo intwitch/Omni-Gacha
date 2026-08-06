@@ -72,6 +72,10 @@ load, parse and set raw data variables.
 I have come to despsise async and await and then and promises and general
 I do not want to deal with ANY of that.
 so we use a xml request for my own sanity.
+
+as of commit f0cfdc87fea60e87e354a4f11efe806425798e1f i've learned how .then works.
+it's uhh... past me is dumb bc it's easy.
+but this still works so... doesn't really *need* to be rewritten.
 */
 function loadParseJSON() {
 	const xhr = new XMLHttpRequest();
@@ -711,9 +715,11 @@ function createAllSortButtons(){
 function cookieSetFunction() {
 	cookieStore.set(cookieName, savedToJsonString()).then(function () {
 		//TODO, PROPER COOKIE PROMISE HANDLING
+		//TODO, MAKE COOKIES PERSIST AFTER SESSION
 	})
 }
-// gets cookie values and implements them, then redraws all save tables. call on window load. and on build change.
+// initiate cookie data, if it exits
+// handle creating sort buttons here bc I fear a race condition.
 function cookieInit() {
 	cookieStore.get(cookieName).then(function(result) {
 		if (result) {
