@@ -207,7 +207,7 @@ input.advancedSearch{
     border: 3px solid #94A3B8
 }
 
-.searchSections th {
+.searchSections thead {
     z-index: 1;
     position: sticky;
     top: 0;
