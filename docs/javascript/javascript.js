@@ -61,6 +61,9 @@ var cursesTab;
 var buildTab;
 var searchTab;
 
+//todo, add options tab that lets you change build and thus cookie.
+var cookieName = "default"
+
 //incredibly important, nothing can be done without.
 loadParseJSON()
 
@@ -79,6 +82,14 @@ function loadParseJSON() {
 
 	rawItemsData = values.items
 	rawCursesData = values.curses
+}
+
+function savedToJsonString(){
+	const json = {
+		"items": savedItemRolls,
+		"curses": savedCurseRolls
+	}
+	return JSON.stringify(json)
 }
 
 function itemToString(item) {
@@ -150,7 +161,13 @@ function roll(table, data, historyArray) {
 }
 
 //redraw a save table
-function redrawSaveTable(table, data) {
+function redrawSaveTable(table, data, save = true) {
+
+	//if save tables are being redrawn, they're changing.
+	//if they're changing, gotta update cookies.
+	// save paramater exists so redrawAllSaveTables can override.
+	if(save) cookieSetFunction()
+
 	var rows = [];
 
 	function buttonFunctionCreator(index) {
@@ -360,10 +377,11 @@ function tabChangeHandlerCreator(targetTab) {
 
 //redraw important cross tab tables from source to reflect modifications made on other tabs
 function redrawAllSaveTables() {
-	redrawSaveTable(document.getElementById("saveTable"), savedItemRolls);
-	redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls);
-	redrawSaveTable(document.getElementById("buildItemsTable"), savedItemRolls);
-	redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls);
+	//we don't want to update cookies here
+	redrawSaveTable(document.getElementById("saveTable"), savedItemRolls, false);
+	redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls, false);
+	redrawSaveTable(document.getElementById("buildItemsTable"), savedItemRolls, false);
+	redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls, false);
 }
 
 // set all tabs display to none then the one targetTab to block
@@ -689,7 +707,34 @@ function createAllSortButtons(){
 	}
 }
 
+//save saved rolls into a cookie :)
+function cookieSetFunction() {
+	cookieStore.set(cookieName, savedToJsonString()).then(function () {
+		//TODO, PROPER COOKIE PROMISE HANDLING
+	})
+}
+// gets cookie values and implements them, then redraws all save tables. call on window load. and on build change.
+function cookieInit() {
+	cookieStore.get(cookieName).then(function(result) {
+		if (result) {
+			console.log("cookies got!")
+			const json = JSON.parse(result.value)
+			savedItemRolls = json.items
+			savedCurseRolls = json.curses
+			redrawAllSaveTables()
+			createAllSortButtons();
+		}
+		else {
+			console.log("cookies not got!")
+			createAllSortButtons();
+		}
+	})
+}
+
 window.onload = function () {
+
+	cookieInit()
+
 	document.getElementById("contentOptions").addEventListener("change", updateContentFilter)
 
 	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
@@ -751,7 +796,7 @@ window.onload = function () {
 		})
 	}
 
-	createAllSortButtons();
+	
 
 
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
