@@ -736,6 +736,32 @@ function cookieInit() {
 		}
 	})
 }
+//takes a string of the rank and returns the proper css variable value
+function rankToColor(rank){
+	const style = window.getComputedStyle(document.body)
+	switch(rank.toLowerCase()){
+		case "f":
+			return style.getPropertyValue("--Frank")
+		case "e":
+			return style.getPropertyValue("--Erank")
+		case "d":
+			return style.getPropertyValue("--Drank")
+		case "c":
+			return style.getPropertyValue("--Crank")
+		case "b":
+			return style.getPropertyValue("--Brank")
+		case "a":
+			return style.getPropertyValue("--Arank")
+		case "s":
+			return style.getPropertyValue("--Srank")
+		case "ss":
+			return style.getPropertyValue("--SSrank")
+		case "sss":
+			return style.getPropertyValue("--SSSrank")
+		case "ex":
+			return style.getPropertyValue("--EXrank")
+	}
+}
 
 /*
 I'm fucking sorry for whatever this is.
@@ -761,6 +787,7 @@ function canvasInit(canvasID, eventName) {
 		const dialRadius = scale
 		var angle = 0;
 		const angleVelocity = Math.PI / 16.0
+		var ballColor;
 
 		ctx.lineWidth = 1
 		drawTurnDial()
