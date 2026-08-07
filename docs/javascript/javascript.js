@@ -737,7 +737,12 @@ function cookieInit() {
 	})
 }
 
-function canvasInit(canvasID) {
+/*
+I'm fucking sorry for whatever this is.
+init the canvas, load the image, create the animation functions, and finally create the event handler.
+TODO; make this call roll at end of animation, and click to skip and get roll early.
+*/
+function canvasInit(canvasID, tableID) {
 	const canvas = document.getElementById(canvasID)
 	const gumballImage = new Image()
 	gumballImage.addEventListener("load", function () {
@@ -759,7 +764,7 @@ function canvasInit(canvasID) {
 		drawTurnDial()
 		ctx.save()
 		
-
+		// draw the dial, rotated by angle default 0
 		function drawTurnDial(angle = 0){
 			ctx.beginPath()
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -777,7 +782,7 @@ function canvasInit(canvasID) {
 			ctx.stroke()
 			ctx.resetTransform()
 		}
-
+		// animation to rotate dial
 		var currentFrame;
 		function rotateTurnDial(){
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
