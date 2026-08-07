@@ -361,3 +361,11 @@ header{
     border: 1px solid var(--unselected-button-color);
     color: white;
 }
+
+canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin: auto;
+    display: block;
+    cursor: pointer;
+}

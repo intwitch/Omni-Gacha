@@ -88,7 +88,7 @@ function loadParseJSON() {
 	rawCursesData = values.curses
 }
 
-function savedToJsonString(){
+function savedToJsonString() {
 	const json = {
 		"items": savedItemRolls,
 		"curses": savedCurseRolls
@@ -170,7 +170,7 @@ function redrawSaveTable(table, data, save = true) {
 	//if save tables are being redrawn, they're changing.
 	//if they're changing, gotta update cookies.
 	// save paramater exists so redrawAllSaveTables can override.
-	if(save) cookieSetFunction()
+	if (save) cookieSetFunction()
 
 	var rows = [];
 
@@ -248,8 +248,8 @@ function updateItemFilterData() {
 function valueFilter(filterArray, index) {
 	var filterFunction = function (value) {
 		const valuePart = value[index].toLowerCase();
-		for(filter of filterArray){
-			if(valuePart === filter.toLowerCase()) return true
+		for (filter of filterArray) {
+			if (valuePart === filter.toLowerCase()) return true
 		}
 		return false;
 	}
@@ -259,8 +259,8 @@ function valueFilter(filterArray, index) {
 function textValueFilter(filterArray, index) {
 	var filterFunction = function (value) {
 		const valuePart = value[index].toLowerCase();
-		for(filter of filterArray){
-			if(valuePart.includes(filter.toLowerCase())) return true
+		for (filter of filterArray) {
+			if (valuePart.includes(filter.toLowerCase())) return true
 		}
 		return false;
 	}
@@ -366,9 +366,9 @@ function tabChangeHandlerCreator(targetTab) {
 	var root = getComputedStyle(document.querySelector(":root"))
 
 	// handle changing the tab, 'this' becomes called button.
-	var tabChangeHandler = function(){
+	var tabChangeHandler = function () {
 		document.querySelectorAll("#selector button")
-		for(button of document.querySelectorAll("#selector button")){
+		for (button of document.querySelectorAll("#selector button")) {
 			button.style.backgroundColor = root.getPropertyValue("--unselected-button-color")
 		}
 		this.style.backgroundColor = root.getPropertyValue("--selected-button-color")
@@ -390,7 +390,7 @@ function redrawAllSaveTables() {
 
 // set all tabs display to none then the one targetTab to block
 function hideAllBut(targetTab) {
-	for (tab of document.querySelectorAll(".tabcontent")){
+	for (tab of document.querySelectorAll(".tabcontent")) {
 		tab.style.display = "none"
 	}
 	targetTab.style.display = "block";
@@ -429,12 +429,12 @@ get the specific values from name, series, description, then filter and apply th
 get values from advanced search
 use regex to parse then filter those and apply them to search
 */
-function searchHandlerCreator(sourceArray, saveArray, tableID){
+function searchHandlerCreator(sourceArray, saveArray, tableID) {
 
 	//use sourceArray to determine item or curse
 	var headerToIndex
 	var isCurse
-	if(sourceArray[0].length > 10) {
+	if (sourceArray[0].length > 10) {
 		headerToIndex = itemHeaderToIndex
 		isCurse = false
 	}
@@ -467,7 +467,7 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 		return finalArray
 	}
 
-	var searchHandler = function(trigger) {
+	var searchHandler = function (trigger) {
 		console.log("search")
 		var resultsArray = sourceArray;
 		var inputs = trigger.parentElement.querySelectorAll("input");
@@ -479,29 +479,29 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 			return (value.match(advancedSearchVerifyPattern));
 		});
 
-		for(var i = 0; i < 3; i++){
-			if(inputs[i].value == "") continue;
+		for (var i = 0; i < 3; i++) {
+			if (inputs[i].value == "") continue;
 			resultsArray = resultsArray.filter(textValueFilter(inputs[i].value.toLowerCase().split(","), i))
 		}
 		/*
 		probably not going to be a lot of mixing going on, while it's possible O(n^2) is unlikely.
 		will in all likelyhood be closer to O(n) or best case O(1)
 		*/
-		for(searchValue of advancedSearchValue){
+		for (searchValue of advancedSearchValue) {
 			const arry = searchValue.split(":")
 			var headers = arry[0].split(",")
 			var terms = arry[1].split(",")
 
 			var arrays = []
 
-			for(header of headers){
+			for (header of headers) {
 				const index = headerToIndex(header)
 
-				if(isCurse){
+				if (isCurse) {
 					arrays.push(resultsArray.filter(textValueFilter(terms, index)))
 					continue;
 				}
-				else switch(index){
+				else switch (index) {
 					case ITEMS.NAME:
 					case ITEMS.SERIES:
 					case ITEMS.DESCRIPTION:
@@ -548,7 +548,7 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 
 			resultsArray = arrayMerge(arrays);
 		}
-		if(isCurse) curseSearchResults = resultsArray
+		if (isCurse) curseSearchResults = resultsArray
 		else itemSearchResults = resultsArray
 		redrawHistoryTable(tableID, resultsArray, saveArray)
 	}
@@ -557,17 +557,17 @@ function searchHandlerCreator(sourceArray, saveArray, tableID){
 
 //merges an array of arrays (if an item is in either array, it's in the new one), discards duplicates, and returns the new merged array
 //will throw an error if you pass in a blank array.
-function arrayMerge(sourceArrays){
+function arrayMerge(sourceArrays) {
 	//recursive base statement
-	if(sourceArrays.length == 1) return sourceArrays[0]
+	if (sourceArrays.length == 1) return sourceArrays[0]
 
 	//get first two arrays
 	var subArray1 = sourceArrays[0]
 	var subArray2 = sourceArrays[1]
 
 	//trim shared elements out of subArray2
-	subArray2 = subArray2.filter(function(element){
-		return !(( subArray1.indexOf(element) != -1 ) && subArray2.indexOf(element) != -1)
+	subArray2 = subArray2.filter(function (element) {
+		return !((subArray1.indexOf(element) != -1) && subArray2.indexOf(element) != -1)
 	})
 
 	//merge elements and place back in source.
@@ -579,54 +579,54 @@ function arrayMerge(sourceArrays){
 
 
 //set of functions for search handler that... well.. pretty obvvious.
-function itemHeaderToIndex(header){
-	var headerArray = ["name", "series","description", "category", "gender", "magic", "memetic", "might", "mind", "motion", "moxie", "mutation", "myth", "stats", "rank", "growth type", "growth rate", "restock", "return", "gift", "nsfw"]
+function itemHeaderToIndex(header) {
+	var headerArray = ["name", "series", "description", "category", "gender", "magic", "memetic", "might", "mind", "motion", "moxie", "mutation", "myth", "stats", "rank", "growth type", "growth rate", "restock", "return", "gift", "nsfw"]
 	return headerArray.indexOf(header.toLowerCase())
 }
 
-function curseHeaderToIndex(header){
+function curseHeaderToIndex(header) {
 	var headerArray = ["curse", "description", "resolution", "level", "target", "affects", "nsfw", "reward"]
 	return headerArray.indexOf(header.toLowerCase())
 }
 //function that gets the index to sort on, and if isAscending == true, sort ascend. else sort by descending.
-function compareFunctionCreator(index, isAscending){
+function compareFunctionCreator(index, isAscending) {
 	var lessValue;
 	var greaterValue;
-	if(isAscending){
+	if (isAscending) {
 		lessValue = -1
 		greaterValue = 1
 	}
-	else{
+	else {
 		lessValue = 1
 		greaterValue = -1
 	}
-	function compare(a,b){
-		switch(true){
-			case(a < b):
-			return lessValue;
-			case(a > b):
-			return greaterValue;
+	function compare(a, b) {
+		switch (true) {
+			case (a < b):
+				return lessValue;
+			case (a > b):
+				return greaterValue;
 			default:
 				return 0;
 		}
 	}
 
-	function standardCompare(a, b){
+	function standardCompare(a, b) {
 		return compare(a[index], b[index])
 	}
 
-	function rankCompare(a,b){
+	function rankCompare(a, b) {
 		return compare(rankToNumber(a[index]), rankToNumber(b[index]))
 	}
 
 	var compareFunction
-	if((ITEMS.MAGIC <= index && index <= ITEMS.MYTH )|| index == ITEMS.RANK) compareFunction = rankCompare
+	if ((ITEMS.MAGIC <= index && index <= ITEMS.MYTH) || index == ITEMS.RANK) compareFunction = rankCompare
 	else compareFunction = standardCompare
 	return compareFunction
 }
 //converts a rank to a number for sorting/ordering purposes, and returns the number. if rank doesn't match anything return rank.
-function rankToNumber(rank){
-	switch(rank.toLowerCase()){
+function rankToNumber(rank) {
+	switch (rank.toLowerCase()) {
 		case "f":
 			return 0;
 		case "e":
@@ -653,58 +653,58 @@ function rankToNumber(rank){
 }
 
 //do this in it's own function and call on window load to make it more readable
-function createAllSortButtons(){
+function createAllSortButtons() {
 	// items tab
-	for(button of document.querySelectorAll("#saveTable th button")){
-		button.addEventListener("click", function(){
+	for (button of document.querySelectorAll("#saveTable th button")) {
+		button.addEventListener("click", function () {
 			savedItemRolls.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
 			redrawSaveTable(document.getElementById("saveTable"), savedItemRolls);
 		})
 	}
-	for(button of document.querySelectorAll("#itemRollHistory th button")){
-		button.addEventListener("click", function(){
+	for (button of document.querySelectorAll("#itemRollHistory th button")) {
+		button.addEventListener("click", function () {
 			itemRollHistory.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
 			redrawHistoryTable("itemRollHistory", itemRollHistory, savedItemRolls);
 		})
 	}
 
 	//curse tab
-	for(button of document.querySelectorAll("#cursesSaveTable th button")){
-		button.addEventListener("click", function(){
+	for (button of document.querySelectorAll("#cursesSaveTable th button")) {
+		button.addEventListener("click", function () {
 			savedCurseRolls.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
 			redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls);
 		})
 	}
-	for(button of document.querySelectorAll("#curseRollHistoryTable th button")){
-		button.addEventListener("click", function(){
+	for (button of document.querySelectorAll("#curseRollHistoryTable th button")) {
+		button.addEventListener("click", function () {
 			curseRollHistory.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
 			redrawHistoryTable("curseRollHistoryTable", curseRollHistory, savedCurseRolls);
 		})
 	}
 
 	//build tab
-	for(button of document.querySelectorAll("#buildItemsTable th button")){
-		button.addEventListener("click", function(){
+	for (button of document.querySelectorAll("#buildItemsTable th button")) {
+		button.addEventListener("click", function () {
 			savedItemRolls.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
 			redrawSaveTable(document.getElementById("buildItemsTable"), savedItemRolls);
 		})
 	}
-	for(button of document.querySelectorAll("#buildCursesTable th button")){
-		button.addEventListener("click", function(){
+	for (button of document.querySelectorAll("#buildCursesTable th button")) {
+		button.addEventListener("click", function () {
 			savedCurseRolls.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
 			redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls);
 		})
 	}
 
 	//search tab
-	for(button of document.querySelectorAll("#searchItemsTable th button")){
-		button.addEventListener("click", function(){
+	for (button of document.querySelectorAll("#searchItemsTable th button")) {
+		button.addEventListener("click", function () {
 			itemSearchResults.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
 			redrawHistoryTable("searchItemsTable", itemSearchResults, savedItemRolls);
 		})
 	}
-	for(button of document.querySelectorAll("#searchCursesTable th button")){
-		button.addEventListener("click", function(){
+	for (button of document.querySelectorAll("#searchCursesTable th button")) {
+		button.addEventListener("click", function () {
 			curseSearchResults.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
 			redrawHistoryTable("searchCursesTable", curseSearchResults, savedCurseRolls);
 		})
@@ -721,7 +721,7 @@ function cookieSetFunction() {
 // initiate cookie data, if it exits
 // handle creating sort buttons here bc I fear a race condition.
 function cookieInit() {
-	cookieStore.get(cookieName).then(function(result) {
+	cookieStore.get(cookieName).then(function (result) {
 		if (result) {
 			console.log("cookies got!")
 			const json = JSON.parse(result.value)
@@ -737,9 +737,103 @@ function cookieInit() {
 	})
 }
 
+function canvasInit(canvasID) {
+	const canvas = document.getElementById(canvasID)
+	const gumballImage = new Image()
+	gumballImage.addEventListener("load", function () {
+		const scale = 2
+		canvas.width = this.naturalWidth * scale
+		canvas.height = this.naturalHeight * scale
+		const ctx = canvas.getContext("2d")
+		ctx.drawImage(this, 0, 0, canvas.width, canvas.height)
+		const cutoff = 255 * scale
+		const radius = 20 * scale
+		var y = cutoff - radius;
+		const velocity = 2 * scale
+		const dialCenter = 215 * scale
+		const dialRadius = scale
+		var angle = 0;
+		const angleVelocity = Math.PI / 16.0
+
+		ctx.lineWidth = 1
+		drawTurnDial()
+		ctx.save()
+		
+
+		function drawTurnDial(angle = 0){
+			ctx.beginPath()
+			ctx.clearRect(0, 0, canvas.width, canvas.height)
+			ctx.drawImage(gumballImage, 0, 0, canvas.width, canvas.height)
+			ctx.fillStyle = "grey"
+			ctx.arc(canvas.width / 2, dialCenter, radius, 0, 2*Math.PI)
+			ctx.fill()
+			ctx.beginPath()
+			ctx.translate(canvas.width/2, dialCenter)
+			ctx.rotate(angle)
+			ctx.fillStyle = "#404040"
+			ctx.moveTo(0 - dialRadius * 10, 0)
+			ctx.lineTo(dialRadius * 10, 0)
+			ctx.lineWidth = 3 * scale;
+			ctx.stroke()
+			ctx.resetTransform()
+		}
+
+		var currentFrame;
+		function rotateTurnDial(){
+			ctx.clearRect(0, 0, canvas.width, canvas.height)
+			ctx.drawImage(gumballImage, 0, 0, canvas.width, canvas.height)
+			drawTurnDial(angle)
+			if(angle > Math.PI){
+				window.cancelAnimationFrame(currentFrame)
+				angle = 0
+				ctx.beginPath()
+				ctx.rect(0, cutoff, canvas.width, canvas.height)
+				ctx.clip()
+				currentFrame = window.requestAnimationFrame(dropBall)
+				return
+			}
+			angle+=angleVelocity;
+			currentFrame = window.requestAnimationFrame(rotateTurnDial)
+			
+		}
+
+		function dropBall() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height)
+			ctx.drawImage(gumballImage, 0, 0, canvas.width, canvas.height)
+			ctx.beginPath()
+			ctx.fillStyle = "blue";
+			ctx.arc(canvas.width / 2, y, radius, 0, Math.PI, false)
+			ctx.closePath()
+			ctx.fill()
+			ctx.beginPath()
+			ctx.fillStyle = "white";
+			ctx.arc(canvas.width / 2, y, radius, 0, Math.PI, true)
+			ctx.closePath()
+			ctx.fill()
+			y += velocity
+			if (y >= 280 * scale) {
+				window.cancelAnimationFrame(currentFrame)
+				currentFrame = null
+				y = cutoff - radius*2;
+				return;
+			}
+			currentFrame = window.requestAnimationFrame(dropBall)
+		}
+		canvas.addEventListener("click", function(){
+			// if there's already a currentFrame, return.
+			if(currentFrame) return
+			ctx.restore()
+			ctx.save()
+			currentFrame = window.requestAnimationFrame(rotateTurnDial)
+		})
+	})
+	gumballImage.src = "assets/Ball_machine_overworld.png"
+}
+
 window.onload = function () {
 
 	cookieInit()
+	canvasInit("rollButton")
 
 	document.getElementById("contentOptions").addEventListener("change", updateContentFilter)
 
@@ -754,7 +848,7 @@ window.onload = function () {
 
 	homeButton = document.getElementById("homeButton");
 	homeButton.addEventListener("click", tabChangeHandlerCreator(homeTab));
-	document.getElementById("logo").addEventListener("click", function(){ homeButton.click() }) //mirror above event
+	document.getElementById("logo").addEventListener("click", function () { homeButton.click() }) //mirror above event
 
 	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
 
@@ -786,7 +880,7 @@ window.onload = function () {
 	});
 
 	document.getElementById("buildExportButton").addEventListener("click", exportSaved);
-	
+
 	var itemsCategoriesFilters = document.querySelectorAll("#itemsCategoryFilter input");
 	console.log(itemsCategoriesFilters);
 	itemsCategoriesFilters[0].addEventListener("change", function () { //all gets special behavior
@@ -802,28 +896,19 @@ window.onload = function () {
 		})
 	}
 
-	
+
 
 
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
 	// needs to be in a function like this to avoid stale content in itemsData and cursesData
 	updateContentFilter();
-	document.getElementById("searchItemsButton").addEventListener("click", function(){
+	document.getElementById("searchItemsButton").addEventListener("click", function () {
 		searchHandlerCreator(itemsData, savedItemRolls, "searchItemsTable")(this)
 	})
-	document.getElementById("searchCursesButton").addEventListener("click", function(){
+	document.getElementById("searchCursesButton").addEventListener("click", function () {
 		searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable")(this)
 	})
 
 	//let user start rolling.
 	homeButton.click()
 };
-
-window.addEventListener("click", function (event) {
-	var historyModal = document.getElementById("rollHistory");
-	var searchModal = document.getElementById("search");
-	if (event.target === historyModal || event.target === searchModal) {
-		historyModal.style.display = "none";
-		searchModal.style.display = "none";
-	}
-});
