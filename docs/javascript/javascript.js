@@ -154,14 +154,14 @@ function getRandomValue(array) {
 	var randomIndex = Math.floor(Math.random() * array.length);
 	return array[randomIndex];
 }
-// given a table and values, get a single value, put it in a row element, call drawTableBody, push new element to historyArray.
-function roll(table, data, historyArray) {
-	var element = getRandomValue(data);
-	var newRow = createRow(element);
+// given a table element, a item/curse value and history array;
+// draw the value data and add the value to the historyArray.
+function drawRollData(table, value, historyArray) {
+	var newRow = createRow(value);
 
 	drawTableBody(table, [newRow]);
-	historyArray.unshift(element);
-	return element;
+	historyArray.unshift(value);
+	return value;
 }
 
 //redraw a save table
@@ -743,7 +743,7 @@ init the canvas, load the image, create the animation functions, and finally cre
 TODO; make this call roll at end of animation, and click to skip and get roll early.
 */
 function canvasInit(canvasID, eventName) {
-	const event = new Event(eventName)
+	var event;
 	const canvas = document.getElementById(canvasID)
 	const gumballImage = new Image()
 
@@ -827,12 +827,24 @@ function canvasInit(canvasID, eventName) {
 			}
 			currentFrame = window.requestAnimationFrame(dropBall)
 		}
+
+		function animationSetupPlay(){
+			ctx.restore()
+			ctx.save()
+			var filteredData
+			if(eventName === "gachaFinish") filteredData = filteredItemsData
+			else filteredData = filteredCursesData
+			var data = getRandomValue(filteredData)
+			event = new CustomEvent(eventName, {
+				"detail": data
+			})
+			currentFrame = window.requestAnimationFrame(rotateTurnDial)
+		}
+
 		canvas.addEventListener("click", function(){
 			// if there's already a currentFrame, return.
 			if(currentFrame) return
-			ctx.restore()
-			ctx.save()
-			currentFrame = window.requestAnimationFrame(rotateTurnDial)
+			animationSetupPlay()
 		})
 	})
 	gumballImage.src = "assets/Ball_machine_overworld.png"
@@ -868,8 +880,9 @@ window.onload = function () {
 
 	document.getElementById("searchButton").addEventListener("click", tabChangeHandlerCreator(searchTab));
 
-	document.getElementById("rollButton").addEventListener("gachaFinish", function () {
-		currentItemRoll = roll(document.getElementById("rollTable"), filteredItemsData, itemRollHistory);
+	document.getElementById("rollButton").addEventListener("gachaFinish", function (e) {
+		currentItemRoll = e.detail
+		drawRollData(document.getElementById("rollTable"), currentItemRoll, itemRollHistory);
 		redrawHistoryTable("itemRollHistoryTable", itemRollHistory, savedItemRolls)
 	});
 	document.getElementById("saveButton").addEventListener("click", function () {
@@ -878,7 +891,8 @@ window.onload = function () {
 	});
 
 	document.getElementById("cursesRollButton").addEventListener("click", function () {
-		currentCurseRoll = roll(document.getElementById("cursesRollTable"), cursesData, curseRollHistory);
+		currentCurseRoll = getRandomValue(filteredCursesData)
+		drawRollData(document.getElementById("cursesRollTable"), currentCurseRoll, curseRollHistory);
 		redrawHistoryTable("curseRollHistoryTable", curseRollHistory, savedCurseRolls)
 	});
 
