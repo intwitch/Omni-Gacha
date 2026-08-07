@@ -1,6 +1,16 @@
 :root {
     --unselected-button-color: #7A4988;
     --selected-button-color: #710193;
+    --Frank: #FFE0B2;
+    --Erank: #666666;
+    --Drank: #00CDFF;
+    --Crank: #7ED581;
+    --Brank: #FF8F00;
+    --Arank: #CD0000;
+    --Srank: #F8BBD0;
+    --SSrank: #F06292;
+    --SSSrank: #CD00CD;
+    --EXrank: #FFEB3B;
 }
 
 table, th, td {
