@@ -742,9 +742,11 @@ I'm fucking sorry for whatever this is.
 init the canvas, load the image, create the animation functions, and finally create the event handler.
 TODO; make this call roll at end of animation, and click to skip and get roll early.
 */
-function canvasInit(canvasID, tableID) {
+function canvasInit(canvasID, eventName) {
+	const event = new Event(eventName)
 	const canvas = document.getElementById(canvasID)
 	const gumballImage = new Image()
+
 	gumballImage.addEventListener("load", function () {
 		const scale = 2
 		canvas.width = this.naturalWidth * scale
@@ -801,7 +803,7 @@ function canvasInit(canvasID, tableID) {
 			currentFrame = window.requestAnimationFrame(rotateTurnDial)
 			
 		}
-
+		// animation to drop ball.
 		function dropBall() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
 			ctx.drawImage(gumballImage, 0, 0, canvas.width, canvas.height)
@@ -820,6 +822,7 @@ function canvasInit(canvasID, tableID) {
 				window.cancelAnimationFrame(currentFrame)
 				currentFrame = null
 				y = cutoff - radius*2;
+				canvas.dispatchEvent(event)
 				return;
 			}
 			currentFrame = window.requestAnimationFrame(dropBall)
@@ -838,7 +841,7 @@ function canvasInit(canvasID, tableID) {
 window.onload = function () {
 
 	cookieInit()
-	canvasInit("rollButton")
+	canvasInit("rollButton", "gachaFinish")
 
 	document.getElementById("contentOptions").addEventListener("change", updateContentFilter)
 
@@ -865,7 +868,7 @@ window.onload = function () {
 
 	document.getElementById("searchButton").addEventListener("click", tabChangeHandlerCreator(searchTab));
 
-	document.getElementById("rollButton").addEventListener("click", function () {
+	document.getElementById("rollButton").addEventListener("gachaFinish", function () {
 		currentItemRoll = roll(document.getElementById("rollTable"), filteredItemsData, itemRollHistory);
 		redrawHistoryTable("itemRollHistoryTable", itemRollHistory, savedItemRolls)
 	});
