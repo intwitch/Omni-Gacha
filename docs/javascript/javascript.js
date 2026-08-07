@@ -760,6 +760,8 @@ function rankToColor(rank){
 			return style.getPropertyValue("--SSSrank")
 		case "ex":
 			return style.getPropertyValue("--EXrank")
+		default:
+			return "#000000"
 	}
 }
 
@@ -835,7 +837,7 @@ function canvasInit(canvasID, eventName) {
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
 			ctx.drawImage(gumballImage, 0, 0, canvas.width, canvas.height)
 			ctx.beginPath()
-			ctx.fillStyle = "blue";
+			ctx.fillStyle = ballColor;
 			ctx.arc(canvas.width / 2, y, radius, 0, Math.PI, false)
 			ctx.closePath()
 			ctx.fill()
@@ -865,6 +867,7 @@ function canvasInit(canvasID, eventName) {
 			event = new CustomEvent(eventName, {
 				"detail": data
 			})
+			ballColor = rankToColor(data[ITEMS.RANK])
 			currentFrame = window.requestAnimationFrame(rotateTurnDial)
 		}
 
