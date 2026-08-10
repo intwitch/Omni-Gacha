@@ -123,7 +123,7 @@ function updateContentFilter() {
 			itemsData = rawItemsData;
 			cursesData = rawCursesData;
 			NSFWOnlyCheckBox.parentElement.style.visibility = "visible"
-			updateItemFilterData();
+			updateFilterData();
 			return;
 		} else {
 			// NSFWONLY && NSFW
@@ -181,13 +181,18 @@ function redrawSaveTable(table, data, save = true) {
 		}
 		return buttonFunction
 	}
-	data.forEach(function (item, index) {
-		var row = createRow(item)
+	for(var i = 0; i < data.length; i++) {
+		//for some unholy reason, on some browsers it's running when .length = 0, which should be impossible but whatever. fine. we deal.
+		if(!data[i]){
+			//bad data, break;
+			break;
+		}
+		var row = createRow(data[i])
 
-		row.append(additionalButtonTableData(buttonFunctionCreator(index), "Remove"));
+		row.append(additionalButtonTableData(buttonFunctionCreator(i), "Remove"));
 
 		rows.push(row);
-	})
+	}
 
 	drawTableBody(table, rows);
 }
@@ -210,6 +215,7 @@ function createRow(array) {
 	var rowData = "";
 
 	for (var i = 0; i < array.length; i++) {
+		//i don't know how, i don't know why, but for some reason this is being called when array.length = 0, which shouldn't be fucking possible but whatever
 		rowData += "<td><p>" + array[i] + "</p></td>";
 	}
 	newRow.innerHTML = rowData;
@@ -232,9 +238,10 @@ function drawTableBody(table, rows) {
 
 	var tbody = table.querySelector("tbody");
 	tbody.innerHTML = "";
-	rows.forEach(function (row) {
-		tbody.appendChild(row)
-	});
+	for (var i = 0; i < rows.length; i++){
+		if(!rows[i]) break;
+		tbody.appendChild(rows[i])
+	};
 }
 //calls all filter related functions for items as it updates the global variable
 function updateItemFilterData() {
@@ -339,11 +346,13 @@ function searchFor(string) {
 	tbody.innerHTML
 		= ""; //wipe before replace
 
-	searchResults.forEach(element => {
+	for (var i = 0; i < searchResults.length; i++) {
+		if(!searchResults[i]) break;
+		var element = searchResults[i];
 		var newRow = document.createElement("tr");
 		newRow.innerHTML = "<td>" + element[0] + "</td><td>" + element[1] + "</td><td>" + element[2] + "</td><td>" + element[3] + "</td><td>" + element[4] + "</td><td>" + element[5] + "</td><td>" + element[6] + "</td><td>" + element[7] + "</td><td>" + element[8] + "</td><td>" + element[9] + "</td><td>" + element[10] + "</td><td>" + element[11] + "</td><td>" + element[12] + "</td><td>" + element[13] + "</td><td>" + element[14] + "</td><td>" + element[15] + "</td><td>" + element[16] + "</td><td>" + element[17] + "</td><td>" + element[18] + "</td><td>" + element[19] + "</td><td>" + element[20] + "</td>";
 		tbody.append(newRow);
-	});
+	}
 }
 
 // get all items and curses, convert to strings (same as copy paste) then let user download txt file of them.
@@ -424,6 +433,7 @@ function redrawHistoryTable(tableID, historyArray, saveArray) {
 	var rows = [];
 
 	for (var i = 0; i < historyArray.length; i++) {
+		if(!historyArray[i]) break;
 		var row = createRow(historyArray[i])
 		row.append(additionalButtonTableData(saveButtonFunctionCreator(saveArray, i), "Save"))
 		rows.push(row)
