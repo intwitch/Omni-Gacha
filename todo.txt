@@ -1,7 +1,10 @@
-quickstart section
-proper search section
-Custom roll section
-home section & about section
-refactor sections into individual imported html files.
+options menu
+finish about section
 
 move onto step 2; layout.
+
+
+
+
+LATER:
+quickstart, pick a start, pick a number of curses, have the site roll everything for you.
