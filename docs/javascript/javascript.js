@@ -910,6 +910,7 @@ window.onload = function () {
 
 	homeTab = document.getElementById("home");
 	aboutTab = document.getElementById("about");
+	startsTab = document.getElementById("starts")
 	itemsTab = document.getElementById("items");
 	cursesTab = document.getElementById("curses");
 	buildTab = document.getElementById("build");
@@ -919,9 +920,11 @@ window.onload = function () {
 	homeButton.addEventListener("click", tabChangeHandlerCreator(homeTab));
 	document.getElementById("logo").addEventListener("click", function () { homeButton.click() }) //mirror above event
 
-	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
-
 	document.getElementById("aboutButton").addEventListener("click", tabChangeHandlerCreator(aboutTab));
+	
+	document.getElementById("startsButton").addEventListener("click", tabChangeHandlerCreator(startsTab))
+
+	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
 
 	document.getElementById("cursesButton").addEventListener("click", tabChangeHandlerCreator(cursesTab));
 
