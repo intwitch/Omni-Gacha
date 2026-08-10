@@ -146,7 +146,7 @@ function updateContentFilter() {
 	itemsData = rawItemsData.filter(filterFunction(ITEMS.NSFW))
 	cursesData = rawCursesData.filter(filterFunction(CURSES.NSFW))
 
-	updateItemFilterData();
+	updateFilterData();
 }
 
 // gets random value from items or curses
@@ -242,6 +242,15 @@ function updateItemFilterData() {
 	filteredItemsData = FilterTicketData(filteredItemsData);
 	filteredItemsData = filterItemByCategory(filteredItemsData);
 	//console.log(filteredItemsData);
+}
+
+function updateCurseFilterData(){
+	filteredCursesData = cursesData;
+}
+
+function updateFilterData(){
+	updateItemFilterData()
+	updateCurseFilterData()
 }
 
 // create a function to filter on based on an array of filters and an index to see if the index of the item/curse is in the filter.
