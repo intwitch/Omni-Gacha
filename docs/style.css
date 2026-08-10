@@ -418,4 +418,5 @@ canvas {
 
 .EXrank, .goldColor{
     background-color: var(--EXrank);
+    color: black;
 }
