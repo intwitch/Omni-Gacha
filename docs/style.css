@@ -1,7 +1,7 @@
 :root {
     --unselected-button-color: #7A4988;
     --selected-button-color: #710193;
-    --Frank: #FFE0B2;
+    --Frank: #551f00;
     --Erank: #666666;
     --Drank: #00CDFF;
     --Crank: #7ED581;
@@ -380,7 +380,7 @@ canvas {
     cursor: pointer;
 }
 
-.Frank, .tanColor{
+.Frank, .brownColor{
     background-color: var(--Frank);
 }
 
