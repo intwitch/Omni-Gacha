@@ -420,3 +420,19 @@ canvas {
     background-color: var(--EXrank);
     color: black;
 }
+
+.darkGreenColor{
+    background-color: #004400;
+}
+
+.darkBlueColor{
+    background-color: #000077;
+}
+
+.tealColor{
+    background-color: #0077FF;
+}
+
+.amberColor{
+    background-color: #ffbf00;
+}
