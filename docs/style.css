@@ -379,3 +379,43 @@ canvas {
     display: block;
     cursor: pointer;
 }
+
+.Frank, .tanColor{
+    background-color: var(--Frank);
+}
+
+.Erank, .greyColor{
+    background-color: var(--Erank);
+}
+
+.Drank, .cyanColor{
+    background-color: var(--Drank);
+}
+
+.Crank, .lightGreenColor{
+    background-color: var(--Crank);
+}
+
+.Brank, .orangeColor{
+    background-color: var(--Brank);
+}
+
+.Arank, .redColor{
+    background-color: var(--Arank);
+}
+
+.Srank, .lightPinkColor{
+    background-color: var(--Srank);
+}
+
+.SSrank, .pinkColor{
+    background-color: var(--SSrank);
+}
+
+.SSSrank, .magentaColor{
+    background-color: var(--SSSrank);
+}
+
+.EXrank, .goldColor{
+    background-color: var(--EXrank);
+}
