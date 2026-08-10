@@ -123,7 +123,7 @@ function updateContentFilter() {
 			itemsData = rawItemsData;
 			cursesData = rawCursesData;
 			NSFWOnlyCheckBox.parentElement.style.visibility = "visible"
-			updateItemFilterData();
+			updateFilterData();
 			return;
 		} else {
 			// NSFWONLY && NSFW
