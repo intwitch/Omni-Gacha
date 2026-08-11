@@ -475,3 +475,54 @@ canvas {
     border: none;
     color: #0077FF;
 }
+
+#optionsMenu{
+    height: 100vh;
+    width: 33vw;
+    padding: 0 0;
+    margin: 0 auto 0 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background-color: #52527A;
+    overflow-y: auto;
+    
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+}
+
+#optionsMenu > * {
+    margin: auto 0px;
+
+    background-color: var(--sub-element-color);
+}
+
+.switch input{
+    opacity: 0;
+    height: 0px;
+    width: 0px;
+    position: absolute;
+}
+
+.switch input + span{
+    background-color: white;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 5px solid grey;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.switch input:checked + span{
+    background-color: #000077;
+}
+.switch{
+    text-align: center;
+    vertical-align: middle;
+    text-shadow: 3px 3px 4px #000000;
+    margin: auto
+}
