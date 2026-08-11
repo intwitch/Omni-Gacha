@@ -109,8 +109,6 @@ body {
 }
 
 main {
-    flex-grow: 1;
-
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -475,7 +473,7 @@ canvas {
 
 #optionsButton{
     height: fit-content;
-    font-size: 3vh;
+    font-size:xxx-large;
     background: none;
     border: none;
     color: #0077FF;
@@ -497,6 +495,9 @@ canvas {
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: stretch;
+    justify-content: space-around;
+
+    display: none;
 }
 
 #optionsMenu > * {

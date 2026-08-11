@@ -64,6 +64,10 @@ var searchTab;
 //todo, add options tab that lets you change build and thus cookie.
 var cookieName = "default"
 
+var options = {
+	backgroundImage: true
+}
+
 //incredibly important, nothing can be done without.
 loadParseJSON()
 
@@ -899,6 +903,15 @@ function canvasInit(canvasID, eventName) {
 	gumballImage.src = "assets/Ball_machine_overworld.png"
 }
 
+//open the options submenu... this will do more later probably I think. more things to handle. same with bellow
+function openOptions(){
+	document.getElementById("optionsMenu").style.display = "flex"
+}
+
+function closeOptions(){
+	document.getElementById("optionsMenu").style.display = "none"
+}
+
 window.onload = function () {
 
 	cookieInit()
@@ -970,7 +983,8 @@ window.onload = function () {
 		})
 	}
 
-
+	document.getElementById("optionsButton").addEventListener("click", openOptions)
+	document.getElementById("optionsClose").addEventListener("click", closeOptions)
 
 
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
