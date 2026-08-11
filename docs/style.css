@@ -1,7 +1,11 @@
 :root {
     --unselected-button-color: #7A4988;
     --selected-button-color: #710193;
-    --Frank: #FFE0B2;
+
+    --sub-element-color: #1E293B;
+    --transparent-sub-element: #1E293B79;
+
+    --Frank: #551f00;
     --Erank: #666666;
     --Drank: #00CDFF;
     --Crank: #7ED581;
@@ -15,6 +19,13 @@
 
 table, th, td {
   border: 1px solid black;
+}
+
+table caption {
+    text-shadow: 3px 3px 4px #000000;
+    width: fit-content;
+    margin: 0 auto;
+    color: #F1F5F9;
 }
 
 span {
@@ -34,6 +45,13 @@ td, th {
 
 div{
     padding: 1em;
+}
+
+#backgroundImage{
+    position: fixed;
+    z-index: -1;
+    width: 100%;
+    height: auto;
 }
 
 #contentOptions {
@@ -58,11 +76,11 @@ table {
     margin-right: auto;
     color: #94A3B8;
     margin-bottom: 5em;
+    background-color: var(--sub-element-color);
 }
 
 table th {
     width: 8em 8em;
-
 }
 
 table th:nth-child(1), table th:nth-child(2){
@@ -82,15 +100,21 @@ body {
     justify-content: space-between;
     /* main text color */
     color: #F1F5F9;
+    margin: 0;
+
+    background-image: url("assets/Omni_Gacha_Background.png");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: top center;
 }
 
 main {
-    min-height: 95vh;
-    flex-grow: 1;
-
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    margin-top: 15vh;
+    margin-bottom: 0;
+    height: 85vh;
 }
 
 .tabcontent {
@@ -99,7 +123,7 @@ main {
 
 #selector {
     display: flex;
-    background-color: #1E293B;
+    background-color: var(--sub-element-color);
     justify-content: right;
     align-items: stretch;
     height: 3em;
@@ -123,7 +147,7 @@ ul {
 }
 
 .subElement {
-    background-color: #1E293B;
+    background-color: var(--sub-element-color);
     width: 10em;
     z-index: 1;
 }
@@ -133,7 +157,7 @@ ul {
 }
 
 .typeFilter {
-    background-color: #1E293B;
+    background-color: var(--sub-element-color);
     position: relative;
     padding-left: 1em;
     padding-right: 1em;
@@ -161,6 +185,9 @@ ul {
     flex-direction: row;
     align-items: start;
     height: 2em;
+}
+
+forum.options{
     padding-bottom: 10em;
 }
 
@@ -221,7 +248,7 @@ input.advancedSearch{
     z-index: 1;
     position: sticky;
     top: 0;
-    background-color: #1E293B;
+    background-color: var(--sub-element-color);
 }
 
 #logo img {
@@ -249,6 +276,11 @@ button, #logo {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    width: 66%;
+    height: 85vh;
+    margin: 0 auto;
+    background-color: var(--transparent-sub-element);
+    overflow-y: hidden;
 }
 
 #home > h1, #home > h2 {
@@ -286,10 +318,12 @@ nav a:visited{
 
 header{
     height: 15vh;
-    position: sticky;
+    position: fixed;
     top: 0;
-    background-color: #1E293B;
+    background-color: var(--sub-element-color);
     z-index: 2;
+    margin-top: 0;
+    width: 100%;
 }
 
 .twoWideGrid, .threeWideGrid {
@@ -309,7 +343,7 @@ header{
 
 .twoWideGrid{
     grid-template-columns: auto 4fr;
-    background-color: #1E293B;
+    background-color: var(--sub-element-color);
 }
 
 .threeWideGrid{
@@ -318,7 +352,7 @@ header{
 }
 
 .threeWideGrid .threeWideGrid{
-    background-color: #1E293B;
+    background-color: var(--sub-element-color);
     align-items: stretch;
 }
 
@@ -378,4 +412,134 @@ canvas {
     margin: auto;
     display: block;
     cursor: pointer;
+}
+
+.Frank, .brownColor{
+    background-color: var(--Frank);
+}
+
+.Erank, .greyColor{
+    background-color: var(--Erank);
+}
+
+.Drank, .cyanColor{
+    background-color: var(--Drank);
+}
+
+.Crank, .lightGreenColor{
+    background-color: var(--Crank);
+}
+
+.Brank, .orangeColor{
+    background-color: var(--Brank);
+}
+
+.Arank, .redColor{
+    background-color: var(--Arank);
+}
+
+.Srank, .lightPinkColor{
+    background-color: var(--Srank);
+}
+
+.SSrank, .pinkColor{
+    background-color: var(--SSrank);
+}
+
+.SSSrank, .magentaColor{
+    background-color: var(--SSSrank);
+}
+
+.EXrank, .goldColor{
+    background-color: var(--EXrank);
+    color: black;
+}
+
+.darkGreenColor{
+    background-color: #004400;
+}
+
+.darkBlueColor, thead{
+    background-color: #000077;
+}
+
+.tealColor{
+    background-color: #0077FF;
+}
+
+.amberColor{
+    background-color: #ffbf00;
+}
+
+#optionsButton{
+    height: fit-content;
+    font-size:xxx-large;
+    background: none;
+    border: none;
+    color: #0077FF;
+}
+
+#optionsMenu{
+    height: 100vh;
+    width: 33vw;
+    padding: 0 0;
+    margin: 0 auto 0 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background-color: #52527A;
+    overflow-y: auto;
+    
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: space-around;
+
+    display: none;
+}
+
+#optionsMenu > * {
+    margin: auto 0px;
+
+    background-color: var(--sub-element-color);
+}
+
+.switch input{
+    opacity: 0;
+    height: 0px;
+    width: 0px;
+    position: absolute;
+}
+
+.switch input + span{
+    background-color: white;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 5px solid grey;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.switch input:checked + span{
+    background-color: #000077;
+}
+.switch{
+    text-align: center;
+    vertical-align: middle;
+    text-shadow: 3px 3px 4px #000000;
+    margin: auto
+}
+
+#optionsClose{
+    width: fit-content;
+    position: absolute;
+    top:0;
+    right: 0;
+    background-color: white;
+    color: red;
+    font-weight: bold;
+    font-size: large;
 }

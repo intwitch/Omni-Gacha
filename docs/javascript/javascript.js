@@ -61,8 +61,10 @@ var cursesTab;
 var buildTab;
 var searchTab;
 
-//todo, add options tab that lets you change build and thus cookie.
-var cookieName = "default"
+var optionsValues = {
+	"backgroundImage": true,
+	"build": "default"
+}
 
 //incredibly important, nothing can be done without.
 loadParseJSON()
@@ -424,6 +426,7 @@ function redrawHistoryTable(tableID, historyArray, saveArray) {
 	function saveButtonFunctionCreator(saveArray, index) {
 		var saveButtonFunction = function () {
 			saveArray.push(historyArray[index])
+			cookieSetFunction()
 			redrawAllSaveTables()
 		}
 		return saveButtonFunction
@@ -732,15 +735,22 @@ function createAllSortButtons() {
 
 //save saved rolls into a cookie :)
 function cookieSetFunction() {
-	cookieStore.set(cookieName, savedToJsonString()).then(function () {
+	cookieStore.set({
+		"name": optionsValues.build,
+		value: JSON.stringify({
+			items: savedItemRolls,
+			curses: savedCurseRolls
+		}),
+		expires: Date.now() + 1000*60*60*24*365
+	}).then(function () {
 		//TODO, PROPER COOKIE PROMISE HANDLING
 		//TODO, MAKE COOKIES PERSIST AFTER SESSION
 	})
 }
-// initiate cookie data, if it exits
+// initiate build cookie data, if it exits
 // handle creating sort buttons here bc I fear a race condition.
-function cookieInit() {
-	cookieStore.get(cookieName).then(function (result) {
+function buildCookieInit() {
+	cookieStore.get(optionsValues.build).then(function (result) {
 		if (result) {
 			console.log("cookies got!")
 			const json = JSON.parse(result.value)
@@ -755,6 +765,25 @@ function cookieInit() {
 		}
 	})
 }
+// get the option cookie and save it to optionsValues, then call optionsUpdateAll
+function optionCookieInit(){
+	cookieStore.get("options").then(function(result){
+		if(!result){
+			console.log("saved options found")
+			return;
+		}
+		console.log("saved options found")
+		optionsValues = JSON.parse(result.value)
+		updateAllOptions()
+	})
+}
+// call option cookie init then build cookie init.
+// build cookie relies on things from option so, don't bork that. or it will
+function cookieInit(){
+	optionCookieInit()
+	buildCookieInit()
+}
+
 //takes a string of the rank and returns the proper css variable value
 function rankToColor(rank){
 	const style = window.getComputedStyle(document.body)
@@ -795,7 +824,7 @@ function canvasInit(canvasID, eventName) {
 	const gumballImage = new Image()
 
 	gumballImage.addEventListener("load", function () {
-		const scale = 2
+		const scale = 1
 		canvas.width = this.naturalWidth * scale
 		canvas.height = this.naturalHeight * scale
 		const ctx = canvas.getContext("2d")
@@ -899,9 +928,59 @@ function canvasInit(canvasID, eventName) {
 	gumballImage.src = "assets/Ball_machine_overworld.png"
 }
 
+//open the options submenu... this will do more later probably I think. more things to handle. same with bellow
+function openOptions(){
+	document.getElementById("optionsMenu").style.display = "flex"
+}
+
+function closeOptions(){
+	document.getElementById("optionsMenu").style.display = "none"
+}
+
+//save a cookie with name options and value string of optionsValues stringified, because a raw json doesn't work
+function updateSavedOptions(){
+	cookieStore.set({
+		name: "options",
+		value: JSON.stringify(optionsValues),
+		expires: Date.now() + 1000*60*60*24*365
+	}).then(function(value){
+		return;
+	}, function(reason){
+		console.error("saving cookies failed")
+		console.error(reason)
+	})
+}
+//call every function that has something changed by options and change it, along with the html elements.
+function updateAllOptions(){
+	document.getElementById("optionsBackgroundToggle").checked = optionsValues.backgroundImage
+	updateBackgroundImage();
+}
+
+//called by changed in options. depending on event target value do different things.
+function optionChange(event){
+	var target = event.target;
+	switch(target.value){
+		case "backgroundImage":
+			optionsValues[target.value] = target.checked
+			updateBackgroundImage()
+			break;
+	}
+	updateSavedOptions()
+}
+//if options say off, off. if options say on, on.
+function updateBackgroundImage(){
+	if(optionsValues.backgroundImage){
+		document.body.style.backgroundImage = 'url("assets/Omni_Gacha_Background.png")';
+	}
+	else{
+		document.body.style.backgroundImage = "none";
+	}
+}
+
 window.onload = function () {
 
 	cookieInit()
+
 	canvasInit("rollButton", "gachaFinish")
 
 	document.getElementById("contentOptions").addEventListener("change", updateContentFilter)
@@ -910,6 +989,7 @@ window.onload = function () {
 
 	homeTab = document.getElementById("home");
 	aboutTab = document.getElementById("about");
+	startsTab = document.getElementById("starts")
 	itemsTab = document.getElementById("items");
 	cursesTab = document.getElementById("curses");
 	buildTab = document.getElementById("build");
@@ -919,9 +999,11 @@ window.onload = function () {
 	homeButton.addEventListener("click", tabChangeHandlerCreator(homeTab));
 	document.getElementById("logo").addEventListener("click", function () { homeButton.click() }) //mirror above event
 
-	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
-
 	document.getElementById("aboutButton").addEventListener("click", tabChangeHandlerCreator(aboutTab));
+	
+	document.getElementById("startsButton").addEventListener("click", tabChangeHandlerCreator(startsTab))
+
+	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
 
 	document.getElementById("cursesButton").addEventListener("click", tabChangeHandlerCreator(cursesTab));
 
@@ -967,8 +1049,10 @@ window.onload = function () {
 		})
 	}
 
+	document.getElementById("optionsButton").addEventListener("click", openOptions)
+	document.getElementById("optionsClose").addEventListener("click", closeOptions)
 
-
+	document.getElementById("optionsBackgroundToggle").addEventListener("change", optionChange)
 
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
 	// needs to be in a function like this to avoid stale content in itemsData and cursesData
