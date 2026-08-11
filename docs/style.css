@@ -69,11 +69,15 @@ table {
     margin-right: auto;
     color: #94A3B8;
     margin-bottom: 5em;
+    background-color: var(--sub-element-color);
+}
+
+thead {
+
 }
 
 table th {
     width: 8em 8em;
-
 }
 
 table th:nth-child(1), table th:nth-child(2){
@@ -446,7 +450,7 @@ canvas {
     background-color: #004400;
 }
 
-.darkBlueColor{
+.darkBlueColor, thead{
     background-color: #000077;
 }
 
