@@ -61,11 +61,9 @@ var cursesTab;
 var buildTab;
 var searchTab;
 
-//todo, add options tab that lets you change build and thus cookie.
-var cookieName = "default"
-
 var optionsValues = {
-	"backgroundImage": true
+	"backgroundImage": true,
+	"build": "default"
 }
 
 //incredibly important, nothing can be done without.
@@ -736,7 +734,14 @@ function createAllSortButtons() {
 
 //save saved rolls into a cookie :)
 function cookieSetFunction() {
-	cookieStore.set(cookieName, savedToJsonString()).then(function () {
+	cookieStore.set({
+		"name": optionsValues.build,
+		value: JSON.stringify({
+			items: savedItemRolls,
+			curses: savedCurseRolls
+		}),
+		expires: Date.now() + 1000*60*60*24*365
+	}).then(function () {
 		//TODO, PROPER COOKIE PROMISE HANDLING
 		//TODO, MAKE COOKIES PERSIST AFTER SESSION
 	})
@@ -744,7 +749,7 @@ function cookieSetFunction() {
 // initiate build cookie data, if it exits
 // handle creating sort buttons here bc I fear a race condition.
 function buildCookieInit() {
-	cookieStore.get(cookieName).then(function (result) {
+	cookieStore.get(optionsValues.build).then(function (result) {
 		if (result) {
 			console.log("cookies got!")
 			const json = JSON.parse(result.value)
@@ -933,7 +938,11 @@ function closeOptions(){
 
 //save a cookie with name options and value string of optionsValues stringified, because a raw json doesn't work
 function updateSavedOptions(){
-	cookieStore.set("options", JSON.stringify(optionsValues)).then(function(value){
+	cookieStore.set({
+		name: "options",
+		value: JSON.stringify(optionsValues),
+		expires: Date.now() + 1000*60*60*24*365
+	}).then(function(value){
 		return;
 	}, function(reason){
 		console.error("saving cookies failed")
