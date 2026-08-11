@@ -426,6 +426,7 @@ function redrawHistoryTable(tableID, historyArray, saveArray) {
 	function saveButtonFunctionCreator(saveArray, index) {
 		var saveButtonFunction = function () {
 			saveArray.push(historyArray[index])
+			cookieSetFunction()
 			redrawAllSaveTables()
 		}
 		return saveButtonFunction
