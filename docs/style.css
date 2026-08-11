@@ -526,3 +526,14 @@ canvas {
     text-shadow: 3px 3px 4px #000000;
     margin: auto
 }
+
+#optionsClose{
+    width: fit-content;
+    position: absolute;
+    top:0;
+    right: 0;
+    background-color: white;
+    color: red;
+    font-weight: bold;
+    font-size: large;
+}
