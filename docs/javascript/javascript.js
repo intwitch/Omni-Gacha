@@ -64,8 +64,8 @@ var searchTab;
 //todo, add options tab that lets you change build and thus cookie.
 var cookieName = "default"
 
-var options = {
-	backgroundImage: true
+var optionsValues = {
+	"backgroundImage": true
 }
 
 //incredibly important, nothing can be done without.
@@ -741,9 +741,9 @@ function cookieSetFunction() {
 		//TODO, MAKE COOKIES PERSIST AFTER SESSION
 	})
 }
-// initiate cookie data, if it exits
+// initiate build cookie data, if it exits
 // handle creating sort buttons here bc I fear a race condition.
-function cookieInit() {
+function buildCookieInit() {
 	cookieStore.get(cookieName).then(function (result) {
 		if (result) {
 			console.log("cookies got!")
@@ -759,6 +759,25 @@ function cookieInit() {
 		}
 	})
 }
+// get the option cookie and save it to optionsValues, then call optionsUpdateAll
+function optionCookieInit(){
+	cookieStore.get("options").then(function(result){
+		if(!result){
+			console.log("saved options found")
+			return;
+		}
+		console.log("saved options found")
+		optionsValues = JSON.parse(result.value)
+		updateAllOptions()
+	})
+}
+// call option cookie init then build cookie init.
+// build cookie relies on things from option so, don't bork that. or it will
+function cookieInit(){
+	optionCookieInit()
+	buildCookieInit()
+}
+
 //takes a string of the rank and returns the proper css variable value
 function rankToColor(rank){
 	const style = window.getComputedStyle(document.body)
@@ -912,9 +931,46 @@ function closeOptions(){
 	document.getElementById("optionsMenu").style.display = "none"
 }
 
+//save a cookie with name options and value string of optionsValues stringified, because a raw json doesn't work
+function updateSavedOptions(){
+	cookieStore.set("options", JSON.stringify(optionsValues)).then(function(value){
+		return;
+	}, function(reason){
+		console.error("saving cookies failed")
+		console.error(reason)
+	})
+}
+//call every function that has something changed by options and change it, along with the html elements.
+function updateAllOptions(){
+	document.getElementById("optionsBackgroundToggle").checked = optionsValues.backgroundImage
+	updateBackgroundImage();
+}
+
+//called by changed in options. depending on event target value do different things.
+function optionChange(event){
+	var target = event.target;
+	switch(target.value){
+		case "backgroundImage":
+			optionsValues[target.value] = target.checked
+			updateBackgroundImage()
+			break;
+	}
+	updateSavedOptions()
+}
+//if options say off, off. if options say on, on.
+function updateBackgroundImage(){
+	if(optionsValues.backgroundImage){
+		document.body.style.backgroundImage = 'url("assets/Omni_Gacha_Background.png")';
+	}
+	else{
+		document.body.style.backgroundImage = "none";
+	}
+}
+
 window.onload = function () {
 
 	cookieInit()
+
 	canvasInit("rollButton", "gachaFinish")
 
 	document.getElementById("contentOptions").addEventListener("change", updateContentFilter)
@@ -986,6 +1042,7 @@ window.onload = function () {
 	document.getElementById("optionsButton").addEventListener("click", openOptions)
 	document.getElementById("optionsClose").addEventListener("click", closeOptions)
 
+	document.getElementById("optionsBackgroundToggle").addEventListener("change", optionChange)
 
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
 	// needs to be in a function like this to avoid stale content in itemsData and cursesData
