@@ -795,7 +795,7 @@ function canvasInit(canvasID, eventName) {
 	const gumballImage = new Image()
 
 	gumballImage.addEventListener("load", function () {
-		const scale = 2
+		const scale = 1
 		canvas.width = this.naturalWidth * scale
 		canvas.height = this.naturalHeight * scale
 		const ctx = canvas.getContext("2d")

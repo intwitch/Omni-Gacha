@@ -592,7 +592,12 @@
         <div id="items" class="tabcontent">
             <br>
             <div>
+                <div class="canvasContainer">
+                    <canvas id="rollButton">
+                    </canvas>
+                </div>
                 <div class="options">
+                    <button id="saveButton">Save Item</button>
                     <select id="ticketSelector">
                         <option value="0" selected disabled hidden>select ticket</option>
                         <option value="1">1 Star (F-D)</option>
@@ -603,7 +608,7 @@
                         <option value="6">6 Star (A-SS)</option>
                         <option value="7">7 Star (S-SSS)</option>
                         <option value="8">EX Star (SS-EX)</option>
-                        <option value="0">Just Browsing</option>
+                        <option value="0">No Ticket</option>
                     </select>
                     <span class="subElement">
                         <span id="itemsCategoryFilter" class="typeFilter">
@@ -671,12 +676,6 @@
                         </span>
                     </span>
                 </div>
-                <div class="canvasContainer">
-                    <canvas id="rollButton">
-
-                    </canvas>
-                </div>
-                <button id="saveButton">Save Item</button>
                 <table id="rollTable">
                     <caption>
                         <h2>Rolls</h2>
