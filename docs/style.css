@@ -467,3 +467,11 @@ canvas {
 .amberColor{
     background-color: #ffbf00;
 }
+
+#optionsButton{
+    height: fit-content;
+    font-size: 3vh;
+    background: none;
+    border: none;
+    color: #0077FF;
+}
