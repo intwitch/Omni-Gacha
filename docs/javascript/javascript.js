@@ -1027,38 +1027,72 @@ function buildCookieCreator(buildName) {
 }
 
 // create a new build, and switch to it
-function createNewBuild(event){
+function createNewBuildEventHandler(event){
 	const value = event.target.value
-	const select = document.getElementById("optionsBuildSelector")
 	if(event.key != "Enter" || value == "") return;
-	if(optionsValues.buildsArray.indexOf(value) != -1){
-		select.value = value;
-		event.target.value = ""
-		event.target.placeholder = `"${value}" already a build`
-		return;
+
+	createNewBuild(value)
+}
+/**
+ * 
+ * @param {String} newBuild 
+ * @returns -1 on fail null on success
+ */
+function createNewBuild(newBuild){
+	const select = document.getElementById("optionsBuildSelector")
+	
+	if(optionsValues.buildsArray.indexOf(newBuild) != -1){
+		alert(event.target.placeholder = `"${newBuild}" already a build`)
+		return -1;
 	}
-	buildCookieCreator(value);
+	buildCookieCreator(newBuild);
 	populateBuildSelector()
-	select.value = value
-	event.target.value = ""
+	select.value = newBuild
+	return null
 }
 
 /**
- * event handler to change build
- * @param build Event
+ * event handler to get value then call switchBuild()
+ * @param {Event} event
 **/
-function switchBuild(build){
-	if(typeof build == "object"){
-		build = build.target.value
-	}
-	if(optionsValues.buildsArray.indexOf(build) == -1){
-		console.err(`"${build}" not in buildsList`)
-		return null;
+function switchBuildEventHandler(event){
+	switchBuild(event.target.value)
+}
+/**
+ * switch build to the desired.
+ * @param {String} buildValue 
+ */
+function switchBuild(buildValue){
+	if(optionsValues.buildsArray.indexOf(buildValue) == -1){
+		console.err(`"${buildValue}" not in buildsList`)
+		return;
 	}
 
-	optionsValues.build = build
+	optionsValues.build = buildValue
 	buildCookieInit()
 	redrawAllSaveTables()
+}
+
+/**
+ * delete build determined by string.
+ * @param {String} build 
+ */
+function deleteBuild(build){
+	cookieStore.delete(build)
+	optionsValues.buildsArray.splice(optionsValues.buildsArray.indexOf(build), 1)
+	switch(true){
+		case (optionsValues.buildsArray.length == 0):
+			createNewBuild("default")
+			break;
+		case (optionsValues.build == build):
+			switchBuild(optionsValues.buildsArray[0])
+			populateBuildSelector()
+			break;
+		default:
+			populateBuildSelector()
+			break;
+	}
+	updateSavedOptions()
 }
 
 function createAllEventHandlers(){
@@ -1133,8 +1167,8 @@ function createAllEventHandlers(){
 	document.getElementById("optionsClose").addEventListener("click", closeOptions)
 
 	document.getElementById("optionsBackgroundToggle").addEventListener("change", optionChange)
-	document.getElementById("optionsBuildSelector").addEventListener("change", switchBuild)
-	document.getElementById("optionsBuildsNewName").addEventListener("keydown", createNewBuild)
+	document.getElementById("optionsBuildSelector").addEventListener("change", switchBuildEventHandler)
+	document.getElementById("optionsBuildsNewName").addEventListener("keydown", createNewBuildEventHandler)
 
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
 	// needs to be in a function like this to avoid stale content in itemsData and cursesData
