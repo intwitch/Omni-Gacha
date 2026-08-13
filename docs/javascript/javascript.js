@@ -768,7 +768,7 @@ function buildCookieInit() {
 }
 // get the option cookie and save it to optionsValues, then call optionsUpdateAll
 function optionCookieInit(){
-	cookieStore.get("options").then(function(result){
+	return cookieStore.get("options").then(function(result){
 		if(!result){
 			console.log("saved options found")
 			return;
@@ -786,9 +786,9 @@ function optionCookieInit(){
 }
 // call option cookie init then build cookie init.
 // build cookie relies on things from option so, don't bork that. or it will
-async function cookieInit(){
-	await optionCookieInit()
-	buildCookieInit()
+function cookieInit(){
+	return optionCookieInit().then(buildCookieInit)
+	
 }
 
 //takes a string of the rank and returns the proper css variable value
@@ -1049,9 +1049,7 @@ function switchBuild(build){
 	redrawAllSaveTables()
 }
 
-window.onload = function () {
-
-	cookieInit()
+function createAllEventHandlers(){
 
 	canvasInit("rollButton", "gachaFinish")
 
@@ -1137,7 +1135,9 @@ window.onload = function () {
 	document.getElementById("searchCursesButton").addEventListener("click", function () {
 		searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable")(this)
 	})
-
-	//let user start rolling.
-	homeButton.click()
 };
+
+cookieInit().then(function(){
+	createAllEventHandlers()
+	homeButton.click()
+})
