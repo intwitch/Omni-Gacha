@@ -1032,8 +1032,8 @@ function createNewBuild(event){
 }
 
 /**
- * change build
- * @param build Event | String
+ * event handler to change build
+ * @param build Event
 **/
 function switchBuild(build){
 	if(typeof build == "object"){
@@ -1052,7 +1052,6 @@ function switchBuild(build){
 window.onload = function () {
 
 	cookieInit()
-	populateBuildSelector
 
 	canvasInit("rollButton", "gachaFinish")
 
@@ -1126,6 +1125,7 @@ window.onload = function () {
 	document.getElementById("optionsClose").addEventListener("click", closeOptions)
 
 	document.getElementById("optionsBackgroundToggle").addEventListener("change", optionChange)
+	document.getElementById("optionsBuildSelector").addEventListener("change", switchBuild)
 	document.getElementById("optionsBuildsNewName").addEventListener("keydown", createNewBuild)
 
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
