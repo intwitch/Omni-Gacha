@@ -786,8 +786,8 @@ function optionCookieInit(){
 }
 // call option cookie init then build cookie init.
 // build cookie relies on things from option so, don't bork that. or it will
-function cookieInit(){
-	optionCookieInit()
+async function cookieInit(){
+	await optionCookieInit()
 	buildCookieInit()
 }
 
@@ -961,6 +961,8 @@ function updateSavedOptions(){
 function applyAllOptions(){
 	document.getElementById("optionsBackgroundToggle").checked = optionsValues.backgroundImage
 	updateBackgroundImage();
+
+	populateBuildSelector();
 }
 
 //called by changed in options. depending on event target value do different things.
@@ -999,6 +1001,8 @@ function populateBuildSelector(){
 		option.innerText = build
 		select.appendChild(option)
 	}
+
+	select.value = optionsValues.build
 }
 //apply options to create a new build cookie
 function buildCookieCreator(buildName) {
@@ -1048,7 +1052,7 @@ function switchBuild(build){
 window.onload = function () {
 
 	cookieInit()
-	populateBuildSelector()
+	populateBuildSelector
 
 	canvasInit("rollButton", "gachaFinish")
 
