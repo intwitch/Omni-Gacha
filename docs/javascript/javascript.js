@@ -63,7 +63,8 @@ var searchTab;
 
 var optionsValues = {
 	"backgroundImage": true,
-	"build": "default"
+	"build": "default",
+	"buildsArray": ["default"]
 }
 
 //incredibly important, nothing can be done without.
