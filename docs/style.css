@@ -1,6 +1,9 @@
 :root {
+    --main-background-color: #0F172A;
     --unselected-button-color: #7A4988;
     --selected-button-color: #710193;
+
+    --tint: #00000066;
 
     --sub-element-color: #1E293B;
     --transparent-sub-element: #1E293B79;
@@ -96,7 +99,7 @@ table th:nth-child(3) {
 body {
     display: flex;
     flex-direction: column;
-    background-color: #0F172A;
+    background-color: var(--main-background-color);
     justify-content: space-between;
     /* main text color */
     color: #F1F5F9;
@@ -559,4 +562,20 @@ canvas {
 
 #optionsBuildsNewName{
     flex-grow: 1;
+}
+
+.transparentBackground{
+    background-color: var(--tint);
+    padding: 0;
+    min-height: calc(85vh - 2em);
+    margin: 1em 1em;
+}
+
+.solidBackground{
+    background-color: var(--main-background-color);
+}
+
+.noTopPadding{
+    padding: 0;
+    margin: 0;
 }
