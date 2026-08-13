@@ -987,11 +987,14 @@ function optionChange(event){
 }
 //if options say off, off. if options say on, on.
 function updateBackgroundImage(){
+	const root = document.querySelector(":root")
 	if(optionsValues.backgroundImage){
 		document.body.style.backgroundImage = 'url("assets/Omni_Gacha_Background.png")';
+		root.style.setProperty('--tint', "#00000066")
 	}
 	else{
 		document.body.style.backgroundImage = "none";
+		root.style.setProperty('--tint', "#00000000")
 	}
 }
 
