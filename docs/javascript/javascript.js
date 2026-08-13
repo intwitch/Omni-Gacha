@@ -774,8 +774,14 @@ function optionCookieInit(){
 			return;
 		}
 		console.log("saved options found")
-		optionsValues = JSON.parse(result.value)
-		updateAllOptions()
+		const savedValues = JSON.parse(result.value)
+
+		//do it like this so that if any new options are added, they aren't overwritten.
+		for(option in savedValues){
+			optionsValues[option] = savedValues[option]
+		}
+
+		applyAllOptions()
 	})
 }
 // call option cookie init then build cookie init.
@@ -952,7 +958,7 @@ function updateSavedOptions(){
 	})
 }
 //call every function that has something changed by options and change it, along with the html elements.
-function updateAllOptions(){
+function applyAllOptions(){
 	document.getElementById("optionsBackgroundToggle").checked = optionsValues.backgroundImage
 	updateBackgroundImage();
 }
@@ -978,9 +984,27 @@ function updateBackgroundImage(){
 	}
 }
 
+function populateBuildSelector(){
+	const selector = document.getElementById("optionsBuildSelector")
+	selector.textContent = "" //wipe with textContent to avoid .innerHTML
+
+	const builds = optionsValues.buildsArray;
+	if(builds.length == 0){
+		console.warn("warning, no builds. something has probably gone wrong.")
+		return;
+	}
+	for(build of builds){
+		const option = document.createElement("option");
+		option.value = build
+		option.innerText = build
+		selector.appendChild(option)
+	}
+}
+
 window.onload = function () {
 
 	cookieInit()
+	populateBuildSelector()
 
 	canvasInit("rollButton", "gachaFinish")
 
