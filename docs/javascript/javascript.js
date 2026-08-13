@@ -67,8 +67,18 @@ var optionsValues = {
 	"buildsArray": ["default"]
 }
 
-//incredibly important, nothing can be done without.
-loadParseJSON()
+const cookiePromise = cookieInit()
+const jsonPromise = loadParseJSON()
+
+
+window.onload = function () {
+	cookiePromise.then(jsonPromise.then(function () {
+		createAllEventHandlers()
+		applyAllOptions()
+		canvasInit("rollButton", "gachaFinish")
+		homeButton.click()
+	}))
+}
 
 /*
 load, parse and set raw data variables.
@@ -80,7 +90,7 @@ as of commit f0cfdc87fea60e87e354a4f11efe806425798e1f i've learned how .then wor
 it's uhh... past me is dumb bc it's easy.
 but this still works so... doesn't really *need* to be rewritten.
 */
-function loadParseJSON() {
+async function loadParseJSON() {
 	const xhr = new XMLHttpRequest();
 	xhr.open("GET", "data/values.json", false); // false = synchronous
 	xhr.send();
@@ -89,6 +99,7 @@ function loadParseJSON() {
 
 	rawItemsData = values.items
 	rawCursesData = values.curses
+	return null;
 }
 
 function savedToJsonString() {
@@ -780,13 +791,11 @@ function optionCookieInit(){
 		for(option in savedValues){
 			optionsValues[option] = savedValues[option]
 		}
-
-		applyAllOptions()
 	})
 }
 // call option cookie init then build cookie init.
 // build cookie relies on things from option so, don't bork that. or it will
-function cookieInit(){
+async function cookieInit(){
 	return optionCookieInit().then(buildCookieInit)
 	
 }
@@ -1051,8 +1060,6 @@ function switchBuild(build){
 
 function createAllEventHandlers(){
 
-	canvasInit("rollButton", "gachaFinish")
-
 	document.getElementById("contentOptions").addEventListener("change", updateContentFilter)
 
 	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
@@ -1136,8 +1143,3 @@ function createAllEventHandlers(){
 		searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable")(this)
 	})
 };
-
-cookieInit().then(function(){
-	createAllEventHandlers()
-	homeButton.click()
-})
