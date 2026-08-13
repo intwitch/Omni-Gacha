@@ -1010,7 +1010,7 @@ function buildCookieCreator(buildName) {
 	buildCookieSetFunction();
 }
 
-// create a new build
+// create a new build, and switch to it
 function createNewBuild(event){
 	const value = event.target.value
 	const select = document.getElementById("optionsBuildSelector")
@@ -1025,6 +1025,24 @@ function createNewBuild(event){
 	populateBuildSelector()
 	select.value = value
 	event.target.value = ""
+}
+
+/**
+ * change build
+ * @param build Event | String
+**/
+function switchBuild(build){
+	if(typeof build == "object"){
+		build = build.target.value
+	}
+	if(optionsValues.buildsArray.indexOf(build) == -1){
+		console.err(`"${build}" not in buildsList`)
+		return null;
+	}
+
+	optionsValues.build = build
+	buildCookieInit()
+	redrawAllSaveTables()
 }
 
 window.onload = function () {
