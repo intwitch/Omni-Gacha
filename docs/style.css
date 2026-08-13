@@ -533,13 +533,30 @@ canvas {
     margin: auto
 }
 
-#optionsClose{
+#optionsBuilds{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+#optionsBuilds > *{
+    margin: 0 0.5em;
+}
+
+#optionsClose, #optionsBuildsCreate{
     width: fit-content;
-    position: absolute;
-    top:0;
-    right: 0;
     background-color: white;
-    color: red;
     font-weight: bold;
     font-size: large;
+}
+
+#optionsClose {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: red;
+}
+
+#optionsBuildsNewName{
+    flex-grow: 1;
 }

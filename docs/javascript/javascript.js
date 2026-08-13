@@ -173,7 +173,7 @@ function redrawSaveTable(table, data, save = true) {
 	//if save tables are being redrawn, they're changing.
 	//if they're changing, gotta update cookies.
 	// save paramater exists so redrawAllSaveTables can override.
-	if (save) cookieSetFunction()
+	if (save) buildCookieSetFunction()
 
 	var rows = [];
 
@@ -427,7 +427,7 @@ function redrawHistoryTable(tableID, historyArray, saveArray) {
 	function saveButtonFunctionCreator(saveArray, index) {
 		var saveButtonFunction = function () {
 			saveArray.push(historyArray[index])
-			cookieSetFunction()
+			buildCookieSetFunction()
 			redrawAllSaveTables()
 		}
 		return saveButtonFunction
@@ -735,7 +735,7 @@ function createAllSortButtons() {
 }
 
 //save saved rolls into a cookie :)
-function cookieSetFunction() {
+function buildCookieSetFunction() {
 	cookieStore.set({
 		"name": optionsValues.build,
 		value: JSON.stringify({
@@ -985,8 +985,8 @@ function updateBackgroundImage(){
 }
 
 function populateBuildSelector(){
-	const selector = document.getElementById("optionsBuildSelector")
-	selector.textContent = "" //wipe with textContent to avoid .innerHTML
+	const select = document.getElementById("optionsBuildSelector")
+	select.textContent = "" //wipe with textContent to avoid .innerHTML
 
 	const builds = optionsValues.buildsArray;
 	if(builds.length == 0){
@@ -997,8 +997,34 @@ function populateBuildSelector(){
 		const option = document.createElement("option");
 		option.value = build
 		option.innerText = build
-		selector.appendChild(option)
+		select.appendChild(option)
 	}
+}
+//apply options to create a new build cookie
+function buildCookieCreator(buildName) {
+	optionsValues.build = buildName;
+	optionsValues.buildsArray.push(buildName);
+	savedItemRolls = [];
+	savedCurseRolls = [];
+	updateSavedOptions();
+	buildCookieSetFunction();
+}
+
+// create a new build
+function createNewBuild(event){
+	const value = event.target.value
+	const select = document.getElementById("optionsBuildSelector")
+	if(event.key != "Enter" || value == "") return;
+	if(optionsValues.buildsArray.indexOf(value) != -1){
+		select.value = value;
+		event.target.value = ""
+		event.target.placeholder = `"${value}" already a build`
+		return;
+	}
+	buildCookieCreator(value);
+	populateBuildSelector()
+	select.value = value
+	event.target.value = ""
 }
 
 window.onload = function () {
@@ -1078,6 +1104,7 @@ window.onload = function () {
 	document.getElementById("optionsClose").addEventListener("click", closeOptions)
 
 	document.getElementById("optionsBackgroundToggle").addEventListener("change", optionChange)
+	document.getElementById("optionsBuildsNewName").addEventListener("keydown", createNewBuild)
 
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
 	// needs to be in a function like this to avoid stale content in itemsData and cursesData
