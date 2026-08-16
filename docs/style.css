@@ -105,6 +105,7 @@ body {
     /* main text color */
     color: #F1F5F9;
     margin: 0;
+    height: fit-content;
 
     background-image: url("assets/Omni_Gacha_Background.png");
     background-size: cover;
@@ -117,7 +118,7 @@ main {
     flex-direction: column;
     flex-wrap: nowrap;
     margin-bottom: 0;
-    height: 85vh;
+    height: fit-content;
 }
 
 .tabcontent {
