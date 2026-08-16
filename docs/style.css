@@ -60,6 +60,7 @@ div{
 #contentOptions {
     display: flex;
     margin-top: auto;
+    justify-content: space-around;
 }
 
 #contentOptions > span:last-child {
