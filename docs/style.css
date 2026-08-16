@@ -135,7 +135,7 @@ main {
     top: 0;
 }
 
-#selector > button, #backLink > button{
+#selector > button.tabButton, #backLink > button{
     width: 5%;
     background-color: var(--unselected-button-color);
 }
@@ -477,9 +477,10 @@ canvas {
 #optionsButton{
     height: fit-content;
     font-size:xxx-large;
-    background: none;
+    background: none!important;
     border: none;
     color: #0077FF;
+    margin: 0 0;
 }
 
 #optionsMenu{
