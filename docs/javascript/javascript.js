@@ -67,13 +67,22 @@ var optionsValues = {
 	"buildsArray": ["default"]
 }
 
+var buildsValues = {
+	default: {
+		items: [],
+		curses: []
+	}
+}
+
 const cookiePromise = cookieInit()
 const jsonPromise = loadParseJSON()
 
 
 window.onload = function () {
-	cookiePromise.then(jsonPromise.then(function () {
+	cookiePromise.then(function(){jsonPromise.then()}).then((function () {
 		createAllEventHandlers()
+		switchBuild(optionsValues.build)
+		createAllSortButtons()
 		applyAllOptions()
 		canvasInit("rollButton", "gachaFinish")
 		homeButton.click()
@@ -747,33 +756,43 @@ function createAllSortButtons() {
 
 //save saved rolls into a cookie :)
 function buildCookieSetFunction() {
+	buildsValues[optionsValues.build]["items"] = savedItemRolls
+	buildsValues[optionsValues.build]["curses"] = savedCurseRolls
 	cookieStore.set({
-		"name": optionsValues.build,
-		value: JSON.stringify({
-			items: savedItemRolls,
-			curses: savedCurseRolls
-		}),
+		"name": "builds",
+		value: JSON.stringify(buildsValues),
 		expires: Date.now() + 1000*60*60*24*365
 	}).then(function () {
 		//TODO, PROPER COOKIE PROMISE HANDLING
-		//TODO, MAKE COOKIES PERSIST AFTER SESSION
 	})
 }
-// initiate build cookie data, if it exits
-// handle creating sort buttons here bc I fear a race condition.
-function buildCookieInit() {
-	cookieStore.get(optionsValues.build).then(function (result) {
+// initiate the old build cookie data, if it exits
+// changing to have everything handled in one builds cookie instead of individual
+function oldBuildCookieInit() {
+	return cookieStore.get(optionsValues.build).then(function (result) {
 		if (result) {
-			console.log("cookies got!")
+			console.log("old cookies got!")
 			const json = JSON.parse(result.value)
 			savedItemRolls = json.items
 			savedCurseRolls = json.curses
-			redrawAllSaveTables()
-			createAllSortButtons();
 		}
 		else {
-			console.log("cookies not got!")
-			createAllSortButtons();
+			console.log("old cookies not got!")
+		}
+	})
+}
+//get the builds cookie, save to json.
+function buildCookieInit(){
+	return cookieStore.get("builds").then(function (result) {
+		if (result) {
+			console.log("new cookies got!")
+			const json = JSON.parse(result.value)
+			for(option in json){
+			buildsValues[option] = json[option]
+			}
+		}
+		else {
+			console.log("new cookies not got!")
 		}
 	})
 }
@@ -796,7 +815,7 @@ function optionCookieInit(){
 // call option cookie init then build cookie init.
 // build cookie relies on things from option so, don't bork that. or it will
 async function cookieInit(){
-	return optionCookieInit().then(buildCookieInit)
+	return optionCookieInit().then(oldBuildCookieInit).then(buildCookieInit)
 	
 }
 
@@ -1017,9 +1036,14 @@ function populateBuildSelector(){
 	select.value = optionsValues.build
 }
 //apply options to create a new build cookie
+//save after
 function buildCookieCreator(buildName) {
 	optionsValues.build = buildName;
 	optionsValues.buildsArray.push(buildName);
+	buildsValues[buildName] = {
+		items: [],
+		curses: []
+	}
 	savedItemRolls = [];
 	savedCurseRolls = [];
 	updateSavedOptions();
@@ -1069,7 +1093,9 @@ function switchBuild(buildValue){
 	}
 
 	optionsValues.build = buildValue
-	buildCookieInit()
+	savedItemRolls = buildsValues[buildValue]["items"]
+	savedCurseRolls = buildsValues[buildValue]["curses"]
+	updateSavedOptions()
 	redrawAllSaveTables()
 }
 
@@ -1078,7 +1104,7 @@ function switchBuild(buildValue){
  * @param {String} build 
  */
 function deleteBuild(build){
-	cookieStore.delete(build)
+	delete buildsValues[build]
 	optionsValues.buildsArray.splice(optionsValues.buildsArray.indexOf(build), 1)
 	switch(true){
 		case (optionsValues.buildsArray.length == 0):
@@ -1093,6 +1119,7 @@ function deleteBuild(build){
 			break;
 	}
 	updateSavedOptions()
+	buildCookieSetFunction()
 }
 
 function createAllEventHandlers(){
