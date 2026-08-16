@@ -486,12 +486,12 @@ canvas {
 
 #optionsMenu{
     height: 100vh;
-    width: 33vw;
+    width: 20vw;
     padding: 0 0;
     margin: 0 auto 0 0;
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
     z-index: 3;
     background-color: #52527A;
     overflow-y: auto;
@@ -558,7 +558,7 @@ canvas {
 #optionsClose {
     position: absolute;
     top: 0;
-    right: 0;
+    left: 0;
     color: red;
 }
 
