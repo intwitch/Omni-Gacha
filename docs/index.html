@@ -10,8 +10,7 @@
 </head>
 
 <body>
-    <header>
-        <div id="selector">
+    <header id="selector">
             <img id="logo" src="assets/Gacha_Site_Logo.png" 
                 alt="Omni gacha logo">
             <button id="homeButton" class="tabButton">Home</button>
@@ -22,7 +21,6 @@
             <button id="buildButton" class="tabButton">Build</button>
             <button id="searchButton" class="tabButton">Search</button>
             <button id="optionsButton">☰</button>
-        </div>
     </header>
     <main>
         <div id="optionsMenu">
@@ -57,8 +55,7 @@
         <div id="home" class="tabcontent">
             <p>
             <h1>Welcome to the Omni Gacha!</h1>
-            <h2>You, who have stared into the infinite multiverse and been rewarded for it, now have acess to the
-                infinite multiverse in the form of a gacha system.</h2>
+            <h2>You, who have stared into the infinite multiverse and been rewarded for it, now have access to eternity in the form of a gacha system.</h2>
             <h2>Become all powerful, rebuild a dead world, kill the world, be the greatest hero, the worst villain, or
                 anywhere in between. The world is your playground now. The power is up to luck but yours to command. The
                 possibilities are endless, and fate is yours to make the best of.</h2>
@@ -717,7 +714,7 @@
                             </span>
                         </span>
                     </div>
-                    <table id="rollTable">
+                    <table id="rollTable" class="itemsTable">
                         <caption>
                             <h2>Rolls</h2>
                         </caption>
@@ -755,7 +752,7 @@
                 </div>
 
                 <div>
-                    <table id="saveTable">
+                    <table id="saveTable" class="itemsTable">
                         <caption>
                             <h2>Saved Rolls</h2>
                         </caption>
@@ -878,7 +875,7 @@
                 </div>
 
                 <div id="itemRollHistory">
-                    <table id="itemRollHistoryTable">
+                    <table id="itemRollHistoryTable" class="itemsTable">
                         <caption>
                             <h2>Roll History</h2>
                         </caption>
@@ -1006,7 +1003,7 @@
             <div>
                 <button id="cursesRollButton">Get Curse</button>
                 <button id="cursesSaveButton">Save Curse</button>
-                <table id="cursesRollTable">
+                <table id="cursesRollTable" class="cursesTable">
                     <caption>
                         <h2>Rolls</h2>
                     </caption>
@@ -1028,7 +1025,7 @@
                 </table>
             </div>
             <div>
-                <table id="cursesSaveTable">
+                <table id="cursesSaveTable" class="cursesTable">
                     <caption>
                         <h2>Saved Curses</h2>
                     </caption>
@@ -1083,7 +1080,7 @@
                     <tbody>
                     </tbody>
                 </table>
-                <table id="curseRollHistoryTable">
+                <table id="curseRollHistoryTable" class="cursesTable">
                     <caption>
                         <h2>Roll History</h2>
                     </caption>
@@ -1145,7 +1142,7 @@
         <div id="build" class="tabcontent transparentBackground">
             <button id="buildExportButton">Export all</button>
             <div>
-                <table id="buildItemsTable">
+                <table id="buildItemsTable" class="itemsTable">
                     <caption>
                         <h2>Saved Items</h2>
                     </caption>
@@ -1267,7 +1264,7 @@
                 </table>
             </div>
             <div>
-                <table id="buildCursesTable">
+                <table id="buildCursesTable" class="cursesTable">
                     <caption>
                         <h2>Saved Curses</h2>
                     </caption>
@@ -1344,7 +1341,7 @@
                     <input type="text" id="searchItemsAdvanced" class="advancedSearch" placeholder='Magic:F Motion:C,D'>
                     <button id="searchItemsButton">search</button>
                 </forum>
-                <table id="searchItemsTable">
+                <table id="searchItemsTable" class="itemsTable">
                     <caption>
                         <h2>Items</h2>
                     </caption>
@@ -1484,7 +1481,7 @@
                         placeholder='Target:You,Others Name:sin'>
                     <button id="searchCursesButton">search</button>
                 </forum>
-                <table id="searchCursesTable">
+                <table id="searchCursesTable" class="cursesTable">
                     <caption>
                         <h2>Curses</h2>
                     </caption>
