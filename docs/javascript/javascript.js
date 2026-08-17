@@ -63,11 +63,31 @@ var searchTab;
 
 var optionsValues = {
 	"backgroundImage": true,
-	"build": "default"
+	"build": "default",
+	"buildsArray": ["default"]
 }
 
-//incredibly important, nothing can be done without.
-loadParseJSON()
+var buildsValues = {
+	default: {
+		items: [],
+		curses: []
+	}
+}
+
+const cookiePromise = cookieInit()
+const jsonPromise = loadParseJSON()
+
+
+window.onload = function () {
+	cookiePromise.then(function(){jsonPromise.then()}).then((function () {
+		createAllEventHandlers()
+		switchBuild(optionsValues.build)
+		createAllSortButtons()
+		applyAllOptions()
+		canvasInit("rollButton", "gachaFinish")
+		homeButton.click()
+	}))
+}
 
 /*
 load, parse and set raw data variables.
@@ -79,7 +99,7 @@ as of commit f0cfdc87fea60e87e354a4f11efe806425798e1f i've learned how .then wor
 it's uhh... past me is dumb bc it's easy.
 but this still works so... doesn't really *need* to be rewritten.
 */
-function loadParseJSON() {
+async function loadParseJSON() {
 	const xhr = new XMLHttpRequest();
 	xhr.open("GET", "data/values.json", false); // false = synchronous
 	xhr.send();
@@ -88,6 +108,7 @@ function loadParseJSON() {
 
 	rawItemsData = values.items
 	rawCursesData = values.curses
+	return null;
 }
 
 function savedToJsonString() {
@@ -172,7 +193,7 @@ function redrawSaveTable(table, data, save = true) {
 	//if save tables are being redrawn, they're changing.
 	//if they're changing, gotta update cookies.
 	// save paramater exists so redrawAllSaveTables can override.
-	if (save) cookieSetFunction()
+	if (save) buildCookieSetFunction()
 
 	var rows = [];
 
@@ -426,7 +447,7 @@ function redrawHistoryTable(tableID, historyArray, saveArray) {
 	function saveButtonFunctionCreator(saveArray, index) {
 		var saveButtonFunction = function () {
 			saveArray.push(historyArray[index])
-			cookieSetFunction()
+			buildCookieSetFunction()
 			redrawAllSaveTables()
 		}
 		return saveButtonFunction
@@ -734,54 +755,68 @@ function createAllSortButtons() {
 }
 
 //save saved rolls into a cookie :)
-function cookieSetFunction() {
+function buildCookieSetFunction() {
+	buildsValues[optionsValues.build]["items"] = savedItemRolls
+	buildsValues[optionsValues.build]["curses"] = savedCurseRolls
 	cookieStore.set({
-		"name": optionsValues.build,
-		value: JSON.stringify({
-			items: savedItemRolls,
-			curses: savedCurseRolls
-		}),
+		"name": "builds",
+		value: JSON.stringify(buildsValues),
 		expires: Date.now() + 1000*60*60*24*365
 	}).then(function () {
 		//TODO, PROPER COOKIE PROMISE HANDLING
-		//TODO, MAKE COOKIES PERSIST AFTER SESSION
 	})
 }
-// initiate build cookie data, if it exits
-// handle creating sort buttons here bc I fear a race condition.
-function buildCookieInit() {
-	cookieStore.get(optionsValues.build).then(function (result) {
+// initiate the old build cookie data, if it exits
+// changing to have everything handled in one builds cookie instead of individual
+function oldBuildCookieInit() {
+	return cookieStore.get(optionsValues.build).then(function (result) {
 		if (result) {
-			console.log("cookies got!")
+			console.log("old cookies got!")
 			const json = JSON.parse(result.value)
 			savedItemRolls = json.items
 			savedCurseRolls = json.curses
-			redrawAllSaveTables()
-			createAllSortButtons();
 		}
 		else {
-			console.log("cookies not got!")
-			createAllSortButtons();
+			console.log("old cookies not got!")
+		}
+	})
+}
+//get the builds cookie, save to json.
+function buildCookieInit(){
+	return cookieStore.get("builds").then(function (result) {
+		if (result) {
+			console.log("new cookies got!")
+			const json = JSON.parse(result.value)
+			for(option in json){
+			buildsValues[option] = json[option]
+			}
+		}
+		else {
+			console.log("new cookies not got!")
 		}
 	})
 }
 // get the option cookie and save it to optionsValues, then call optionsUpdateAll
 function optionCookieInit(){
-	cookieStore.get("options").then(function(result){
+	return cookieStore.get("options").then(function(result){
 		if(!result){
 			console.log("saved options found")
 			return;
 		}
 		console.log("saved options found")
-		optionsValues = JSON.parse(result.value)
-		updateAllOptions()
+		const savedValues = JSON.parse(result.value)
+
+		//do it like this so that if any new options are added, they aren't overwritten.
+		for(option in savedValues){
+			optionsValues[option] = savedValues[option]
+		}
 	})
 }
 // call option cookie init then build cookie init.
 // build cookie relies on things from option so, don't bork that. or it will
-function cookieInit(){
-	optionCookieInit()
-	buildCookieInit()
+async function cookieInit(){
+	return optionCookieInit().then(oldBuildCookieInit).then(buildCookieInit)
+	
 }
 
 //takes a string of the rank and returns the proper css variable value
@@ -951,9 +986,11 @@ function updateSavedOptions(){
 	})
 }
 //call every function that has something changed by options and change it, along with the html elements.
-function updateAllOptions(){
+function applyAllOptions(){
 	document.getElementById("optionsBackgroundToggle").checked = optionsValues.backgroundImage
 	updateBackgroundImage();
+
+	populateBuildSelector();
 }
 
 //called by changed in options. depending on event target value do different things.
@@ -969,19 +1006,130 @@ function optionChange(event){
 }
 //if options say off, off. if options say on, on.
 function updateBackgroundImage(){
+	const root = document.querySelector(":root")
 	if(optionsValues.backgroundImage){
 		document.body.style.backgroundImage = 'url("assets/Omni_Gacha_Background.png")';
+		root.style.setProperty('--tint', "#00000066")
 	}
 	else{
 		document.body.style.backgroundImage = "none";
+		root.style.setProperty('--tint', "#00000000")
 	}
 }
 
-window.onload = function () {
+function populateBuildSelector(){
+	const select = document.getElementById("optionsBuildSelector")
+	select.textContent = "" //wipe with textContent to avoid .innerHTML
 
-	cookieInit()
+	const builds = optionsValues.buildsArray;
+	if(builds.length == 0){
+		console.warn("warning, no builds. something has probably gone wrong.")
+		return;
+	}
+	for(build of builds){
+		const option = document.createElement("option");
+		option.value = build
+		option.innerText = build
+		select.appendChild(option)
+	}
 
-	canvasInit("rollButton", "gachaFinish")
+	select.value = optionsValues.build
+}
+//apply options to create a new build cookie
+//save after
+function buildCookieCreator(buildName) {
+	optionsValues.build = buildName;
+	optionsValues.buildsArray.push(buildName);
+	buildsValues[buildName] = {
+		items: [],
+		curses: []
+	}
+	savedItemRolls = [];
+	savedCurseRolls = [];
+	updateSavedOptions();
+	buildCookieSetFunction();
+}
+
+// create a new build, and switch to it
+function createNewBuildEventHandler(event){
+	const value = event.target.value
+	if(event.key != "Enter" || value == "") return;
+
+	createNewBuild(value)
+}
+/**
+ * 
+ * @param {String} newBuild 
+ * @returns -1 on fail null on success
+ */
+function createNewBuild(newBuild){
+	const select = document.getElementById("optionsBuildSelector")
+	
+	if(optionsValues.buildsArray.indexOf(newBuild) != -1){
+		alert(event.target.placeholder = `"${newBuild}" already a build`)
+		return -1;
+	}
+	buildCookieCreator(newBuild);
+	populateBuildSelector()
+	select.value = newBuild
+	return null
+}
+
+/**
+ * event handler to get value then call switchBuild()
+ * @param {Event} event
+**/
+function switchBuildEventHandler(event){
+	switchBuild(event.target.value)
+}
+/**
+ * switch build to the desired.
+ * @param {String} buildValue 
+ */
+function switchBuild(buildValue){
+	if(optionsValues.buildsArray.indexOf(buildValue) == -1){
+		console.err(`"${buildValue}" not in buildsList`)
+		return;
+	}
+
+	optionsValues.build = buildValue
+	savedItemRolls = buildsValues[buildValue]["items"]
+	savedCurseRolls = buildsValues[buildValue]["curses"]
+	updateSavedOptions()
+	redrawAllSaveTables()
+}
+
+/**
+ * delete build determined by string.
+ * @param {String} build 
+ */
+function deleteBuild(build){
+	delete buildsValues[build]
+	optionsValues.buildsArray.splice(optionsValues.buildsArray.indexOf(build), 1)
+	switch(true){
+		case (optionsValues.buildsArray.length == 0):
+			createNewBuild("default")
+			break;
+		case (optionsValues.build == build):
+			switchBuild(optionsValues.buildsArray[0])
+			populateBuildSelector()
+			break;
+		default:
+			populateBuildSelector()
+			break;
+	}
+	updateSavedOptions()
+	buildCookieSetFunction()
+}
+/**
+ * confirm user wants to delete current build then call deleteBuild
+ */
+function deleteCurrentBuildConfirm(){
+	const currentBuild = optionsValues.build
+	if(confirm("Are you sure you want to delte build: "+currentBuild)) deleteBuild(currentBuild)
+}
+
+function createAllEventHandlers(){
 
 	document.getElementById("contentOptions").addEventListener("change", updateContentFilter)
 
@@ -1053,6 +1201,9 @@ window.onload = function () {
 	document.getElementById("optionsClose").addEventListener("click", closeOptions)
 
 	document.getElementById("optionsBackgroundToggle").addEventListener("change", optionChange)
+	document.getElementById("optionsBuildSelector").addEventListener("change", switchBuildEventHandler)
+	document.getElementById("optionsBuildsNewName").addEventListener("keydown", createNewBuildEventHandler)
+	document.getElementById("optionsBuildsDeleteButton").addEventListener("click", deleteCurrentBuildConfirm)
 
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
 	// needs to be in a function like this to avoid stale content in itemsData and cursesData
@@ -1063,7 +1214,4 @@ window.onload = function () {
 	document.getElementById("searchCursesButton").addEventListener("click", function () {
 		searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable")(this)
 	})
-
-	//let user start rolling.
-	homeButton.click()
 };

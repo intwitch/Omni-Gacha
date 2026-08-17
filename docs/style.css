@@ -1,6 +1,9 @@
 :root {
+    --main-background-color: #0F172A;
     --unselected-button-color: #7A4988;
     --selected-button-color: #710193;
+
+    --tint: #00000066;
 
     --sub-element-color: #1E293B;
     --transparent-sub-element: #1E293B79;
@@ -23,9 +26,13 @@ table, th, td {
 
 table caption {
     text-shadow: 3px 3px 4px #000000;
-    width: fit-content;
-    margin: 0 auto;
     color: #F1F5F9;
+    height: fit-content;
+}
+
+table caption h2 {
+    margin: 0;
+    margin-left: 1em;
 }
 
 span {
@@ -57,6 +64,7 @@ div{
 #contentOptions {
     display: flex;
     margin-top: auto;
+    justify-content: space-around;
 }
 
 #contentOptions > span:last-child {
@@ -96,13 +104,14 @@ table th:nth-child(3) {
 body {
     display: flex;
     flex-direction: column;
-    background-color: #0F172A;
+    background-color: var(--main-background-color);
     justify-content: space-between;
     /* main text color */
     color: #F1F5F9;
     margin: 0;
+    height: fit-content;
 
-    background-image: url("assets/Omni_Gacha_Background.png");
+    background-image: url("assets/Omni_Gacha_Background.webp");
     background-size: cover;
     background-attachment: fixed;
     background-position: top center;
@@ -112,9 +121,8 @@ main {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    margin-top: 15vh;
     margin-bottom: 0;
-    height: 85vh;
+    height: fit-content;
 }
 
 .tabcontent {
@@ -125,16 +133,17 @@ main {
     display: flex;
     background-color: var(--sub-element-color);
     justify-content: right;
-    align-items: stretch;
-    height: 3em;
+    align-items: center;
 
     position: sticky;
     top: 0;
 }
 
-#selector > button, #backLink > button{
+#selector > button.tabButton, #backLink > button{
     width: 5%;
     background-color: var(--unselected-button-color);
+    margin: auto 1.5em;
+    height: 3em;
 }
 
 #backLink button{
@@ -188,7 +197,8 @@ ul {
 }
 
 forum.options{
-    padding-bottom: 10em;
+    height: fit-content;
+    margin-bottom: 1em;
 }
 
 .subOption {
@@ -256,11 +266,9 @@ input.advancedSearch{
 }
 
 #logo {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: left;
     margin-right: auto;
-    align-items: center;
+    object-fit: contain;
+    height: 4em;
 }
 
 button, #logo {
@@ -317,8 +325,8 @@ nav a:visited{
 }
 
 header{
-    height: 15vh;
-    position: fixed;
+    height: fit-content;
+    position: sticky;
     top: 0;
     background-color: var(--sub-element-color);
     z-index: 2;
@@ -459,7 +467,7 @@ canvas {
     background-color: #004400;
 }
 
-.darkBlueColor, thead{
+.darkBlueColor{
     background-color: #000077;
 }
 
@@ -473,20 +481,21 @@ canvas {
 
 #optionsButton{
     height: fit-content;
-    font-size:xxx-large;
-    background: none;
+    font-size: xx-large;
+    background: none!important;
     border: none;
     color: #0077FF;
+    margin: 0 0;
 }
 
 #optionsMenu{
     height: 100vh;
-    width: 33vw;
+    width: 20vw;
     padding: 0 0;
     margin: 0 auto 0 0;
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
     z-index: 3;
     background-color: #52527A;
     overflow-y: auto;
@@ -533,13 +542,81 @@ canvas {
     margin: auto
 }
 
-#optionsClose{
+#optionsBuilds{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+#optionsBuilds > *{
+    margin: 0 0.5em;
+}
+
+#optionsClose, #optionsBuildsCreate{
     width: fit-content;
-    position: absolute;
-    top:0;
-    right: 0;
     background-color: white;
-    color: red;
     font-weight: bold;
     font-size: large;
 }
+
+#optionsClose {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: red;
+}
+
+#optionsBuildsNewName{
+    flex-grow: 1;
+}
+
+.transparentBackground{
+    background-color: var(--tint);
+    padding: 0;
+    padding-bottom: auto;
+    margin: 1em 1em;
+}
+
+.solidBackground{
+    background-color: var(--main-background-color);
+}
+
+.noTopPadding{
+    padding: 0;
+    margin: 0;
+}
+
+.itemsTable thead, .itemsTable caption{
+    background-color: #000077;
+}
+
+.itemsTable tbody{
+    background-color: #000050;
+}
+
+.cursesTable thead, .cursesTable caption{
+    background-color: #500077;
+}
+
+.cursesTable tbody{
+    background-color: #300050;
+}
+
+.itemsTable caption, .cursesTable caption{
+    width: 100%;
+    text-align: left;
+    border: 1px solid silver;
+}
+
+#optionsBuildsDeleteButton{
+    margin: 0 auto;
+    background-color: red;
+    color: white;
+}
+
+#optionsBuildsDelete{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+

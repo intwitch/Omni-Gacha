@@ -1,5 +1,16 @@
 options menu
-finish about section
+
+make logo circular
+move options to far right
+place NSFW options into options menu
+shrink top bar in acordance with those changes
+
+give gacha, curses, and build transparent backgrounds
+
+give table captions background, align text left
+make curses purple tables purple
+
+redo the entire fucking gacha animation
 
 move onto step 2; layout.
 
