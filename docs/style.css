@@ -260,11 +260,9 @@ input.advancedSearch{
 }
 
 #logo {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: left;
     margin-right: auto;
-    align-items: center;
+    object-fit: contain;
+    height: 4em;
 }
 
 button, #logo {
