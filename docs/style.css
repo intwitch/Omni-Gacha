@@ -60,6 +60,7 @@ div{
 #contentOptions {
     display: flex;
     margin-top: auto;
+    justify-content: space-around;
 }
 
 #contentOptions > span:last-child {
@@ -104,6 +105,7 @@ body {
     /* main text color */
     color: #F1F5F9;
     margin: 0;
+    height: fit-content;
 
     background-image: url("assets/Omni_Gacha_Background.png");
     background-size: cover;
@@ -115,9 +117,8 @@ main {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    margin-top: 15vh;
     margin-bottom: 0;
-    height: 85vh;
+    height: fit-content;
 }
 
 .tabcontent {
@@ -135,7 +136,7 @@ main {
     top: 0;
 }
 
-#selector > button, #backLink > button{
+#selector > button.tabButton, #backLink > button{
     width: 5%;
     background-color: var(--unselected-button-color);
 }
@@ -259,11 +260,9 @@ input.advancedSearch{
 }
 
 #logo {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: left;
     margin-right: auto;
-    align-items: center;
+    object-fit: contain;
+    height: 4em;
 }
 
 button, #logo {
@@ -320,8 +319,8 @@ nav a:visited{
 }
 
 header{
-    height: 15vh;
-    position: fixed;
+    height: fit-content;
+    position: sticky;
     top: 0;
     background-color: var(--sub-element-color);
     z-index: 2;
@@ -477,19 +476,20 @@ canvas {
 #optionsButton{
     height: fit-content;
     font-size:xxx-large;
-    background: none;
+    background: none!important;
     border: none;
     color: #0077FF;
+    margin: 0 0;
 }
 
 #optionsMenu{
     height: 100vh;
-    width: 33vw;
+    width: 20vw;
     padding: 0 0;
     margin: 0 auto 0 0;
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
     z-index: 3;
     background-color: #52527A;
     overflow-y: auto;
@@ -556,7 +556,7 @@ canvas {
 #optionsClose {
     position: absolute;
     top: 0;
-    right: 0;
+    left: 0;
     color: red;
 }
 
@@ -567,7 +567,7 @@ canvas {
 .transparentBackground{
     background-color: var(--tint);
     padding: 0;
-    min-height: calc(85vh - 2em);
+    padding-bottom: auto;
     margin: 1em 1em;
 }
 

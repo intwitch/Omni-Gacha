@@ -6,17 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css?v=0.1.0">
     <script src="javascript/javascript.js?v=0.1.0"></script>
-    <link rel="icon" type="image/x-icon" href="assets/logo.webp?v=0.1.0">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.png?v=0.1.0">
 </head>
 
 <body>
     <header>
         <div id="selector">
-            <span id="logo" class="tabButton">
-                <img src="assets/logo.webp"
-                    alt="Omni Gacha Logo, a cirlce in space with gears inside with the text, Omni, overtop.">
-                <h2>Omni Gacha</h2>
-            </span>
+            <img id="logo" src="assets/Gacha_Site_Logo.png" 
+                alt="Omni gacha logo">
             <button id="homeButton" class="tabButton">Home</button>
             <button id="aboutButton" class="tabButton">About</button>
             <button id="startsButton" class="tabButton">Starting</button>
@@ -24,20 +21,10 @@
             <button id="cursesButton" class="tabButton">Curses</button>
             <button id="buildButton" class="tabButton">Build</button>
             <button id="searchButton" class="tabButton">Search</button>
+            <button id="optionsButton">☰</button>
         </div>
-
-        <button id="optionsButton">☰</button>
-
-        <span id="contentOptions" class="floatR">
-            <span>
-                <label for="nsfwCheckbox">NSFW</label><br>
-                <input type="checkbox" id="nsfwCheckbox" name="nsfwCheckbox">
-            </span>
-            <span>
-                <label for="nsfwOnlyCheckbox">NSFW Only</label><br>
-                <input type="checkbox" id="nsfwOnlyCheckbox" name="nsfwOnlyCheckbox">
-            </span>
-        </span>
+    </header>
+    <main>
         <div id="optionsMenu">
             <button id="optionsClose">X</button>
             <div class="twoWideGrid">
@@ -52,12 +39,20 @@
                 <select id="optionsBuildSelector">
                     <!--populate with javascript, default to, well, "deafult"-->
                 </select>
-                <input type="text" id="optionsBuildsNewName" placeholder="enter new build name and press enter">
+                <input type="text" id="optionsBuildsNewName" placeholder="enter name & press enter">
+            </div>
+            <div id="contentOptions" class="floatR">
+                <h3>Content Options</h3>
+                <span>
+                    <label for="nsfwCheckbox">NSFW</label><br>
+                    <input type="checkbox" id="nsfwCheckbox" name="nsfwCheckbox">
+                </span>
+                <span>
+                    <label for="nsfwOnlyCheckbox">NSFW Only</label><br>
+                    <input type="checkbox" id="nsfwOnlyCheckbox" name="nsfwOnlyCheckbox">
+                </span>
             </div>
         </div>
-    </header>
-
-    <main>
 
         <div id="home" class="tabcontent">
             <p>
