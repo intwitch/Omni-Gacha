@@ -602,3 +602,15 @@ canvas {
     text-align: left;
     border: 1px solid silver;
 }
+
+#optionsBuildsDeleteButton{
+    margin: 0 auto;
+    background-color: red;
+    color: white;
+}
+
+#optionsBuildsDelete{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}

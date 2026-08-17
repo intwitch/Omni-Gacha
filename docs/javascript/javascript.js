@@ -1121,6 +1121,13 @@ function deleteBuild(build){
 	updateSavedOptions()
 	buildCookieSetFunction()
 }
+/**
+ * confirm user wants to delete current build then call deleteBuild
+ */
+function deleteCurrentBuildConfirm(){
+	const currentBuild = optionsValues.build
+	if(confirm("Are you sure you want to delte build: "+currentBuild)) deleteBuild(currentBuild)
+}
 
 function createAllEventHandlers(){
 
@@ -1196,6 +1203,7 @@ function createAllEventHandlers(){
 	document.getElementById("optionsBackgroundToggle").addEventListener("change", optionChange)
 	document.getElementById("optionsBuildSelector").addEventListener("change", switchBuildEventHandler)
 	document.getElementById("optionsBuildsNewName").addEventListener("keydown", createNewBuildEventHandler)
+	document.getElementById("optionsBuildsDeleteButton").addEventListener("click", deleteCurrentBuildConfirm)
 
 	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
 	// needs to be in a function like this to avoid stale content in itemsData and cursesData
