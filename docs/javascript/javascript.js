@@ -70,10 +70,12 @@ var optionsValues = {
 }
 
 var buildsValues = {
+	/*
 	default: {
 		items: [],
 		curses: []
 	}
+	*/
 }
 
 const cookiePromise = cookieInit()
@@ -775,14 +777,53 @@ function createAllSortButtons() {
 		})
 	}
 }
+/**
+ * given a name of item or curse, return the array of all data
+ * if passed argument is not a string, assume it's an array, and return that array (backwards compatibility with old saves)
+ * if name is not found also return raw name
+ * @param {string} name
+ * @param {boolean} isItem is the raw item array and not curse array
+ */
+function nameToFull(name, isItem = true){
+	if(typeof name != "string") return name;
+	var dataArray;
+	if(isItem) dataArray = rawItemsData;
+	else dataArray = rawCursesData;
+
+	// i feel hoorible about the amount if statements here, unfortunately it's a lot of searching in an unsorted array
+	
+	for(data of dataArray){
+		if(data[ITEMS.NAME] == name) return data
+	}
+	console.error(`${name} not found in raw data array. something has gone wrong`)
+	return name
+}
 
 //save saved rolls into a cookie :)
 function buildCookieSetFunction() {
 	buildsValues[optionsValues.build]["items"] = savedItemRolls
 	buildsValues[optionsValues.build]["curses"] = savedCurseRolls
+
+	//saving all that data takes a lot of the 4098 Byte limit, save just names instead.
+	//for now it works, an outright ID or further compression shouldn't be required, yet.
+
+	var truncatedBuildValues = {}
+	for(build in buildsValues){
+		var truncatedBuild = {}
+		truncatedBuild.items = []
+		truncatedBuild.curses = []
+		for(item of buildsValues[build].items){
+			truncatedBuild.items.push(item[ITEMS.NAME])
+		}
+		for(curse of buildsValues[build].curses){
+			truncatedBuild.curses.push(curse[CURSES.NAME])
+		}
+		truncatedBuildValues[build] = truncatedBuild
+	}
+
 	cookieStore.set({
 		"name": "builds",
-		value: JSON.stringify(buildsValues),
+		value: JSON.stringify(truncatedBuildValues),
 		expires: Date.now() + 1000*60*60*24*365
 	}).then(function () {
 		//TODO, PROPER COOKIE PROMISE HANDLING
@@ -809,12 +850,28 @@ function buildCookieInit(){
 		if (result) {
 			console.log("new cookies got!")
 			const json = JSON.parse(result.value)
-			for(option in json){
-			buildsValues[option] = json[option]
+			for(build in json){
+				var expandedBuild = {
+					"items": [],
+					"curses": []
+				}
+				
+				for(item of json[build].items){
+					expandedBuild.items.push(nameToFull(item))
+				}
+				for(curse of json[build].curses){
+					expandedBuild.curses.push(nameToFull(curses, false))
+				}
+
+				buildsValues[build] = expandedBuild
 			}
 		}
 		else {
 			console.log("new cookies not got!")
+			buildsValues.default = {
+				"items": [],
+				"curses": []
+			}
 		}
 	})
 }
