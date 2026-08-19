@@ -32,6 +32,10 @@ function buildData() {
 
     console.log(`final data obtained.\nItems: ${itemsData.length}\nCurses: ${cursesData.length}`)
 
+    //remove header values
+    itemsData.splice(0, 1)
+    cursesData.splice(0, 1)
+
     //item 13 stats.
     //needs to be a number.
     //skip header
