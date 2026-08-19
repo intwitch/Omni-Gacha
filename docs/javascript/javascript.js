@@ -64,7 +64,9 @@ var searchTab;
 var optionsValues = {
 	"backgroundImage": true,
 	"build": "default",
-	"buildsArray": ["default"]
+	"buildsArray": ["default"],
+	"NSFW": false,
+	"NSFWOnly": false
 }
 
 var buildsValues = {
@@ -130,13 +132,22 @@ function curseToString(curse) {
 	if (curse[CURSES.NSFW] === "TRUE") sfw = " | NSFW"
 	return `${curse[CURSES.NAME]} | ${curse[CURSES.LEVEL]}${sfw}\n${curse[CURSES.DESCRIPTION]}\nResolution: ${curse[CURSES.RESOLUTION]}`
 }
-// check checkbox status and update values acordingly, then call updatefilter for more general
-function updateContentFilter() {
+/**
+ * call back function for the "contentOptions" event listener.
+ * change appropriate values, handle dom element visibility, save the options cookie, call required filltering functions
+ */
+function contentFilterChange(){
 	NSFWCheckBox = document.getElementById("nsfwCheckbox")
 	NSFWOnlyCheckBox = document.getElementById("nsfwOnlyCheckbox")
 
 	NSFW = NSFWCheckBox.checked
 	NSFWOnly = NSFWOnlyCheckBox.checked
+
+	//TODO refactor out old variables outside options.
+	optionsValues.NSFW = NSFW
+	optionsValues.NSFWOnly = NSFWOnly
+
+	updateSavedOptions();
 
 	var searchParam
 
@@ -150,18 +161,29 @@ function updateContentFilter() {
 			return;
 		} else {
 			// NSFWONLY && NSFW
-			searchParam = "TRUE"
+			NSFWOnlyCheckBox.parentElement.style.visibility = "visible"
+			searchParam = true
 		}
 	} else {
 		// NSFW = false and thus NSFWONLY = false
-		searchParam = "FALSE"
+		searchParam = false
 		NSFWOnlyCheckBox.checked = false
 		NSFWOnlyCheckBox.parentElement.style.visibility = "hidden"
 	}
+	updateContentFilter(searchParam)
+}
+
+/**
+ * refilter ItemsData and CursesData based on boolean input
+ * if you want some NSFW but not only this function shoulld not be called
+ * skip straight to updateFilterData() instead
+ * @param {boolean} searchParam 
+ */
+function updateContentFilter(searchParam) {
 
 	var filterFunction = function (seekPosition) {
 		var rFunction = function (value, index, array) {
-			return value[seekPosition] === searchParam
+			return value[seekPosition] === searchParam.toString().toUpperCase()
 		}
 		return rFunction
 	}
@@ -796,7 +818,7 @@ function buildCookieInit(){
 		}
 	})
 }
-// get the option cookie and save it to optionsValues, then call optionsUpdateAll
+// get the option cookie and save it to optionsValues
 function optionCookieInit(){
 	return cookieStore.get("options").then(function(result){
 		if(!result){
@@ -990,6 +1012,12 @@ function applyAllOptions(){
 	document.getElementById("optionsBackgroundToggle").checked = optionsValues.backgroundImage
 	updateBackgroundImage();
 
+	if(optionsValues.NSFW != undefined){
+		document.getElementById("nsfwCheckbox").checked = NSFW = optionsValues.NSFW
+		document.getElementById("nsfwOnlyCheckbox").checked = NSFWOnly = optionsValues.NSFWOnly
+	}
+	contentFilterChange();
+
 	populateBuildSelector();
 }
 
@@ -1131,7 +1159,7 @@ function deleteCurrentBuildConfirm(){
 
 function createAllEventHandlers(){
 
-	document.getElementById("contentOptions").addEventListener("change", updateContentFilter)
+	document.getElementById("contentOptions").addEventListener("change", contentFilterChange)
 
 	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
 
@@ -1205,9 +1233,7 @@ function createAllEventHandlers(){
 	document.getElementById("optionsBuildsNewName").addEventListener("keydown", createNewBuildEventHandler)
 	document.getElementById("optionsBuildsDeleteButton").addEventListener("click", deleteCurrentBuildConfirm)
 
-	//uses current data to check which headerToIndex function to use so things have to be initalized before adding event listener
-	// needs to be in a function like this to avoid stale content in itemsData and cursesData
-	updateContentFilter();
+	
 	document.getElementById("searchItemsButton").addEventListener("click", function () {
 		searchHandlerCreator(itemsData, savedItemRolls, "searchItemsTable")(this)
 	})
