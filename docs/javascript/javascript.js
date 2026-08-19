@@ -860,7 +860,7 @@ function buildCookieInit(){
 					expandedBuild.items.push(nameToFull(item))
 				}
 				for(curse of json[build].curses){
-					expandedBuild.curses.push(nameToFull(curses, false))
+					expandedBuild.curses.push(nameToFull(curse, false))
 				}
 
 				buildsValues[build] = expandedBuild
