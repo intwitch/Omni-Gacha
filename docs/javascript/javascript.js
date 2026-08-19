@@ -1126,7 +1126,7 @@ function deleteBuild(build){
  */
 function deleteCurrentBuildConfirm(){
 	const currentBuild = optionsValues.build
-	if(confirm("Are you sure you want to delte build: "+currentBuild)) deleteBuild(currentBuild)
+	if(confirm(`Are you sure you want to delte build "${currentBuild}"?`)) deleteBuild(currentBuild)
 }
 
 function createAllEventHandlers(){
