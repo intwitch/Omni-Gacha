@@ -127,3 +127,18 @@ function optionsCookieSetFunction() {
 		console.error(reason);
 	});
 }
+
+//apply options to create a new build cookie
+//save after
+function buildCookieCreator(buildName) {
+	optionsValues.build = buildName;
+	optionsValues.buildsArray.push(buildName);
+	buildsValues[buildName] = {
+		items: [],
+		curses: []
+	}
+	savedItemRolls = [];
+	savedCurseRolls = [];
+	optionsCookieSetFunction();
+	buildCookieSetFunction();
+}
