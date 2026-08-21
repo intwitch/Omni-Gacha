@@ -3,3 +3,4 @@
 .env
 node_modules/
 docs/data/values.json
+docs/javascript/javascript.js
