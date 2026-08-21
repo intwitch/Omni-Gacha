@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "",
-    "start": "node dataBuild.js"
+    "start": "node build.js"
   },
   "dependencies": {
     "dotenv": "^17.4.2"
