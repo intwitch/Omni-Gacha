@@ -17,7 +17,7 @@ var result = ""
 
 // function for filter to call
 function filterData(value, index, array) {
-    if(value[0] === "" || value[1] === "" || value[2] === ""){
+    if(value[13] == "0" || value[0] === "" || value[1] === "" || value[2] === ""){
         return false;
     }
     else return true;
