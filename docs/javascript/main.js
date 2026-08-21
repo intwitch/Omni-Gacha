@@ -134,106 +134,10 @@ function curseToString(curse) {
 	if (curse[CURSES.NSFW] === "TRUE") sfw = " | NSFW"
 	return `${curse[CURSES.NAME]} | ${curse[CURSES.LEVEL]}${sfw}\n${curse[CURSES.DESCRIPTION]}\nResolution: ${curse[CURSES.RESOLUTION]}`
 }
-/**
- * call back function for the "contentOptions" event listener.
- * change appropriate values, handle dom element visibility, save the options cookie, call required filltering functions
- */
 
 
-// gets random value from items or curses
-function getRandomValue(array) {
-	var randomIndex = Math.floor(Math.random() * array.length);
-	return array[randomIndex];
-}
-// given a table element, a item/curse value and history array;
-// draw the value data and add the value to the historyArray.
-function drawRollData(table, value, historyArray) {
-	var newRow = createRow(value);
 
-	drawTableBody(table, [newRow]);
-	historyArray.unshift(value);
-	return value;
-}
 
-//redraw a save table
-function redrawSaveTable(table, data, save = true) {
-
-	//if save tables are being redrawn, they're changing.
-	//if they're changing, gotta update cookies.
-	// save paramater exists so redrawAllSaveTables can override.
-	if (save) buildCookieSetFunction()
-
-	var rows = [];
-
-	function buttonFunctionCreator(index) {
-		var buttonFunction = function () {
-			data.splice(index, 1);
-			redrawSaveTable(table, data);
-		}
-		return buttonFunction
-	}
-	for(var i = 0; i < data.length; i++) {
-		//for some unholy reason, on some browsers it's running when .length = 0, which should be impossible but whatever. fine. we deal.
-		if(!data[i]){
-			//bad data, break;
-			break;
-		}
-		var row = createRow(data[i])
-
-		row.append(additionalButtonTableData(buttonFunctionCreator(i), "Remove"));
-
-		rows.push(row);
-	}
-
-	drawTableBody(table, rows);
-}
-
-//return an additional TD element with an on "click" listener.
-//function and value determined by inputs.
-function additionalButtonTableData(buttonFunction, buttonText) {
-	var additionalItem = document.createElement("td");
-	var itemButton = document.createElement("button");
-	itemButton.innerText = buttonText;
-	additionalItem.appendChild(itemButton);
-
-	itemButton.addEventListener("click", buttonFunction);
-	return additionalItem
-}
-
-//given array convert to tr element with td data
-function createRow(array) {
-	var newRow = document.createElement("tr");
-	var rowData = "";
-
-	for (var i = 0; i < array.length; i++) {
-		//i don't know how, i don't know why, but for some reason this is being called when array.length = 0, which shouldn't be fucking possible but whatever
-		rowData += "<td><p>" + array[i] + "</p></td>";
-	}
-	newRow.innerHTML = rowData;
-
-	var nameElement = newRow.querySelector("td p");
-	nameElement.classList.add("saveTableNameData");
-	nameElement.title = "copy";
-	nameElement.addEventListener("click", function () {
-		var copytext;
-		if (array.length > 14) copytext = itemToString(array);
-		else copytext = curseToString(array);
-
-		navigator.clipboard.writeText(copytext);
-	});
-
-	return newRow;
-}
-//given a table and an array of rows (tr element) , clear then draw them to tbody
-function drawTableBody(table, rows) {
-
-	var tbody = table.querySelector("tbody");
-	tbody.innerHTML = "";
-	for (var i = 0; i < rows.length; i++){
-		if(!rows[i]) break;
-		tbody.appendChild(rows[i])
-	};
-}
 
 
 //takes a string of the rank and returns the proper css variable value
