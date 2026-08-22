@@ -70,23 +70,31 @@ window.onload = function () {
 		curses: []
 	}
 
-	var itemsData = [];
-	var cursesData = [];
+	var data = {
+		items: [],
+		curses: []
+	}
 
-	var filteredItemsData = []
-	var filteredCursesData = []
+	var filteredData = {
+		items: [],
+		curses: []
+	}
 	
-	var currentItemRoll;
-	var savedItemRolls = [];
-	var itemRollHistory = [];
+	var savedRolls = {
+		items: [],
+		curses: []
+	}
 
-	var itemSearchResults = [];
-	var curseSearchResults = [];
+	var itemRollInfo = {
+		current: undefined,
+		history: []
+	}
 
-	var currentCurseRoll;
-	var savedCurseRolls = [];
-	var curseRollHistory = [];
-	
+	var curseRollInfo = {
+		current: undefined,
+		history: []
+	}
+
 
 	
 	var optionsValues = {
