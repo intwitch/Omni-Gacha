@@ -59,10 +59,6 @@ const CURSES = {
 	REWARD: 7
 }
 
-const cookiePromise = cookieInit()
-const jsonPromise = loadParseJSON(rawData)
-
-
 window.onload = function () {
 
 	var rawData = {
@@ -96,13 +92,14 @@ window.onload = function () {
 	}
 
 
-	
-	var optionsValues = {
+	// blocked commented out values are only meant to show deafults, they will be set later
+	var optionsValues = {/*
 		"backgroundImage": true,
 		"build": "default",
 		"buildsArray": ["default"],
 		"NSFW": false,
 		"NSFWOnly": false
+		*/
 	}
 	
 	var buildsValues = {
@@ -113,12 +110,9 @@ window.onload = function () {
 		}
 		*/
 	}
-	
-	var homeTab;
-	var itemsTab;
-	var cursesTab;
-	var buildTab;
-	var searchTab;
+
+	const cookiePromise = cookieInit(optionsValues, buildsValues)
+	const jsonPromise = loadParseJSON(rawData)
 	
 	cookiePromise.then(function () { jsonPromise.then() }).then((function () {
 		createAllEventHandlers()
@@ -322,13 +316,13 @@ function createAllEventHandlers() {
 
 	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
 
-	homeTab = document.getElementById("home");
-	aboutTab = document.getElementById("about");
-	startsTab = document.getElementById("starts")
-	itemsTab = document.getElementById("items");
-	cursesTab = document.getElementById("curses");
-	buildTab = document.getElementById("build");
-	searchTab = document.getElementById("search");
+	let homeTab = document.getElementById("home");
+	let aboutTab = document.getElementById("about");
+	let startsTab = document.getElementById("starts")
+	let itemsTab = document.getElementById("items");
+	let cursesTab = document.getElementById("curses");
+	let buildTab = document.getElementById("build");
+	let searchTab = document.getElementById("search");
 
 	homeButton = document.getElementById("homeButton");
 	homeButton.addEventListener("click", tabChangeHandlerCreator(homeTab));
@@ -403,7 +397,5 @@ function createAllEventHandlers() {
 
 export {
 	ITEMS,
-	CURSES,
-	rawItemsData,
-	rawCursesData,
+	CURSES
 };

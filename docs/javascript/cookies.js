@@ -1,18 +1,12 @@
 import {
 	CURSES,
 	ITEMS,
-	buildsValues,
-	optionsValues,
-	rawCursesData,
-	rawItemsData,
-	savedCurseRolls,
-	savedItemRolls,
 } from "./main.js";
 
 /**
  * given a name of item or curse, return the array of all data
  * if passed argument is not a string, assume it's an array, and return that array (backwards compatibility with old saves)
- * if name is not found also return raw name
+ * if name is not found return undefined
  * @param {string} name
  * @param {boolean} isItem is the raw item array and not curse array
  */
@@ -29,16 +23,27 @@ function nameToFull(name, isItem = true) {
 	console.error(`${name} not found in raw data array. something has gone wrong`);
 	return name;
 }
-//save saved rolls into a cookie :)
-function buildCookieSetFunction() {
-	buildsValues[optionsValues.build]["items"] = savedItemRolls;
-	buildsValues[optionsValues.build]["curses"] = savedCurseRolls;
+/**
+ * function to call whenever savedRolls changes. returns nothing. 
+ * mutates buildsValues with structured clone of savedrolls
+ * @param {object} buildsValues object to update
+ * @param {string} build which build to update
+ * @param {object} savedRolls what to update that build with
+ */
+function buildsValuesUpdate(buildsValues, savedRolls, build){
+	buildsValues[build] = structuredClone(savedRolls)
+}
 
+/**
+ * 
+ * @param {object} buildsValues values to save
+ */
+function buildCookieSetFunction(buildsValues) {
 	//saving all that data takes a lot of the 4098 Byte limit, save just names instead.
 	//for now it works, an outright ID or further compression shouldn't be required, yet.
-	var truncatedBuildValues = {};
+	let truncatedBuildValues = {};
 	for (build in buildsValues) {
-		var truncatedBuild = {};
+		let truncatedBuild = {};
 		truncatedBuild.items = [];
 		truncatedBuild.curses = [];
 		for (item of buildsValues[build].items) {
@@ -58,75 +63,95 @@ function buildCookieSetFunction() {
 		//TODO, PROPER COOKIE PROMISE HANDLING
 	});
 }
-// initiate the old build cookie data, if it exits
-// changing to have everything handled in one builds cookie instead of individual
-function oldBuildCookieInit() {
-	return cookieStore.get(optionsValues.build).then(function (result) {
-		if (result) {
-			console.log("old cookies got!");
-			const json = JSON.parse(result.value);
-			savedItemRolls = json.items;
-			savedCurseRolls = json.curses;
-		}
-		else {
-			console.log("old cookies not got!");
-		}
-	});
-}
-//get the builds cookie, save to json.
-function buildCookieInit() {
-	return cookieStore.get("builds").then(function (result) {
-		if (result) {
-			console.log("new cookies got!");
-			const json = JSON.parse(result.value);
-			for (build in json) {
-				var expandedBuild = {
-					"items": [],
-					"curses": []
-				};
 
-				for (item of json[build].items) {
-					expandedBuild.items.push(nameToFull(item));
-				}
-				for (curse of json[build].curses) {
-					expandedBuild.curses.push(nameToFull(curse, false));
-				}
 
-				buildsValues[build] = expandedBuild;
-			}
-		}
-		else {
-			console.log("new cookies not got!");
-			buildsValues.default = {
+/**
+ * get the build cookie data, complete the data, return it.
+ * @returns cookie data formated for buildsValues
+ */
+async function buildCookieInit() {
+
+	let returnValues = {}
+
+	try {
+		const json = JSON.parse(await cookieStore.get("builds").values)
+		for (build in json) {
+			let buildValues = {
 				"items": [],
 				"curses": []
 			};
-		}
-	});
-}
-// get the option cookie and save it to optionsValues
-function optionCookieInit() {
-	return cookieStore.get("options").then(function (result) {
-		if (!result) {
-			console.log("saved options found");
-			return;
-		}
-		console.log("saved options found");
-		const savedValues = JSON.parse(result.value);
 
-		//do it like this so that if any new options are added, they aren't overwritten.
-		for (option in savedValues) {
-			optionsValues[option] = savedValues[option];
-		}
-	});
-}
-// call option cookie init then build cookie init.
-// build cookie relies on things from option so, don't bork that. or it will
-async function cookieInit() {
-	return optionCookieInit().then(oldBuildCookieInit).then(buildCookieInit);
+			for (item of json[build].items) {
+				buildValues.items.push(nameToFull(item));
+			}
+			for (curse of json[build].curses) {
+				buildValues.curses.push(nameToFull(curse, false));
+			}
 
-}//save a cookie with name options and value string of optionsValues stringified, because a raw json doesn't work
-function optionsCookieSetFunction() {
+			returnValues[build] = buildValue
+		}
+		console.log("cookies got!");
+	}
+	catch (error) {
+		console.log("cookies not got!\n" + error);
+		returnValues.default = {
+			"items": [],
+			"curses": []
+		};
+	}
+	finally {
+		return returnValues;
+	}
+}
+
+/**
+ * trys to load the saved options cookie and if that fails, return a default
+ * @returns optionsValues
+ */
+async function optionCookieInit() {
+	//defaults
+	let optionsValues = {
+		"backgroundImage": true,
+		"build": "default",
+		"buildsArray": ["default"],
+		"NSFW": false,
+		"NSFWOnly": false
+	}
+	try {
+		const optionsResults = JSON.parse(await cookieStore.get("options").values)
+		console.log("options cookies got!")
+		for (option in optionsResults){
+			optionsValues[option] = optionsResults[options]
+		}
+	}
+	catch (error) {
+		console.log("options cookies not got!\n")
+	}
+
+	return optionsValues
+}
+/**
+ * call the two cookie init functions and mutate the given (preferably) empty object with saved values
+ * @param {object} optionsValues object to mutate with optionCookieInit() results
+ * @param {object} buildsValues  object to mutate with buildCookieInit() results
+ */
+async function cookieInit(optionsValues, buildsValues) {
+	const optionsCookieResults = optionCookieInit()
+	const buildCookieResults = buildCookieInit()
+
+	for(option in await optionsCookieResults){
+		optionsValues[option] = optionsCookieResults[option]
+	}
+	for(build in await buildCookieResults){
+		buildsValues[build] = buildCookieResults[build]
+	}
+}
+
+/**
+ * update the saved optionCookie
+ * @param {object} optionsValues options to save
+ */
+function optionsCookieSetFunction(optionsValues) {
 	cookieStore.set({
 		name: "options",
 		value: JSON.stringify(optionsValues),
@@ -139,28 +164,11 @@ function optionsCookieSetFunction() {
 	});
 }
 
-//apply options to create a new build cookie
-//save after
-function buildCookieCreator(buildName) {
-	optionsValues.build = buildName;
-	optionsValues.buildsArray.push(buildName);
-	buildsValues[buildName] = {
-		items: [],
-		curses: []
-	}
-	savedItemRolls = [];
-	savedCurseRolls = [];
-	optionsCookieSetFunction();
-	buildCookieSetFunction();
-}
-
 export {
 	nameToFull,
 	buildCookieSetFunction,
-	oldBuildCookieInit,
 	buildCookieInit,
 	optionCookieInit,
 	cookieInit,
-	optionsCookieSetFunction,
-	buildCookieCreator,
+	optionsCookieSetFunction
 };
