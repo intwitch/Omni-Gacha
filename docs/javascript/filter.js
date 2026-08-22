@@ -1,3 +1,16 @@
+import {
+	CURSES,
+	ITEMS,
+	NSFW,
+	NSFWOnly,
+	cursesData,
+	itemsData,
+	optionsValues,
+	rawCursesData,
+	rawItemsData,
+} from "./main.js";
+import { optionsCookieSetFunction } from "./cookies.js";
+
 function contentFilterChange(){
 	NSFWCheckBox = document.getElementById("nsfwCheckbox")
 	NSFWOnlyCheckBox = document.getElementById("nsfwOnlyCheckbox")
@@ -167,3 +180,16 @@ function searchFor(string) {
 		tbody.append(newRow);
 	}
 }
+
+export {
+	contentFilterChange,
+	updateContentFilter,
+	updateItemFilterData,
+	updateCurseFilterData,
+	updateFilterData,
+	valueFilter,
+	textValueFilter,
+	FilterTicketData,
+	filterItemByCategory,
+	searchFor,
+};

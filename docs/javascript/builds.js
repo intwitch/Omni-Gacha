@@ -76,3 +76,12 @@ function deleteCurrentBuildConfirm(){
 	const currentBuild = optionsValues.build
 	if(confirm(`Are you sure you want to delete build "${currentBuild}"?`)) deleteBuild(currentBuild)
 }
+
+export {
+	createNewBuildEventHandler,
+	createNewBuild,
+	switchBuildEventHandler,
+	switchBuild,
+	deleteBuild,
+	deleteCurrentBuildConfirm,
+};

@@ -1,3 +1,14 @@
+import {
+	CURSES,
+	ITEMS,
+	buildsValues,
+	optionsValues,
+	rawCursesData,
+	rawItemsData,
+	savedCurseRolls,
+	savedItemRolls,
+} from "./main.js";
+
 /**
  * given a name of item or curse, return the array of all data
  * if passed argument is not a string, assume it's an array, and return that array (backwards compatibility with old saves)
@@ -142,3 +153,14 @@ function buildCookieCreator(buildName) {
 	optionsCookieSetFunction();
 	buildCookieSetFunction();
 }
+
+export {
+	nameToFull,
+	buildCookieSetFunction,
+	oldBuildCookieInit,
+	buildCookieInit,
+	optionCookieInit,
+	cookieInit,
+	optionsCookieSetFunction,
+	buildCookieCreator,
+};

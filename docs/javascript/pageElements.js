@@ -1,3 +1,17 @@
+import {
+	CURSES,
+	ITEMS,
+	NSFW,
+	NSFWOnly,
+	cursesData,
+	itemRollHistory,
+	itemSearchResults,
+	optionsValues,
+	savedCurseRolls,
+	savedItemRolls,
+} from "./main.js";
+import { buildCookieSetFunction } from "./cookies.js";
+
 //open the options submenu... this will do more later probably I think. more things to handle. same with bellow
 function openOptions(){
 	document.getElementById("optionsMenu").style.display = "flex"
@@ -534,3 +548,30 @@ function drawTableBody(table, rows) {
 		tbody.appendChild(rows[i])
 	};
 }
+
+export {
+	openOptions,
+	closeOptions,
+	applyAllOptions,
+	optionChange,
+	updateBackgroundImage,
+	populateBuildSelector,
+	createAllSortButtons,
+	tabChangeHandlerCreator,
+	redrawAllSaveTables,
+	hideAllBut,
+	redrawHistoryTable,
+	searchHandlerCreator,
+	arrayMerge,
+	itemHeaderToIndex,
+	curseHeaderToIndex,
+	compareFunctionCreator,
+	rankToNumber,
+	exportSaved,
+	getRandomValue,
+	drawRollData,
+	redrawSaveTable,
+	additionalButtonTableData,
+	createRow,
+	drawTableBody,
+};

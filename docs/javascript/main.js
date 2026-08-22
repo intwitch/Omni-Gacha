@@ -1,3 +1,29 @@
+import {
+	createNewBuildEventHandler,
+	deleteCurrentBuildConfirm,
+	switchBuild,
+	switchBuildEventHandler,
+} from "./builds.js";
+import { cookieInit } from "./cookies.js";
+import {
+	contentFilterChange,
+	updateItemFilterData,
+} from "./filter.js";
+import {
+	applyAllOptions,
+	closeOptions,
+	createAllSortButtons,
+	drawRollData,
+	exportSaved,
+	getRandomValue,
+	openOptions,
+	optionChange,
+	redrawHistoryTable,
+	redrawSaveTable,
+	searchHandlerCreator,
+	tabChangeHandlerCreator,
+} from "./pageElements.js";
+
 const ITEMS = {
 	NAME: 0,
 	SERIES: 1,
@@ -371,4 +397,32 @@ function createAllEventHandlers(){
 	document.getElementById("searchCursesButton").addEventListener("click", function () {
 		searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable")(this)
 	})
+};
+
+export {
+	ITEMS,
+	CURSES,
+	rawItemsData,
+	rawCursesData,
+	itemsData,
+	cursesData,
+	filteredItemsData,
+	filteredCursesData,
+	NSFW,
+	NSFWOnly,
+	currentItemRoll,
+	savedItemRolls,
+	itemRollHistory,
+	itemSearchResults,
+	currentCurseRoll,
+	savedCurseRolls,
+	curseRollHistory,
+	curseSearchResults,
+	homeTab,
+	itemsTab,
+	cursesTab,
+	buildTab,
+	searchTab,
+	optionsValues,
+	buildsValues,
 };
