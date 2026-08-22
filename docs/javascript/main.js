@@ -70,12 +70,12 @@ window.onload = function () {
 		curses: []
 	}
 
-	var data = {
+	var filteredData = {
 		items: [],
 		curses: []
 	}
 
-	var filteredData = {
+	var RollData = {
 		items: [],
 		curses: []
 	}
