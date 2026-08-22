@@ -59,57 +59,60 @@ const CURSES = {
 	REWARD: 7
 }
 
-var rawItemsData;
-var rawCursesData;
-
-var itemsData = [];
-var cursesData = [];
-
-var filteredItemsData = []
-var filteredCursesData = []
-
-var NSFW = false;
-var NSFWOnly = false;
-
-var currentItemRoll;
-var savedItemRolls = [];
-var itemRollHistory = [];
-var itemSearchResults = [];
-
-var currentCurseRoll;
-var savedCurseRolls = [];
-var curseRollHistory = [];
-var curseSearchResults = [];
-
-var homeTab;
-var itemsTab;
-var cursesTab;
-var buildTab;
-var searchTab;
-
-var optionsValues = {
-	"backgroundImage": true,
-	"build": "default",
-	"buildsArray": ["default"],
-	"NSFW": false,
-	"NSFWOnly": false
-}
-
-var buildsValues = {
-	/*
-	default: {
-		items: [],
-		curses: []
-	}
-	*/
-}
-
 const cookiePromise = cookieInit()
-const jsonPromise = loadParseJSON()
+const jsonPromise = loadParseJSON(rawData)
 
 
 window.onload = function () {
-	cookiePromise.then(function(){jsonPromise.then()}).then((function () {
+
+	var rawData = {
+		items: [],
+		curses: []
+	}
+
+	var itemsData = [];
+	var cursesData = [];
+
+	var filteredItemsData = []
+	var filteredCursesData = []
+	
+	var currentItemRoll;
+	var savedItemRolls = [];
+	var itemRollHistory = [];
+
+	var itemSearchResults = [];
+	var curseSearchResults = [];
+
+	var currentCurseRoll;
+	var savedCurseRolls = [];
+	var curseRollHistory = [];
+	
+
+	
+	var optionsValues = {
+		"backgroundImage": true,
+		"build": "default",
+		"buildsArray": ["default"],
+		"NSFW": false,
+		"NSFWOnly": false
+	}
+	
+	var buildsValues = {
+		/*
+		default: {
+			items: [],
+			curses: []
+		}
+		*/
+	}
+	
+	var homeTab;
+	var itemsTab;
+	var cursesTab;
+	var buildTab;
+	var searchTab;
+	
+	cookiePromise.then(function () { jsonPromise.then() }).then((function () {
 		createAllEventHandlers()
 		switchBuild(optionsValues.build)
 		createAllSortButtons()
@@ -119,26 +122,17 @@ window.onload = function () {
 	}))
 }
 
-/*
-load, parse and set raw data variables.
-I have come to despsise async and await and then and promises and general
-I do not want to deal with ANY of that.
-so we use a xml request for my own sanity.
+/**
+ * 
+ * @param rawData json of rawData to mutate with fetch results
+ * @returns fetch results
+ */
+async function loadParseJSON(rawData) {
+	const values = await fetch("data/values.json")
 
-as of commit f0cfdc87fea60e87e354a4f11efe806425798e1f i've learned how .then works.
-it's uhh... past me is dumb bc it's easy.
-but this still works so... doesn't really *need* to be rewritten.
-*/
-async function loadParseJSON() {
-	const xhr = new XMLHttpRequest();
-	xhr.open("GET", "data/values.json", false); // false = synchronous
-	xhr.send();
-
-	values = JSON.parse(xhr.responseText);
-
-	rawItemsData = values.items
-	rawCursesData = values.curses
-	return null;
+	rawData.items = values.items
+	rawData.curses = values.curses
+	return values
 }
 
 function savedToJsonString() {
@@ -167,9 +161,9 @@ function curseToString(curse) {
 
 
 //takes a string of the rank and returns the proper css variable value
-function rankToColor(rank){
+function rankToColor(rank) {
 	const style = window.getComputedStyle(document.body)
-	switch(rank.toLowerCase()){
+	switch (rank.toLowerCase()) {
 		case "f":
 			return style.getPropertyValue("--Frank")
 		case "e":
@@ -224,17 +218,17 @@ function canvasInit(canvasID, eventName) {
 		ctx.lineWidth = 1
 		drawTurnDial()
 		ctx.save()
-		
+
 		// draw the dial, rotated by angle default 0
-		function drawTurnDial(angle = 0){
+		function drawTurnDial(angle = 0) {
 			ctx.beginPath()
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
 			ctx.drawImage(gumballImage, 0, 0, canvas.width, canvas.height)
 			ctx.fillStyle = "grey"
-			ctx.arc(canvas.width / 2, dialCenter, radius, 0, 2*Math.PI)
+			ctx.arc(canvas.width / 2, dialCenter, radius, 0, 2 * Math.PI)
 			ctx.fill()
 			ctx.beginPath()
-			ctx.translate(canvas.width/2, dialCenter)
+			ctx.translate(canvas.width / 2, dialCenter)
 			ctx.rotate(angle)
 			ctx.fillStyle = "#404040"
 			ctx.moveTo(0 - dialRadius * 10, 0)
@@ -245,11 +239,11 @@ function canvasInit(canvasID, eventName) {
 		}
 		// animation to rotate dial
 		var currentFrame;
-		function rotateTurnDial(){
+		function rotateTurnDial() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
 			ctx.drawImage(gumballImage, 0, 0, canvas.width, canvas.height)
 			drawTurnDial(angle)
-			if(angle > Math.PI){
+			if (angle > Math.PI) {
 				window.cancelAnimationFrame(currentFrame)
 				angle = 0
 				ctx.beginPath()
@@ -258,9 +252,9 @@ function canvasInit(canvasID, eventName) {
 				currentFrame = window.requestAnimationFrame(dropBall)
 				return
 			}
-			angle+=angleVelocity;
+			angle += angleVelocity;
 			currentFrame = window.requestAnimationFrame(rotateTurnDial)
-			
+
 		}
 		// animation to drop ball.
 		function dropBall() {
@@ -280,18 +274,18 @@ function canvasInit(canvasID, eventName) {
 			if (y >= 280 * scale) {
 				window.cancelAnimationFrame(currentFrame)
 				currentFrame = null
-				y = cutoff - radius*2;
+				y = cutoff - radius * 2;
 				canvas.dispatchEvent(event)
 				return;
 			}
 			currentFrame = window.requestAnimationFrame(dropBall)
 		}
 
-		function animationSetupPlay(){
+		function animationSetupPlay() {
 			ctx.restore()
 			ctx.save()
 			var filteredData
-			if(eventName === "gachaFinish") filteredData = filteredItemsData
+			if (eventName === "gachaFinish") filteredData = filteredItemsData
 			else filteredData = filteredCursesData
 			var data = getRandomValue(filteredData)
 			event = new CustomEvent(eventName, {
@@ -301,9 +295,9 @@ function canvasInit(canvasID, eventName) {
 			currentFrame = window.requestAnimationFrame(rotateTurnDial)
 		}
 
-		canvas.addEventListener("click", function(){
+		canvas.addEventListener("click", function () {
 			// if there's already a currentFrame, return.
-			if(currentFrame) return
+			if (currentFrame) return
 			animationSetupPlay()
 		})
 	})
@@ -314,7 +308,7 @@ function canvasInit(canvasID, eventName) {
 
 
 
-function createAllEventHandlers(){
+function createAllEventHandlers() {
 
 	document.getElementById("contentOptions").addEventListener("change", contentFilterChange)
 
@@ -333,7 +327,7 @@ function createAllEventHandlers(){
 	document.getElementById("logo").addEventListener("click", function () { homeButton.click() }) //mirror above event
 
 	document.getElementById("aboutButton").addEventListener("click", tabChangeHandlerCreator(aboutTab));
-	
+
 	document.getElementById("startsButton").addEventListener("click", tabChangeHandlerCreator(startsTab))
 
 	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
@@ -390,7 +384,7 @@ function createAllEventHandlers(){
 	document.getElementById("optionsBuildsNewName").addEventListener("keydown", createNewBuildEventHandler)
 	document.getElementById("optionsBuildsDeleteButton").addEventListener("click", deleteCurrentBuildConfirm)
 
-	
+
 	document.getElementById("searchItemsButton").addEventListener("click", function () {
 		searchHandlerCreator(itemsData, savedItemRolls, "searchItemsTable")(this)
 	})
@@ -404,25 +398,4 @@ export {
 	CURSES,
 	rawItemsData,
 	rawCursesData,
-	itemsData,
-	cursesData,
-	filteredItemsData,
-	filteredCursesData,
-	NSFW,
-	NSFWOnly,
-	currentItemRoll,
-	savedItemRolls,
-	itemRollHistory,
-	itemSearchResults,
-	currentCurseRoll,
-	savedCurseRolls,
-	curseRollHistory,
-	curseSearchResults,
-	homeTab,
-	itemsTab,
-	cursesTab,
-	buildTab,
-	searchTab,
-	optionsValues,
-	buildsValues,
 };
