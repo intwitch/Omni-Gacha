@@ -127,7 +127,7 @@ class filteringHandler {
 	 * update #data.roll
 	 */
 	updateRollData() {
-		this.#filterItemByRank
+		this.#updateItemRollData()
 		this.updateCurseRollData()
 	}
 
@@ -179,46 +179,116 @@ class filteringHandler {
 		return filterFunctionCreator
 	}
 
-	/**
-	 * filter items by rank determined in #filters.ranks
-	 * @param {string[]} itemsData array of items
-	 * @returns filtered items array
-	 */
-	#filterItemByRank(itemsData) {
-		return itemsData.filter(valueFilter(this.#filters.ranks, ITEMS.RANK));
+	searchItems(searchText){
+
 	}
-	// determine categories to filter by, (if any if all is checked), then call filter with valueFilter
-	filterItemByCategory(itemsData) {
-		var itemsCategoriesFilters = document.querySelectorAll("#itemsCategoryFilter input");
-		var filter = []
 
-		if (itemsCategoriesFilters[0].checked) return itemsData;
+	searchCurses(searchText){
 
-		for (var category of itemsCategoriesFilters) {
-			if (category.checked) filter.push(category.value);
+	}
+
+	#search() {
+
+		//use sourceArray to determine item or curse
+		var headerToIndex
+		var isCurse
+		if (sourceArray[0].length > 10) {
+			headerToIndex = itemHeaderToIndex
+			isCurse = false
+		}
+		else {
+			headerToIndex = curseHeaderToIndex
+			isCurse = true
 		}
 
-		return itemsData.filter(valueFilter(filter, ITEMS.CATEGORY))
-	}
-	// shabby but technically works.... for now.
-	searchFor(string) {
-		var regex = new RegExp(string, "i");
-		var searchResults = itemsData.filter(function (item) {
-			return item[ITEMS.NAME].concat(item[ITEMS.SERIES], item[ITEMS.DESCRIPTION]).search(regex) != -1;
-		});
+		
+		
 
-		var tbody = document.querySelector("#searchTable > tbody");
-		tbody.innerHTML
-			= ""; //wipe before replace
+		var searchHandler = function (trigger) {
+			console.log("search")
+			var resultsArray = sourceArray;
+			var inputs = trigger.parentElement.querySelectorAll("input");
 
-		for (var i = 0; i < searchResults.length; i++) {
-			if (!searchResults[i]) break;
-			var element = searchResults[i];
-			var newRow = document.createElement("tr");
-			newRow.innerHTML = "<td>" + element[0] + "</td><td>" + element[1] + "</td><td>" + element[2] + "</td><td>" + element[3] + "</td><td>" + element[4] + "</td><td>" + element[5] + "</td><td>" + element[6] + "</td><td>" + element[7] + "</td><td>" + element[8] + "</td><td>" + element[9] + "</td><td>" + element[10] + "</td><td>" + element[11] + "</td><td>" + element[12] + "</td><td>" + element[13] + "</td><td>" + element[14] + "</td><td>" + element[15] + "</td><td>" + element[16] + "</td><td>" + element[17] + "</td><td>" + element[18] + "</td><td>" + element[19] + "</td><td>" + element[20] + "</td>";
-			tbody.append(newRow);
+			var advancedSearchValue = smartSplit(inputs[3].value);
+			const advancedSearchVerifyPattern = /^[a-z0-9 ]+(,[a-z0-9 ]+)*:[a-z0-9 ]+(,[a-z0-9 ]+)*$/i;
+
+			advancedSearchValue = advancedSearchValue.filter(function (value) {
+				return (value.match(advancedSearchVerifyPattern));
+			});
+
+			for (var i = 0; i < 3; i++) {
+				if (inputs[i].value == "") continue;
+				resultsArray = resultsArray.filter(textValueFilter(inputs[i].value.toLowerCase().split(","), i))
+			}
+			/*
+			probably not going to be a lot of mixing going on, while it's possible O(n^2) is unlikely.
+			will in all likelyhood be closer to O(n) or best case O(1)
+			*/
+			for (searchValue of advancedSearchValue) {
+				const arry = searchValue.split(":")
+				var headers = arry[0].split(",")
+				var terms = arry[1].split(",")
+
+				var arrays = []
+
+				for (header of headers) {
+					const index = headerToIndex(header)
+
+					if (isCurse) {
+						arrays.push(resultsArray.filter(textValueFilter(terms, index)))
+						continue;
+					}
+					else switch (index) {
+						case ITEMS.NAME:
+						case ITEMS.SERIES:
+						case ITEMS.DESCRIPTION:
+						case ITEMS.CATEGORY:
+						case ITEMS.GENDER:
+
+						case ITEMS.GROWTH_RATE:
+						case ITEMS.GROWTH_TYPE:
+						case ITEMS.RESTOCK:
+						case ITEMS.RETURN:
+						case ITEMS.GIFT:
+						case ITEMS.NSFW:
+							arrays.push(resultsArray.filter(textValueFilter(terms, index)))
+							break;
+						case ITEMS.MAGIC:
+						case ITEMS.MEMETIC:
+						case ITEMS.MIGHT:
+						case ITEMS.MIND:
+						case ITEMS.MOTION:
+						case ITEMS.MOXIE:
+						case ITEMS.MUTATION:
+						case ITEMS.MYTH:
+						case ITEMS.STATS:
+						case ITEMS.RANK:
+							arrays.push(resultsArray.filter(valueFilter(terms, index)))
+							break;
+						default:
+							consolelog("Search Header Index not found, something seems to have gone wrong.")
+					}
+					/*
+					switch inside an else, kinda cursed I know. but javascript doesn't really benifit massively optimization wize from switch statements, or so I heard
+					could have done:
+					switch(true){
+						case: (index < ITEMS.GENDER)
+						case: (isCurse)
+							textValueFilter...
+							break;
+						(etc...)
+					}
+					but I figured the abovce was more readable and easier to change. And if it is worse, I've made worse decisions in this code.
+					TODO: give STATS it's own filter that takes a range of nubmers.
+					*/
+				}
+
+				resultsArray = arrayMerge(arrays);
+			}
+			if (isCurse) curseSearchResults = resultsArray
+			else itemSearchResults = resultsArray
+			redrawHistoryTable(tableID, resultsArray, saveArray)
 		}
+		return searchHandler
 	}
-
-
 }
