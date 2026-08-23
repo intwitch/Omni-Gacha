@@ -1,87 +1,112 @@
-// create a new build, and switch to it
-function createNewBuildEventHandler(event){
-	const value = event.target.value
-	if(event.key != "Enter" || value == "") return;
-
-	createNewBuild(value)
+import {
+	optionsCookieSetFunction,
+	buildCookieSetFunction
 }
-/**
- * 
- * @param {String} newBuild 
- * @returns -1 on fail null on success
- */
-function createNewBuild(newBuild){
-	const select = document.getElementById("optionsBuildSelector")
-	
-	if(optionsValues.buildsArray.indexOf(newBuild) != -1){
-		alert(event.target.placeholder = `"${newBuild}" already a build`)
-		return -1;
-	}
-	buildCookieCreator(newBuild);
-	populateBuildSelector()
-	select.value = newBuild
-	return null
+	from "./cookies.js"
+import {
+	redrawAllSaveTables
 }
-
-/**
- * event handler to get value then call switchBuild()
- * @param {Event} event
-**/
-function switchBuildEventHandler(event){
-	switchBuild(event.target.value)
-}
-/**
- * switch build to the desired.
- * @param {String} buildValue 
- */
-function switchBuild(buildValue){
-	if(optionsValues.buildsArray.indexOf(buildValue) == -1){
-		console.err(`"${buildValue}" not in buildsList`)
-		return;
+	from "./pageElements.js"
+class gachaBuildsHandler {
+	#buildsValues
+	#optionsValues
+	#savedRolls
+	constructor(buildsValues, optionsValues, savedRolls){
+		this.#buildsValues = buildsValues
+		this.#optionsValues = optionsValues
+		this.#savedRolls = savedRolls
 	}
 
-	optionsValues.build = buildValue
-	savedItemRolls = buildsValues[buildValue]["items"]
-	savedCurseRolls = buildsValues[buildValue]["curses"]
-	optionsCookieSetFunction()
-	redrawAllSaveTables()
-}
+	/**
+	 * handles input validation on the event and calls createNewBuild()
+	 * @param {object} buildsValues 
+	 * @param {object} optionsValues 
+	 * @param {event} event 
+	 * @returns nothing
+	*/
+	createNewBuildEventHandler(event, buildsValues = this.#buildsValues, optionsValues = this.#optionsValues) {
+		const value = event.target.value
+		if (event.key != "Enter" || value == "") return;
 
-/**
- * delete build determined by string.
- * @param {String} build 
- */
-function deleteBuild(build){
-	delete buildsValues[build]
-	optionsValues.buildsArray.splice(optionsValues.buildsArray.indexOf(build), 1)
-	switch(true){
-		case (optionsValues.buildsArray.length == 0):
-			createNewBuild("default")
-			break;
-		case (optionsValues.build == build):
-			switchBuild(optionsValues.buildsArray[0])
-			populateBuildSelector()
-			break;
-		default:
-			populateBuildSelector()
-			break;
+		//TODO, handle if fail
+		if (createNewBuild(value, buildsValues, optionsValues)) switchBuild(value)
 	}
-	optionsCookieSetFunction()
-	buildCookieSetFunction()
-}
-/**
- * confirm user wants to delete current build then call deleteBuild
- */
-function deleteCurrentBuildConfirm(){
-	const currentBuild = optionsValues.build
-	if(confirm(`Are you sure you want to delete build "${currentBuild}"?`)) deleteBuild(currentBuild)
-}
+	/**
+	 * create a new build but do not switch to it, instead call switchBuild()
+	 * @param {string} newBuild 
+ * @param {object} buildsValues 
+ * @param {object} optionsValues 
+ * @returns true on success
+ * @returns false on failure
+	*/
+	createNewBuild(newBuild, buildsValues = this.#buildsValues, optionsValues = this.#optionsValues) {
+		if (optionsValues.buildsArray.indexOf(newBuild) != -1) {
+			alert(`"${newBuild}" already a build`)
+			return false;
+		}
 
-export {
-	createNewBuildEventHandler,
-	createNewBuild,
-	switchBuildEventHandler,
-	switchBuild,
-	deleteBuild,
-	deleteCurrentBuildConfirm,
+		optionsValues.buildsArray.push(newBuild)
+		buildsValues[newBuild].items = []
+		buildsValues[newBuild].curses = []
+
+		populateBuildSelector()
+		return true
+	}
+
+	/**
+	 * event handler to get value then call switchBuild()
+	 * @param {Event} event
+	**/
+	switchBuildEventHandler(event) {
+		switchBuild(event.target.value)
+	}
+	/**
+	 * switch build to the desired.
+	 * @param {String} value 
+	*/
+	switchBuild(value, buildsValues = this.#buildsValues, optionsValues = this.#optionsValues, savedRolls = this.#savedRolls) {
+		if (optionsValues.buildsArray.indexOf(value) == -1) {
+			console.err(`"${value}" not in buildsList`)
+			return;
+		}
+		const select = document.getElementById("optionsBuildSelector")
+		select.value = value
+
+		optionsValues.build = value
+		savedRolls.items = buildsValues[value]["items"]
+		savedRolls.curses = buildsValues[value]["curses"]
+		optionsCookieSetFunction(optionsValues)
+		redrawAllSaveTables()
+	}
+
+	/**
+	 * delete build determined by string.
+	 * @param {String} build 
+	*/
+	deleteBuild(build, buildsValues = this.#buildsValues, optionsValues = this.#optionsValues, savedRolls = this.#savedRolls) {
+		delete buildsValues[build]
+		optionsValues.buildsArray.splice(optionsValues.buildsArray.indexOf(build), 1)
+		switch (true) {
+			case (optionsValues.buildsArray.length == 0):
+				createNewBuild("default", buildsValues, optionsValues)
+				switchBuild("default", buildsValues, optionsValues, savedRolls)
+				break;
+			case (optionsValues.build == build):
+				switchBuild(optionsValues.buildsArray[0], buildsValues, optionsValues, savedRolls)
+				populateBuildSelector()
+				break;
+			default:
+				populateBuildSelector()
+				break;
+		}
+		optionsCookieSetFunction(optionsValues)
+		buildCookieSetFunction(buildsValues)
+	}
+	/**
+	 * confirm user wants to delete current build then call deleteBuild
+	*/
+	deleteCurrentBuildConfirm() {
+		const currentBuild = optionsValues.build
+		if (confirm(`Are you sure you want to delete build "${currentBuild}"?`)) deleteBuild(currentBuild)
+	}
 };
