@@ -24,6 +24,14 @@ import {
 	tabChangeHandlerCreator,
 } from "./pageElements.js";
 
+export {
+	ITEMS,
+	CURSES,
+	smartSplit,
+	itemToString,
+	curseToString
+};
+
 const ITEMS = {
 	NAME: 0,
 	SERIES: 1,
@@ -95,22 +103,19 @@ window.onload = function () {
 
 
 	// blocked commented out values are only meant to show deafults, they will be set later
-	var optionsValues = {/*
+	var optionsValues = {
 		"backgroundImage": true,
 		"build": "default",
 		"buildsArray": ["default"],
 		"NSFW": false,
 		"NSFWOnly": false
-		*/
 	}
 	
 	var buildsValues = {
-		/*
 		default: {
 			items: [],
 			curses: []
 		}
-		*/
 	}
 
 	const cookiePromise = cookieInit(optionsValues, buildsValues)
@@ -137,14 +142,6 @@ async function loadParseJSON(rawData) {
 	rawData.items = values.items
 	rawData.curses = values.curses
 	return values
-}
-
-function savedToJsonString() {
-	const json = {
-		"items": savedItemRolls,
-		"curses": savedCurseRolls
-	}
-	return JSON.stringify(json)
 }
 
 function itemToString(item) {
@@ -424,9 +421,4 @@ function createAllEventHandlers() {
 	document.getElementById("searchCursesButton").addEventListener("click", function () {
 		searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable")(this)
 	})
-};
-
-export {
-	ITEMS,
-	CURSES
 };
