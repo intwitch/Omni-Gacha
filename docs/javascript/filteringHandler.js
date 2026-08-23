@@ -64,8 +64,8 @@ class filteringHandler {
 		let searchParam
 		let doFilter = true;
 
-		if(nsfw){
-			if(nsfwOnly){
+		if (nsfw) {
+			if (nsfwOnly) {
 				searchParam = "TRUE"
 			}
 			else doFilter = false;
@@ -78,8 +78,8 @@ class filteringHandler {
 			}
 			return filterFunction
 		}
-		
-		if(doFilter){
+
+		if (doFilter) {
 			this.#data.filtered.items = this.#data.raw.items.filter(filterFunctionCreator(ITEMS.NSFW))
 			this.#data.filtered.curses = this.#data.raw.curses.filter(filterFunctionCreator(CURSES.NSFW))
 		}
@@ -93,8 +93,8 @@ class filteringHandler {
 	updateItemRollData() {
 		const rollItemsData = this.#data.filtered.items
 
-		rollItemsData = this.filterItemByRank(rollItemsData);
-		rollItemsData = this.filterItemByCategory(rollItemsData);
+		rollItemsData = this.#filterItemsByRank(rollItemsData);
+		rollItemsData = this.#filterItemsByCategory(rollItemsData);
 		this.#data.roll.items = rollItemsData
 	}
 
@@ -104,6 +104,23 @@ class filteringHandler {
 	 */
 	#updateCurseRollData() {
 		this.#data.roll.curses = this.#data.filtered.curses
+	}
+
+	/**
+	 * filter items by rank determined in #filters.ranks
+	 * @param {string[]} itemsData array of items
+	 * @returns filtered items array
+	 */
+	#filterItemsByRank(itemsData) {
+		return itemsData.filter(valueFilter(this.#filters.ranks, ITEMS.RANK));
+	}
+	/**
+	 * filter items by category determined in #filters.categories
+	 * @param {string[]} itemsData array of items
+	 * @returns filtered items array
+	 */
+	#filterItemsByCategory(itemsData) {
+		return itemsData.filter(valueFilter(this.#filters.categories, ITEMS.CATEGORY))
 	}
 
 	/**
@@ -137,7 +154,7 @@ class filteringHandler {
 		}
 		return filterFunction
 	}
-	
+
 	/**
 	 * filter by text value. text only needs to be part of, not exact match
 	 * for exact match use valueFilter

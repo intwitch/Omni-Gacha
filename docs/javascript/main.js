@@ -159,7 +159,36 @@ function curseToString(curse) {
 	return `${curse[CURSES.NAME]} | ${curse[CURSES.LEVEL]}${sfw}\n${curse[CURSES.DESCRIPTION]}\nResolution: ${curse[CURSES.RESOLUTION]}`
 }
 
+/**
+ *  string.split() method does not respect split string exlusion based on quote
+ * 	this function will works similar to .split(), but will ignore anything in "quotes"
+ *  This function could likely be further optimized
+ * 
+ * @param {string} input 
+ * @returns spllit array
+ */
+function smartSplit(input, split) {
 
+	var insideQuote = false;
+	var splitArray = input.split("");
+	var finalArray = [""]
+	var index = 0;
+
+	for (char of splitArray) {
+		if (char == '\"') {
+			insideQuote = !insideQuote;
+			continue;
+		}
+		if (char == split && !insideQuote) {
+			finalArray.push("");
+			index++
+		}
+		else {
+			finalArray[index] += char;
+		}
+	}
+	return finalArray
+}
 
 
 
