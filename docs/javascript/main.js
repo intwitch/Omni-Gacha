@@ -61,19 +61,21 @@ const CURSES = {
 
 window.onload = function () {
 
-	var rawData = {
-		items: [],
-		curses: []
-	}
+	var data = {
+		raw: {
+			items: [],
+			curses: []
+		},
 
-	var filteredData = {
-		items: [],
-		curses: []
-	}
+		filtered: {
+			items: [],
+			curses: []
+		},
 
-	var RollData = {
-		items: [],
-		curses: []
+		roll: {
+			items: [],
+			curses: []
+		}
 	}
 	
 	var savedRolls = {
