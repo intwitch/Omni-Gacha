@@ -6,6 +6,10 @@ import {
 	redrawAllSaveTables
 }
 	from "./pageElements.js"
+
+/**
+ * handle builds and options values, as they are intertwined
+ */
 class gachaBuildsOptionsHandler {
 	#buildsValues
 	#optionsValues

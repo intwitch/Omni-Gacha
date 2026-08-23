@@ -5,7 +5,9 @@ import {
 export {
 	cookiesHandler
 }
-
+/**
+ * handles saving and getting cookies
+ */
 class cookiesHandler {
 	#buildsValues
 	#optionsValues
