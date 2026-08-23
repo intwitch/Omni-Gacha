@@ -6,7 +6,7 @@ import {
 	redrawAllSaveTables
 }
 	from "./pageElements.js"
-class gachaBuildsOptionsHandler {
+class gachaBuildsHandler {
 	#buildsValues
 	#optionsValues
 	#savedRolls
