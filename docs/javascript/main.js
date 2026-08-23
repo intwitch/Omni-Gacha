@@ -30,7 +30,9 @@ export {
 	smartSplit,
 	itemToString,
 	curseToString,
-	arrayMerge
+	arrayMerge,
+	itemHeaderToIndex,
+	curseHeaderToIndex
 };
 
 const ITEMS = {
@@ -208,6 +210,17 @@ function arrayMerge(sourceArrays) {
 	sourceArrays.splice(0, 2, subArray1);
 	//enter recursion
 	return arrayMerge(sourceArrays);
+}
+
+//set of functions for search handler that... well.. pretty obvvious.
+function itemHeaderToIndex(header) {
+	var headerArray = ["name", "series", "description", "category", "gender", "magic", "memetic", "might", "mind", "motion", "moxie", "mutation", "myth", "stats", "rank", "growth type", "growth rate", "restock", "return", "gift", "nsfw"]
+	return headerArray.indexOf(header.toLowerCase())
+}
+
+function curseHeaderToIndex(header) {
+	var headerArray = ["curse", "description", "resolution", "level", "target", "affects", "nsfw", "reward"]
+	return headerArray.indexOf(header.toLowerCase())
 }
 
 

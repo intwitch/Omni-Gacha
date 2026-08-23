@@ -203,16 +203,7 @@ function redrawHistoryTable(tableID, historyArray, saveArray) {
 
 
 
-//set of functions for search handler that... well.. pretty obvvious.
-function itemHeaderToIndex(header) {
-	var headerArray = ["name", "series", "description", "category", "gender", "magic", "memetic", "might", "mind", "motion", "moxie", "mutation", "myth", "stats", "rank", "growth type", "growth rate", "restock", "return", "gift", "nsfw"]
-	return headerArray.indexOf(header.toLowerCase())
-}
 
-function curseHeaderToIndex(header) {
-	var headerArray = ["curse", "description", "resolution", "level", "target", "affects", "nsfw", "reward"]
-	return headerArray.indexOf(header.toLowerCase())
-}
 //function that gets the index to sort on, and if isAscending == true, sort ascend. else sort by descending.
 function compareFunctionCreator(index, isAscending) {
 	var lessValue;
