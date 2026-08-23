@@ -1,8 +1,7 @@
 import {
-	optionsCookieSetFunction,
-	buildCookieSetFunction
+	cookiesHandler
 }
-	from "./cookies.js"
+	from "./cookiesHandler.js"
 import {
 	redrawAllSaveTables
 }
@@ -11,10 +10,21 @@ class gachaBuildsHandler {
 	#buildsValues
 	#optionsValues
 	#savedRolls
+	#cookiesHandler
+
 	constructor(buildsValues, optionsValues, savedRolls){
 		this.#buildsValues = buildsValues
 		this.#optionsValues = optionsValues
 		this.#savedRolls = savedRolls
+		this.#cookiesHandler = new cookiesHandler(buildsValues, optionsValues)
+	}
+
+	/**
+	 * initalize builds and options
+	 * @returns promise resolved when ititalization done.
+	 */
+	async intialize(){
+		return this.#cookiesHandler.cookieInit()
 	}
 
 	/**
@@ -108,5 +118,35 @@ class gachaBuildsHandler {
 	deleteCurrentBuildConfirm() {
 		const currentBuild = optionsValues.build
 		if (confirm(`Are you sure you want to delete build "${currentBuild}"?`)) deleteBuild(currentBuild)
+	}
+
+	/**
+	 * to call whenever savedRolls changes. returns nothing. 
+	 * mutates buildsValues with structured clone of savedrolls
+	 * @param {object} buildsValues object to update
+	 * @param {string} build which build to update
+	 * @param {object} savedRolls what to update that build with
+	*/
+	buildsValuesUpdate(buildsValues, savedRolls, build) {
+		buildsValues[build] = structuredClone(savedRolls)
+	}
+	/**
+	 * save everything
+	 */
+	saveAll(){
+		this.saveBuilds
+		this.saveOptions
+	}
+	/**
+	 * save builds
+	 */
+	saveBuilds(){
+		this.#cookiesHandler.buildCookieSave()
+	}
+	/**
+	 * save options
+	 */
+	saveOptions(){
+		this.#cookiesHandler.optionsCookieSave()
 	}
 };
