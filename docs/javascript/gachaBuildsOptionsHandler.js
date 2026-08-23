@@ -78,7 +78,7 @@ class gachaBuildsOptionsHandler {
 	 * switch build to the desired.
 	 * @param {String} value 
 	*/
-	switchBuild(value, buildsValues = this.#buildsValues, optionsValues = this.#optionsValues, savedRolls = this.#savedRolls) {
+	switchBuild(value) {
 		if (optionsValues.buildsArray.indexOf(value) == -1) {
 			console.err(`"${value}" not in buildsList`)
 			return;
