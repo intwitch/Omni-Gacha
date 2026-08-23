@@ -124,13 +124,56 @@ class gachaBuildsOptionsHandler {
 		if (confirm(`Are you sure you want to delete build "${currentBuild}"?`)) deleteBuild(currentBuild)
 	}
 
+	
 	/**
-	 * to call whenever savedRolls changes. returns nothing. 
-	 * mutates buildsValues with structured clone of savedrolls
-	*/
-	buildsValuesUpdate(build) {
+	 * save current savedRolls to build.
+	 * @param {string} build default current build
+	 */
+	buildsValuesUpdate(build = this.#optionsValues.build) {
 		this.#buildsValues[build] = structuredClone(this.#savedRolls)
 	}
+
+	/**
+	 * change multiple options at once
+	 * if none provided simply return and don't save
+	 * @param  {...{key: string, value: string}} pairs 
+	 */
+	changeOptionMultiple(...pairs){
+		if(pairs.length == 0){
+			return;
+		}
+		for (pair of pairs){
+			this.#optionsValues[pair.key] = pair.value
+		}
+		this.saveOptions()
+	}
+
+	/**
+	 * change and save option accordingly.
+	 * @param {{key: string, value: string}} pair 
+	 */
+	changeOption(pair){
+		this.#optionsValues[pair.key] = pair.value
+		this.saveOptions
+	}
+	/**
+	 * get an option value
+	 * @param {string} key key of the option to get
+	 * @returns option value
+	 */
+	getOption(key){
+		return this.#optionsValues[key]
+	}
+
+	/**
+	 * 
+	 * @param {string} buildName 
+	 * @returns build
+	 */
+	getBuild(buildName = this.#optionsValues.build){
+		return this.#buildsValues[buildName]
+	}
+
 	/**
 	 * save everything
 	 */
