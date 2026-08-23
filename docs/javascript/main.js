@@ -29,7 +29,8 @@ export {
 	CURSES,
 	smartSplit,
 	itemToString,
-	curseToString
+	curseToString,
+	arrayMerge
 };
 
 const ITEMS = {
@@ -187,7 +188,27 @@ function smartSplit(input, split) {
 	return finalArray
 }
 
+//merges an array of arrays (if an item is in either array, it's in the new one), discards duplicates, and returns the new merged array
+//will throw an error if you pass in a blank array.
+function arrayMerge(sourceArrays) {
+	//recursive base statement
+	if (sourceArrays.length == 1) return sourceArrays[0];
 
+	//get first two arrays
+	var subArray1 = sourceArrays[0];
+	var subArray2 = sourceArrays[1];
+
+	//trim shared elements out of subArray2
+	subArray2 = subArray2.filter(function (element) {
+		return !((subArray1.indexOf(element) != -1) && subArray2.indexOf(element) != -1);
+	});
+
+	//merge elements and place back in source.
+	subArray1 = subArray1.concat(subArray2);
+	sourceArrays.splice(0, 2, subArray1);
+	//enter recursion
+	return arrayMerge(sourceArrays);
+}
 
 
 //takes a string of the rank and returns the proper css variable value
