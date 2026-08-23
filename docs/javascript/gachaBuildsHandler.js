@@ -123,12 +123,9 @@ class gachaBuildsOptionsHandler {
 	/**
 	 * to call whenever savedRolls changes. returns nothing. 
 	 * mutates buildsValues with structured clone of savedrolls
-	 * @param {object} buildsValues object to update
-	 * @param {string} build which build to update
-	 * @param {object} savedRolls what to update that build with
 	*/
-	buildsValuesUpdate(buildsValues, savedRolls, build) {
-		buildsValues[build] = structuredClone(savedRolls)
+	buildsValuesUpdate(build) {
+		this.#buildsValues[build] = structuredClone(this.#savedRolls)
 	}
 	/**
 	 * save everything
