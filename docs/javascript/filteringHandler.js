@@ -1,6 +1,10 @@
 import {
 	CURSES,
 	ITEMS,
+	smartSplit,
+	arrayMerge,
+	itemHeaderToIndex,
+	curseHeaderToIndex
 } from "./main.js";
 import {
 	gachaBuildsOptionsHandler
@@ -180,115 +184,117 @@ class filteringHandler {
 	}
 
 	searchItems(searchText){
+		const indexToFilterFunction = function (index) {
+			switch (index) {
+				case ITEMS.NAME:
+				case ITEMS.SERIES:
+				case ITEMS.DESCRIPTION:
+				case ITEMS.CATEGORY:
+				case ITEMS.GENDER:
 
+				case ITEMS.GROWTH_RATE:
+				case ITEMS.GROWTH_TYPE:
+				case ITEMS.RESTOCK:
+				case ITEMS.RETURN:
+				case ITEMS.GIFT:
+				case ITEMS.NSFW:
+					return filteringHandler.textValueFilter
+					break;
+				case ITEMS.MAGIC:
+				case ITEMS.MEMETIC:
+				case ITEMS.MIGHT:
+				case ITEMS.MIND:
+				case ITEMS.MOTION:
+				case ITEMS.MOXIE:
+				case ITEMS.MUTATION:
+				case ITEMS.MYTH:
+				case ITEMS.STATS:
+				case ITEMS.RANK:
+					return filteringHandler.exactValueFilter
+					break;
+				default:
+					consolelog("Search Header Index not found, something seems to have gone wrong.")
+			}
+		}
+
+		return this.#search(searchText, this.#data.filtered.items, indexToFilterFunction, itemHeaderToIndex)
 	}
 
 	searchCurses(searchText){
+		/*
+		we do it like this for two reasons:
+		align with how searchItems does it
+		we always want to search curses by text value
+		but if that ever changes all we have to do is implement a switch and cases
+		 */
+		const indexToFilterFunction = function(index){
+			return filteringHandler.textValueFilter
+		}
 
+		return this.#search(searchText, this.#data.filtered.curses, indexToFilterFunction, curseHeaderToIndex)
 	}
 
-	#search() {
+	/**
+	 * verify the search text, and construct the search objects
+	 * 
+	 * @param {string} searchText 
+	 * @returns {{keys: string[], values: string[]}[]} searchObjects
+	 */
+	#searchTextToObjects(searchText){
+		const searchValues = this.#searchTextVerifySplit(searchText)
+		const searchObjects = []
 
-		//use sourceArray to determine item or curse
-		var headerToIndex
-		var isCurse
-		if (sourceArray[0].length > 10) {
-			headerToIndex = itemHeaderToIndex
-			isCurse = false
+		for(string of searchValues){
+			const parts = string.split(":")
+			searchObjects.push({
+				keys: smartSplit(parts[0], ","),
+				values: smartSplit(parts[1], ",")
+			})
 		}
-		else {
-			headerToIndex = curseHeaderToIndex
-			isCurse = true
-		}
-
 		
-		
+		return searchObjects
+	}
 
-		var searchHandler = function (trigger) {
-			console.log("search")
-			var resultsArray = sourceArray;
-			var inputs = trigger.parentElement.querySelectorAll("input");
+	/**
+	 * split apart search text into values, and verify parts.
+	 * does not construct search object
+	 * 
+	 * @param {string} searchText 
+	 * @returns {string[]} 
+	 */
+	#searchTextVerifySplit(searchText){
+		let searchValues = smartSplit(searchText, " ")
 
-			var advancedSearchValue = smartSplit(inputs[3].value);
-			const advancedSearchVerifyPattern = /^[a-z0-9 ]+(,[a-z0-9 ]+)*:[a-z0-9 ]+(,[a-z0-9 ]+)*$/i;
+		const advancedSearchVerifyPattern = /^[a-z0-9 ]+(,[a-z0-9 ]+)*:[a-z0-9 ]+(,[a-z0-9 ]+)*$/i;
+		searchValues = searchValues.filter(function (value) {
+			return (value.match(advancedSearchVerifyPattern));
+		});
 
-			advancedSearchValue = advancedSearchValue.filter(function (value) {
-				return (value.match(advancedSearchVerifyPattern));
-			});
+		return searchValues
+	}
 
-			for (var i = 0; i < 3; i++) {
-				if (inputs[i].value == "") continue;
-				resultsArray = resultsArray.filter(textValueFilter(inputs[i].value.toLowerCase().split(","), i))
+	/**
+	 * 
+	 * @param {string} searchText 
+	 * @param {string[][]} data data.filtered.items/curses
+	 * @param {function} indexToFilter
+	 * @param {function} headerToIndex
+	 * @returns {string[][]}
+	 */
+	#search(searchText, data, indexToFilter, headerToIndex) {
+		const searchObjects = this.#searchTextToObjects(searchText)
+
+		let resultsData = data
+		for(searchObject of searchObjects){
+			let resultsDataParts = []
+			for(key of searchObjects){
+				const index = headerToIndex(key)
+				const filterFunction = indexToFilter(index)
+				resultsDataParts.push( resultsData.filter(filterFunction(searchObjects.values), index) )
 			}
-			/*
-			probably not going to be a lot of mixing going on, while it's possible O(n^2) is unlikely.
-			will in all likelyhood be closer to O(n) or best case O(1)
-			*/
-			for (searchValue of advancedSearchValue) {
-				const arry = searchValue.split(":")
-				var headers = arry[0].split(",")
-				var terms = arry[1].split(",")
-
-				var arrays = []
-
-				for (header of headers) {
-					const index = headerToIndex(header)
-
-					if (isCurse) {
-						arrays.push(resultsArray.filter(textValueFilter(terms, index)))
-						continue;
-					}
-					else switch (index) {
-						case ITEMS.NAME:
-						case ITEMS.SERIES:
-						case ITEMS.DESCRIPTION:
-						case ITEMS.CATEGORY:
-						case ITEMS.GENDER:
-
-						case ITEMS.GROWTH_RATE:
-						case ITEMS.GROWTH_TYPE:
-						case ITEMS.RESTOCK:
-						case ITEMS.RETURN:
-						case ITEMS.GIFT:
-						case ITEMS.NSFW:
-							arrays.push(resultsArray.filter(textValueFilter(terms, index)))
-							break;
-						case ITEMS.MAGIC:
-						case ITEMS.MEMETIC:
-						case ITEMS.MIGHT:
-						case ITEMS.MIND:
-						case ITEMS.MOTION:
-						case ITEMS.MOXIE:
-						case ITEMS.MUTATION:
-						case ITEMS.MYTH:
-						case ITEMS.STATS:
-						case ITEMS.RANK:
-							arrays.push(resultsArray.filter(valueFilter(terms, index)))
-							break;
-						default:
-							consolelog("Search Header Index not found, something seems to have gone wrong.")
-					}
-					/*
-					switch inside an else, kinda cursed I know. but javascript doesn't really benifit massively optimization wize from switch statements, or so I heard
-					could have done:
-					switch(true){
-						case: (index < ITEMS.GENDER)
-						case: (isCurse)
-							textValueFilter...
-							break;
-						(etc...)
-					}
-					but I figured the abovce was more readable and easier to change. And if it is worse, I've made worse decisions in this code.
-					TODO: give STATS it's own filter that takes a range of nubmers.
-					*/
-				}
-
-				resultsArray = arrayMerge(arrays);
-			}
-			if (isCurse) curseSearchResults = resultsArray
-			else itemSearchResults = resultsArray
-			redrawHistoryTable(tableID, resultsArray, saveArray)
+			resultsData = arrayMerge(resultsDataParts)
 		}
-		return searchHandler
+
+		return resultsData
 	}
 }
