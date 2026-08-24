@@ -147,12 +147,22 @@ async function loadParseJSON(rawData) {
 	return values
 }
 
+/**
+ * convert an item to a string
+ * @param {string[]} item 
+ * @returns {string}
+ */
 function itemToString(item) {
 	var sfw = ""
 	if (item[ITEMS.NSFW] === "TRUE") sfw = " | NSFW"
 	return `${item[ITEMS.NAME]} | ${item[ITEMS.SERIES]}\nRank ${item[ITEMS.RANK]} | ${item[ITEMS.CATEGORY]}${sfw}\n${item[ITEMS.DESCRIPTION]}`
 }
 
+/**
+ * converts a curse to a string
+ * @param {string[]} curse 
+ * @returns {string}
+ */
 function curseToString(curse) {
 	var sfw = ""
 	if (curse[CURSES.NSFW] === "TRUE") sfw = " | NSFW"
@@ -190,8 +200,14 @@ function smartSplit(input, split) {
 	return finalArray
 }
 
-//merges an array of arrays (if an item is in either array, it's in the new one), discards duplicates, and returns the new merged array
-//will throw an error if you pass in a blank array.
+/**
+ * image the array, as an array of sets. They aren't but its useful
+ * this function finds the union of those sets without duplicates
+ * uses recursion call stack equal to the amount of sets - 1
+ * does not preserve ordering
+ * @param {*[][]} sourceArrays 
+ * @returns 
+ */
 function arrayMerge(sourceArrays) {
 	//recursive base statement
 	if (sourceArrays.length == 1) return sourceArrays[0];
@@ -212,12 +228,22 @@ function arrayMerge(sourceArrays) {
 	return arrayMerge(sourceArrays);
 }
 
-//set of functions for search handler that... well.. pretty obvvious.
+/**
+ * based on a header, return the index such that:
+ * ITEMS.(header) = return
+ * @param {string} header 
+ * @returns {int}
+ */
 function itemHeaderToIndex(header) {
 	var headerArray = ["name", "series", "description", "category", "gender", "magic", "memetic", "might", "mind", "motion", "moxie", "mutation", "myth", "stats", "rank", "growth type", "growth rate", "restock", "return", "gift", "nsfw"]
 	return headerArray.indexOf(header.toLowerCase())
 }
-
+/**
+ * based on a header, return the index such that:
+ * CURSES.(header) = return
+ * @param {string} header 
+ * @returns {int}
+ */
 function curseHeaderToIndex(header) {
 	var headerArray = ["curse", "description", "resolution", "level", "target", "affects", "nsfw", "reward"]
 	return headerArray.indexOf(header.toLowerCase())

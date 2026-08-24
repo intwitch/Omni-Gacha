@@ -183,6 +183,11 @@ class filteringHandler {
 		return filterFunctionCreator
 	}
 
+	/**
+	 * search the data for all maching based on the searchText string
+	 * @param {string} searchText 
+	 * @returns {string[][]}
+	 */
 	searchItems(searchText){
 		const indexToFilterFunction = function (index) {
 			switch (index) {
@@ -220,6 +225,11 @@ class filteringHandler {
 		return this.#search(searchText, this.#data.filtered.items, indexToFilterFunction, itemHeaderToIndex)
 	}
 
+	/**
+	 * search the data for all maching based on the searchText string
+	 * @param {string} searchText 
+	 * @returns string[][]
+	 */
 	searchCurses(searchText){
 		/*
 		we do it like this for two reasons:
@@ -274,6 +284,9 @@ class filteringHandler {
 	}
 
 	/**
+	 * search a set of data, based on the searchtext string.
+	 * indexToFilter and headerToIndex are item/curse dependant and thus 
+	 * are passed along by the public methods.
 	 * 
 	 * @param {string} searchText 
 	 * @param {string[][]} data data.filtered.items/curses
