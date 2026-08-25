@@ -6,7 +6,7 @@ const https = require('https')
 
 //setup get request
 const spreadsheetID = "1YxfI5xpi_q5IEi0L2-3fW_GzCba1SnpS_nOzWVIBwO4"
-const ranges = ["\'Item List\'!A:U"
+const ranges = ["\'Item List\'!A:V"
     ,"\'Curses\'!A:H"]
 
 const url = encodeURI(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetID}/values:batchGet?key=${process.env.SHEETSAPIKEY}&ranges=${ranges[0]}&ranges=${ranges[1]}`)
@@ -16,7 +16,7 @@ var result = ""
 
 // function for filter to call
 function filterData(value, index, array) {
-    if(value[0] === "" || value[1] === "" || value[2] === ""){
+    if( value.at(-1) === "FALSE" || value[0] === "" || value[1] === "" || value[2] === ""){
         return false;
     }
     else return true;
@@ -29,6 +29,10 @@ function buildData() {
 
     var itemsData = result.valueRanges[0].values.filter(filterData);
     var cursesData = result.valueRanges[1].values.filter(filterData);
+
+    for(item of itemsData){
+        item.splice(-1)
+    }
 
     console.log(`final data obtained.\nItems: ${itemsData.length}\nCurses: ${cursesData.length}`)
 
