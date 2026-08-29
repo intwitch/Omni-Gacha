@@ -28,7 +28,6 @@ export {
 	ITEMS,
 	CURSES,
 	smartSplit,
-	itemToString,
 	curseToString,
 	arrayMerge,
 	itemHeaderToIndex,
@@ -145,28 +144,6 @@ async function loadParseJSON(rawData) {
 	rawData.items = values.items
 	rawData.curses = values.curses
 	return values
-}
-
-/**
- * convert an item to a string
- * @param {string[]} item 
- * @returns {string}
- */
-function itemToString(item) {
-	var sfw = ""
-	if (item[ITEMS.NSFW] === "TRUE") sfw = " | NSFW"
-	return `${item[ITEMS.NAME]} | ${item[ITEMS.SERIES]}\nRank ${item[ITEMS.RANK]} | ${item[ITEMS.CATEGORY]}${sfw}\n${item[ITEMS.DESCRIPTION]}`
-}
-
-/**
- * converts a curse to a string
- * @param {string[]} curse 
- * @returns {string}
- */
-function curseToString(curse) {
-	var sfw = ""
-	if (curse[CURSES.NSFW] === "TRUE") sfw = " | NSFW"
-	return `${curse[CURSES.NAME]} | ${curse[CURSES.LEVEL]}${sfw}\n${curse[CURSES.DESCRIPTION]}\nResolution: ${curse[CURSES.RESOLUTION]}`
 }
 
 /**
