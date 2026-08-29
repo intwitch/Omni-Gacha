@@ -131,7 +131,7 @@ class filteringHandler {
 	 * update #data.roll
 	 */
 	updateRollData() {
-		this.#updateItemRollData()
+		this.updateItemRollData()
 		this.updateCurseRollData()
 	}
 

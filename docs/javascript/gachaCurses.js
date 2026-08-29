@@ -1,6 +1,6 @@
-export { curse }
+export { gachaCurse }
 
-class curse {
+class gachaCurse {
     name = String
     description = String
     resolution = String
@@ -38,7 +38,7 @@ class curse {
     * converts a curse to a string
     * @returns {string}
     */
-    toString(this) {
+    toString() {
         let sfw = ""
         if (this.nsfw) sfw = " | NSFW"
         return `${this.name} | ${this.level}${sfw}\n${this.description}\nResolution: ${this.resolution}`

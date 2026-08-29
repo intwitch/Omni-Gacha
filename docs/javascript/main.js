@@ -3,12 +3,12 @@ import {
 	deleteCurrentBuildConfirm,
 	switchBuild,
 	switchBuildEventHandler,
-} from "./builds.js";
-import { cookieInit } from "./cookies.js";
+} from "./gachaBuildsOptionsHandler.js";
+import { cookieInit } from "./cookiesHandler.js";
 import {
 	contentFilterChange,
 	updateItemFilterData,
-} from "./filter.js";
+} from "./filteringHandler.js";
 import {
 	applyAllOptions,
 	closeOptions,
@@ -24,11 +24,13 @@ import {
 	tabChangeHandlerCreator,
 } from "./pageElements.js";
 
+import { gachaItem } from "./gachaItems.js"
+import { gachaCurse } from "./gachaCurses.js"
+
 export {
 	ITEMS,
 	CURSES,
 	smartSplit,
-	curseToString,
 	arrayMerge,
 	itemHeaderToIndex,
 	curseHeaderToIndex
@@ -121,7 +123,7 @@ window.onload = function () {
 	}
 
 	const cookiePromise = cookieInit(optionsValues, buildsValues)
-	const jsonPromise = loadParseJSON(rawData)
+	const jsonPromise = loadParseJSON(data.raw)
 	
 	cookiePromise.then(function () { jsonPromise.then() }).then((function () {
 		createAllEventHandlers()
@@ -136,14 +138,28 @@ window.onload = function () {
 /**
  * 
  * @param rawData json of rawData to mutate with fetch results
- * @returns fetch results
+ * @returns {{
+ * "items": gachaItem[]
+ * "curses": gachaCurse[]
+ * }}
  */
 async function loadParseJSON(rawData) {
 	const values = await fetch("data/values.json")
 
-	rawData.items = values.items
-	rawData.curses = values.curses
-	return values
+	const itemsArray = []
+	const cursesArray = []
+
+	for(let value of values.items){
+		itemsArray.push(new gachaItem(gachaItem.arrayToKeyedObject(value), value.splice(22, Infinity)))
+	}
+	for(let value of values.curses){
+		cursesArray.push(new gachaCurse(gachaCurse.arrayToKeyedObject(values)))
+	}
+
+	rawData = {
+		items: itemsArray,
+		curses: cursesArray
+	}
 }
 
 /**

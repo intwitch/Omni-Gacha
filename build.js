@@ -7,7 +7,7 @@ const https = require('https')
 
 //setup get request
 const spreadsheetID = "1YxfI5xpi_q5IEi0L2-3fW_GzCba1SnpS_nOzWVIBwO4"
-const ranges = ["\'Item List\'!A:U"
+const ranges = ["\'Item List\'!A:AG"
     ,"\'Curses\'!A:H"]
 
 const url = encodeURI(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetID}/values:batchGet?key=${process.env.SHEETSAPIKEY}&ranges=${ranges[0]}&ranges=${ranges[1]}`)
@@ -61,26 +61,6 @@ function callback(err){
         process.exitCode = 1
     }
 }
-
-// get all javascript files, concat them, and output master javascript file
-async function JSbuild(){
-    const main = fsp.readFile('docs/javascript/main.js')
-    const builds = fsp.readFile('docs/javascript/builds.js')
-    const cookies = fsp.readFile('docs/javascript/cookies.js')
-    const filter = fsp.readFile('docs/javascript/filter.js')
-    const pageElements = fsp.readFile('docs/javascript/pageElements.js')
-
-    var result = await main
-    result+= "\n" + await builds
-    result+= "\n" + await cookies
-    result+= "\n" + await filter
-    result+= "\n" + await pageElements
-
-    console.log("javascript file created")
-    fsp.writeFile("docs/javascript/javascript.js", await result)
-}
-
-JSbuild()
 
 //get data from sheet
 console.log("Quereying API")

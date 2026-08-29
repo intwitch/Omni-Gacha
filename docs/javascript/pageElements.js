@@ -10,7 +10,7 @@ import {
 	savedCurseRolls,
 	savedItemRolls,
 } from "./main.js";
-import { buildCookieSetFunction } from "./cookies.js";
+import { buildCookieSetFunction } from "./cookiesHandler.js";
 
 //open the options submenu... this will do more later probably I think. more things to handle. same with bellow
 function openOptions(){

@@ -9,9 +9,9 @@ test('test itemTags getAllTrue()', function () {
 })
 
 test.for([
-    [[true], "tech"],
-    [[true, false, true], "tech magicGeneric"],
-    [[false, false, false, false, false, false, false, false, false, true], "tome"]
+    [["TRUE"], "tech"],
+    [["TRUE", "FALSE", "TRUE"], "tech magicGeneric"],
+    [["FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "TRUE"], "tome"]
 ])("test toString based on constructor %s", ([values, expected]) => {
     const tags = new itemTags(values)
     expect(tags.toString()).toEqual(expected)

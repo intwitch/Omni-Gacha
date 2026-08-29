@@ -25,7 +25,7 @@ class itemTags{
     constructor(givenTags = []){
         const current = this.getAll()
         for(let i = 0; i < givenTags.length; i++){
-            this.#tags[current[i][0]] = givenTags[i]
+            this.#tags[current[i][0]] = (givenTags[i].toUpperCase() == "TRUE")
         }
     }
 

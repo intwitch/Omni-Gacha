@@ -1,8 +1,8 @@
-export {item}
+export {gachaItem}
 
 import { itemTags } from "./itemTags"
 
-class item {
+class gachaItem {
     name = String
     series = String
     description = String
@@ -47,14 +47,14 @@ class item {
             moxie: array[10],
             mutation: array[11],
             myth: array[12],
-            stats: array[13],
+            stats: parseInt(array[13]),
             rank: array[14],
             growthType: array[15],
             growthRate: array[16],
             restock: array[17],
             returnValue: array[18],
             gift: array[19],
-            nsfw: array[20],
+            nsfw: array[20] === true,
         }
     }
 
