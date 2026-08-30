@@ -69,58 +69,19 @@ class pageHandler {
 		select.value = optionsValues.build
 	}
 
-	//do this in it's own function and call on window load to make it more readable
-	createAllSortButtons() {
-		// items tab
-		for (button of document.querySelectorAll("#saveTable th button")) {
-			button.addEventListener("click", function () {
-				savedItemRolls.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
-				redrawSaveTable(document.getElementById("saveTable"), savedItemRolls);
-			})
-		}
-		for (button of document.querySelectorAll("#itemRollHistory th button")) {
-			button.addEventListener("click", function () {
-				itemRollHistory.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
-				redrawHistoryTable("itemRollHistory", itemRollHistory, savedItemRolls);
-			})
-		}
-
-		//curse tab
-		for (button of document.querySelectorAll("#cursesSaveTable th button")) {
-			button.addEventListener("click", function () {
-				savedCurseRolls.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
-				redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls);
-			})
-		}
-		for (button of document.querySelectorAll("#curseRollHistoryTable th button")) {
-			button.addEventListener("click", function () {
-				curseRollHistory.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
-				redrawHistoryTable("curseRollHistoryTable", curseRollHistory, savedCurseRolls);
-			})
-		}
-
-		//build tab
-		for (button of document.querySelectorAll("#buildItemsTable th button")) {
-			button.addEventListener("click", function () {
-				savedItemRolls.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
-				redrawSaveTable(document.getElementById("buildItemsTable"), savedItemRolls);
-			})
-		}
-		for (button of document.querySelectorAll("#buildCursesTable th button")) {
-			button.addEventListener("click", function () {
-				savedCurseRolls.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
-				redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls);
-			})
-		}
-
+	/**
+	 * create the logic for all sort buttons
+	 */
+	#createAllSortButtons() {
+		
 		//search tab
-		for (button of document.querySelectorAll("#searchItemsTable th button")) {
+		for (let button of document.querySelectorAll("#searchItemsTable th button")) {
 			button.addEventListener("click", function () {
 				itemSearchResults.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
 				redrawHistoryTable("searchItemsTable", itemSearchResults, savedItemRolls);
 			})
 		}
-		for (button of document.querySelectorAll("#searchCursesTable th button")) {
+		for (let button of document.querySelectorAll("#searchCursesTable th button")) {
 			button.addEventListener("click", function () {
 				curseSearchResults.sort(compareFunctionCreator(parseInt(this.value), (this.className === "ascendingButton")))
 				redrawHistoryTable("searchCursesTable", curseSearchResults, savedCurseRolls);
