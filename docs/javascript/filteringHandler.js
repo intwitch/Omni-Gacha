@@ -184,6 +184,27 @@ class filteringHandler {
 	}
 
 	/**
+	 * given a name of item or curse, return the array of all data
+	 * if passed argument is not a string, assume it's an array, and return that array (backwards compatibility with old saves)
+	 * if name is not found return undefined
+	 * @param {string} name
+	 * @param {boolean} isItem is the raw item array and not curse array
+	*/
+	static nameToFull(name, isItem = true) {
+		if (typeof name != "string") return name;
+		var dataArray;
+		if (isItem) dataArray = rawItemsData;
+		else dataArray = rawCursesData;
+
+		// i feel hoorible about the amount if statements here, unfortunately it's a lot of searching in an unsorted array
+		for (data of dataArray) {
+			if (data[ITEMS.NAME] == name) return data;
+		}
+		console.error(`${name} not found in raw data array. something has gone wrong`);
+		return name;
+	}
+
+	/**
 	 * search the data for all maching based on the searchText string
 	 * @param {string} searchText 
 	 * @returns {string[][]}
