@@ -1,31 +1,36 @@
 export {gachaItem}
 
 import { itemTags } from "./itemTags"
+import { gachaTerm } from "./gachaTerm"
 
-class gachaItem {
-    name = String
-    series = String
-    description = String
-    category = String
-    gender = String
-    magic = String
-    memetic = String
-    might = String
-    mind = String
-    motion = String
-    moxie = String
-    mutation = String
-    myth = String
-    stats = String
-    rank = Number
-    growthType = String
-    growthRate = String
-    restock = String
-    returnValue = String
-    gift = String
-    nsfw = Boolean
+class gachaItem extends gachaItem {
+    /** @type {{
+     *   name: string,
+     *   series: string,
+     *   description: string,
+     *   category: string,
+     *   gender: string,
+     *   magic: string,
+     *   memetic: string,
+     *   might: string,
+     *   mind: string,
+     *   motion: string,
+     *   moxie: string,
+     *   mutation: string,
+     *   myth: string,
+     *   stats: number,
+     *   rank: string,
+     *   growthType: string,
+     *   growthRate: string,
+     *   restock: string,
+     *   returnValue: string,
+     *   gift: string,
+     *   nsfw: boolean
+     * }} */
+    #values
 
-    tags = itemTags
+    /** @type {itemTags} */
+    tags
     
     /**
      * 
@@ -65,11 +70,13 @@ class gachaItem {
      */
     constructor(object, tags){
         for(let key in object){
-            this[key] = object[key]
+            this.#values[key] = object[key]
         }
 
-        this.tags = new itemTags(tags)
+        this.#tags = new itemTags(tags)
     }
+
+    
 
     /**
      * convert an item to a string
@@ -77,7 +84,18 @@ class gachaItem {
      */
     toString() {
         let sfw = ""
-        if (this.nsfw) sfw = " | NSFW"
-        return `${this.name} | ${this.series}\nRank ${this.series} | ${this.category}${sfw}\n${this.description}`
+        if (this.#nsfw) sfw = " | NSFW"
+        return `${this.#name} | ${this.#series}\nRank ${this.#series} | ${this.#category}${sfw}\n${this.#description}`
+    }
+
+    /**
+     * basic row conversion of the item.
+     * get desired values and call super function
+     * TODO, replace with a better presentation
+     * @returns {HTMLTableRowElement}
+     */
+    toBasicForm(){
+        const basicValues = [this.#values.name, this.#values.series, this.#values.description, this.#values.category]
+        return super.toBasicForm(basicValues)
     }
 }

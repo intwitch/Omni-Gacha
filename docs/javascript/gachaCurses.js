@@ -1,14 +1,20 @@
 export { gachaCurse }
+import { gachaTerm } from "./gachaTerm";
 
-class gachaCurse {
-    name = String
-    description = String
-    resolution = String
-    level = String
-    target = String
-    affects = String
-    nsfw = Boolean
-    reward = String
+class gachaCurse extends gachaTerm{
+    /**
+     * @type {{
+     *   name: string,
+     *   description: string,
+     *   resolution: string,
+     *   level: string,
+     *   target: string,
+     *   affects: string,
+     *   nsfw: boolean,
+     *   reward: string,
+     * }}
+     */
+    #values;
 
     /**
      * 
@@ -42,5 +48,10 @@ class gachaCurse {
         let sfw = ""
         if (this.nsfw) sfw = " | NSFW"
         return `${this.name} | ${this.level}${sfw}\n${this.description}\nResolution: ${this.resolution}`
+    }
+
+    toBasicForm(){
+        const basicValues = [this.#values.name, this.#values.description, this.#values.resolution, this.#values.level]
+        return super.toBasicForm(basicValues)
     }
 }
