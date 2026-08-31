@@ -717,7 +717,7 @@
                             </span>
                         </span>
                     </div>
-                    <table id="rollTable" class="itemsTable">
+                    <table id="rollTable" class="itemsTable rollTable">
                         <caption>
                             <h2>Rolls</h2>
                         </caption>
@@ -755,7 +755,7 @@
                 </div>
 
                 <div>
-                    <table id="saveTable" class="itemsTable">
+                    <table id="saveTable" class="itemsTable saveTable">
                         <caption>
                             <h2>Saved Rolls</h2>
                         </caption>
@@ -791,7 +791,7 @@
                 </div>
 
                 <div id="itemRollHistory">
-                    <table id="itemRollHistoryTable" class="itemsTable">
+                    <table id="itemRollHistoryTable" class="itemsTable historyTable">
                         <caption>
                             <h2>Roll History</h2>
                         </caption>
@@ -832,7 +832,7 @@
             <div>
                 <button id="cursesRollButton">Get Curse</button>
                 <button id="cursesSaveButton">Save Curse</button>
-                <table id="cursesRollTable" class="cursesTable">
+                <table id="cursesRollTable" class="cursesTable rollTable">
                     <caption>
                         <h2>Rolls</h2>
                     </caption>
@@ -854,7 +854,7 @@
                 </table>
             </div>
             <div>
-                <table id="cursesSaveTable" class="cursesTable">
+                <table id="cursesSaveTable" class="cursesTable saveTable">
                     <caption>
                         <h2>Saved Curses</h2>
                     </caption>
@@ -874,7 +874,7 @@
                     <tbody>
                     </tbody>
                 </table>
-                <table id="curseRollHistoryTable" class="cursesTable">
+                <table id="curseRollHistoryTable" class="cursesTable historyTable">
                     <caption>
                         <h2>Roll History</h2>
                     </caption>
@@ -897,11 +897,11 @@
             </div>
         </div>
 
-        
+
         <div id="build" class="tabcontent transparentBackground">
             <button id="buildExportButton">Export all</button>
             <div>
-                <table id="buildItemsTable" class="itemsTable">
+                <table id="buildItemsTable" class="itemsTable saveTable">
                     <caption>
                         <h2>Saved Items</h2>
                     </caption>
@@ -936,7 +936,7 @@
                 </table>
             </div>
             <div>
-                <table id="buildCursesTable" class="cursesTable">
+                <table id="buildCursesTable" class="cursesTable saveTable">
                     <caption>
                         <h2>Saved Curses</h2>
                     </caption>
@@ -978,7 +978,7 @@
                     <input type="text" id="searchItemsAdvanced" class="advancedSearch" placeholder='Magic:F Motion:C,D'>
                     <button id="searchItemsButton">search</button>
                 </forum>
-                <table id="searchItemsTable" class="itemsTable">
+                <table id="searchItemsTable" class="itemsTable searchTable">
                     <caption>
                         <h2>Items</h2>
                     </caption>
@@ -1118,7 +1118,7 @@
                         placeholder='Target:You,Others Name:sin'>
                     <button id="searchCursesButton">search</button>
                 </forum>
-                <table id="searchCursesTable" class="cursesTable">
+                <table id="searchCursesTable" class="cursesTable searchTable">
                     <caption>
                         <h2>Curses</h2>
                     </caption>
