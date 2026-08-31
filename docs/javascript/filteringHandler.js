@@ -27,28 +27,20 @@ import { gachaCurse } from "./gachaCurse.js";
 class filteringHandler {
 	//set here to get intellesense to pick up on type, will always be set by constructor anyway
 	#buildsOptions = gachaBuildsOptionsHandler()
-	#data = {
-		raw: {
-			items: [],
-			curses: []
-		},
-
-		filtered: {
-			items: [],
-			curses: []
-		},
-
-		roll: {
-			items: [],
-			curses: []
-		}
-	}
+	/**
+	 * @type {{
+	 *   raw: { items: gachaItem[], curses: gachaCurse[] },
+	 *   filtered: { items: gachaItem[], curses: gachaCurse[] },
+	 *   roll: { items: gachaItem[], curses: gachaCurse[] }
+	 * }}
+	 */
+	#data
 
 	#filters = {
-		ranks: [
+		"rank": [
 			"F", "E", "D", "C", "B", "A", "S", "SS", "SSS", "EX"
 		],
-		categories: [
+		"category": [
 			"Ability", "Arsenal", "Consumable", "Familiar", "Farmable", "Novelty", "Passive", "Race", "Skill", "Vehicle", "Wearible", "World"
 		]
 	}
@@ -61,34 +53,19 @@ class filteringHandler {
 	constructor(gachaBuildsOptionsHandler, data) {
 		this.#buildsOptions = gachaBuildsOptionsHandler
 		this.#data = data
+
+		
 	}
 
-
 	updateContentFilter() {
-		const nsfw = this.#buildsOptions.getOption("NSFW")
+		const nsfw = this.#buildsOptions.getOption("NSFWOnly")
 		const nsfwOnly = this.#buildsOptions.getOption("NSFWOnly")
 
-		let searchParam
-		let doFilter = true;
-
-		if (nsfw) {
-			if (nsfwOnly) {
-				searchParam = "TRUE"
-			}
-			else doFilter = false;
+		if(nsfw && !nsfw) for(let key in this.#data.raw){ 
+			this.#data.filtered[key] = Array.from(this.#data.raw[key])
 		}
-		else searchParam = "FALSE"
-
-		var filterFunctionCreator = function (seekPosition) {
-			var filterFunction = function (value, index, array) {
-				return value[seekPosition] == searchParam
-			}
-			return filterFunction
-		}
-
-		if (doFilter) {
-			this.#data.filtered.items = this.#data.raw.items.filter(filterFunctionCreator(ITEMS.NSFW))
-			this.#data.filtered.curses = this.#data.raw.curses.filter(filterFunctionCreator(CURSES.NSFW))
+		else for(let key in this.#data.raw){
+			this.#data.filtered[key] = this.#data.raw[key].filter(filteringHandler.exactValueFilter([nsfwOnly]), "nsfw")
 		}
 
 		this.updateRollData()
@@ -97,12 +74,11 @@ class filteringHandler {
 	 * get a constant reference to data.filtered.items, mutate acordingly
 	 * and assign to data.roll.items
 	 */
-	updateItemRollData() {
-		const rollItemsData = this.#data.filtered.items
-
-		rollItemsData = this.#filterItemsByRank(rollItemsData);
-		rollItemsData = this.#filterItemsByCategory(rollItemsData);
-		this.#data.roll.items = rollItemsData
+	#updateItemRollData() {
+		let workingItems = this.#data.filtered.items
+		for(let key in this.#filters){
+			workingItems = workingItems.filter(filteringHandler.exactValueFilter(this.#filters[key]), key)
+		}
 	}
 
 	/**
@@ -111,23 +87,6 @@ class filteringHandler {
 	 */
 	#updateCurseRollData() {
 		this.#data.roll.curses = this.#data.filtered.curses
-	}
-
-	/**
-	 * filter items by rank determined in #filters.ranks
-	 * @param {string[]} itemsData array of items
-	 * @returns filtered items array
-	 */
-	#filterItemsByRank(itemsData) {
-		return itemsData.filter(valueFilter(this.#filters.ranks, ITEMS.RANK));
-	}
-	/**
-	 * filter items by category determined in #filters.categories
-	 * @param {string[]} itemsData array of items
-	 * @returns filtered items array
-	 */
-	#filterItemsByCategory(itemsData) {
-		return itemsData.filter(valueFilter(this.#filters.categories, ITEMS.CATEGORY))
 	}
 
 	/**
@@ -147,15 +106,15 @@ class filteringHandler {
 	 * simply provide the index of what you're filtering ie; ITEMS.RANK
 	 * and filterArray to check the value, of index against.
 	 * 
-	 * @param {string[]} filterArray array of things to match to
-	 * @param {int} index what index of the item/curse to check against
+	 * @param {(string|number|boolean)[]} filterArray array of things to match to
+	 * @param {string} key what index of the item/curse to check against
 	 * @returns function to use in array.filter()
 	 */
-	static exactValueFilter(filterArray, index) {
+	static exactValueFilter(filterArray, key) {
 		var filterFunction = function (value) {
-			const valuePart = value[index].toLowerCase();
+			const valuePart = value.get(key)
 			for (filter of filterArray) {
-				if (valuePart === filter.toLowerCase()) return true
+				if (valuePart === filter) return true
 			}
 			return false;
 		}
@@ -176,7 +135,7 @@ class filteringHandler {
 	 * @returns function to use in array.filter()
 	 */
 	static textValueFilter(filterArray, index) {
-		var filterFunctionCreator = function (value) {
+		let filterFunctionCreator = function (value) {
 			const valuePart = value[index].toLowerCase();
 			for (filter of filterArray) {
 				if (valuePart.includes(filter.toLowerCase())) return true
@@ -195,7 +154,7 @@ class filteringHandler {
 	*/
 	static nameToFull(name, isItem = true) {
 		if (typeof name != "string") return name;
-		var dataArray;
+		let dataArray;
 		if (isItem) dataArray = rawItemsData;
 		else dataArray = rawCursesData;
 
@@ -208,9 +167,43 @@ class filteringHandler {
 	}
 
 	/**
+	 * get a random thing out of an array.
+	 * @param {*[]} array 
+	 * @returns {*}
+	 */
+	static getRandomValue(array) {
+		let randomIndex = Math.floor(Math.random() * array.length);
+		return array[randomIndex];
+	}
+
+	/**
+	 * 
+	 * @param {string} term "items"/"curses"
+	 * @returns {gachaItem|gachaCurse}
+	 */
+	getRandomTerm(term){
+		return filteringHandler.getRandomValue(this.#data.roll[term])
+	}
+
+	/**
+	 * get a random gacha item from roll data
+	 * @returns {gachaItem}
+	 */
+	getRandomItem(){
+		return this.getRandomTerm("items")
+	}
+	/**
+	 * get a random gacha curse from roll data
+	 * @returns {gachaCurse}
+	 */
+	getRandomCurse(){
+		return this.getRandomCurse("curses")
+	}
+
+	/**
 	 * search the data for all maching based on the searchText string
 	 * @param {string} searchText 
-	 * @returns {string[][]}
+	 * @returns {gachaItem[]}
 	 */
 	searchItems(searchText){
 		const indexToFilterFunction = function (index) {
@@ -252,7 +245,7 @@ class filteringHandler {
 	/**
 	 * search the data for all maching based on the searchText string
 	 * @param {string} searchText 
-	 * @returns string[][]
+	 * @returns {gachaCurse[]}
 	 */
 	searchCurses(searchText){
 		/*
@@ -266,6 +259,18 @@ class filteringHandler {
 		}
 
 		return this.#search(searchText, this.#data.filtered.curses, indexToFilterFunction, curseHeaderToIndex)
+	}
+
+	/**
+	 * 
+	 * @param {string} searchText 
+	 * @param {string} term "items"/"curses"
+	 * @returns {gachaItem[]|gachaCurse[]|null} null if term invalid
+	 */
+	searchTerm(searchText, term){
+		if(term == "items") return this.searchItems(searchText);
+		if(term == "curses") return this.searchCurses(searchText);
+		return null;
 	}
 
 	/**

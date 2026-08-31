@@ -2,46 +2,81 @@ import { filteringHandler } from "./filteringHandler";
 import { gachaBuildsOptionsHandler } from "./gachaBuildsOptionsHandler";
 import { gachaCurse } from "./gachaCurse";
 import { gachaItem } from "./gachaItem";
+import { gachaTerm } from "./gachaTerm";
 
 class pageHandler {
+
+	/**@type {filteringHandler} */
+	#filteringHandler
+	
+	/**@type {gachaBuildsOptionsHandler} */
+	#buildsOptions
+
+	/**
+	 * @type {{
+	 * 	items: gachaItem[],
+	 * 	curses: gachaCurse[]
+	 * }}
+	 */
+	#history = {
+		items: [],
+		curses: []
+	}
+
+	/**
+	 * event for a table to dispatch when redraw is wanted. Alows better handling
+	 * @type {event}
+	 */
+	static tableRedrawRequest = new Event("tableRedrawRequest")
+
+	/**
+	 * 
+	 * @param {filteringHandler} filteringHandler constructed filtering handler
+	 * @param {gachaBuildsOptionsHandler} buildsOptions constructed handler
+	 */
+	constructor(filteringHandler, buildsOptions){
+		this.#filteringHandler = filteringHandler
+		this.#buildsOptions = buildsOptions
+	}
 	
 
-	//open the options submenu... this will do more later probably I think. more things to handle. same with bellow
-	openOptions() {
+	/**
+	 * display the options menu
+	 */
+	static openOptions() {
 		document.getElementById("optionsMenu").style.display = "flex"
 	}
 
-	closeOptions() {
+	/**
+	 * close the coptions menu
+	 */
+	static closeOptions() {
 		document.getElementById("optionsMenu").style.display = "none"
 	}
 
-	//call every that has something changed by options and change it, along with the html elements.
-	applyAllOptions() {
-		document.getElementById("optionsBackgroundToggle").checked = optionsValues.backgroundImage
-		updateBackgroundImage();
+	/**
+	 * update option checkboxes/other things, and then apply them
+	 */
+	#applyAllOptions() {
 
-		if (optionsValues.NSFW != undefined) {
-			document.getElementById("nsfwCheckbox").checked = NSFW = optionsValues.NSFW
-			document.getElementById("nsfwOnlyCheckbox").checked = NSFWOnly = optionsValues.NSFWOnly
-		}
-		contentFilterChange();
+		this.#applyBackgroundImage()
 
 		populateBuildSelector();
 	}
-
-	//called by changed in options. depending on event target value do different things.
-	optionChange(event) {
-		var target = event.target;
-		switch (target.value) {
-			case "backgroundImage":
-				optionsValues[target.value] = target.checked
-				updateBackgroundImage()
-				break;
-		}
-		optionsCookieSetFunction()
+	/**
+	 * update the background image checkbox element
+	 * @param {boolean} isOn if it's on or not 
+	 */
+	#updateBackgroundImageOptionElement(isOn = this.#buildsOptions.getOption("backgroundImage")){
+		document.getElementById("optionsBackgroundToggle").checked = isOn
+		this.updateBackgroundImage(isOn)
 	}
-	//if options say off, off. if options say on, on.
-	updateBackgroundImage() {
+
+	/**
+	 * update the background image itself.
+	 * @param {boolean} isOn 
+	 */
+	#applyBackgroundImage(isOn = this.#buildsOptions.getOption("backgroundImage")) {
 		const root = document.querySelector(":root")
 		if (optionsValues.backgroundImage) {
 			document.body.style.backgroundImage = 'url("assets/Omni_Gacha_Background.png")';
@@ -53,23 +88,46 @@ class pageHandler {
 		}
 	}
 
+	/**
+	 * update the physical checkboxes with the saved options, then update the #filteringHandlers data
+	 * should not be called outside of initialization
+	 * @param {boolean} NSFW 
+	 * @param {boolean} NSFWOnly 
+	 */
+	#updateContentOptionsElement(NSFW = this.#buildsOptions.getOption("NSFW"), NSFWOnly = this.#buildsOptions.getOption("NSFWOnly")){
+		const nsfwElement = document.getElementById("nsfwCheckbox")
+		const nsfwOnlyElement = document.getElementById("nsfwOnlyCheckbox")
+
+		nsfwElement.checked = NSFW
+		nsfwOnlyElement.checked = NSFWOnly
+
+		if(NSFW || NSFWOnly) nsfwOnlyElement.display = "hide";
+		else nsfwOnlyElement.display = "block"
+
+		this.#filteringHandler.updateContentFilter()
+	}
+
+	/**
+	 * populate the build <selector> element with options.
+	 * should be called whenever a build is added or deleted
+	 */
 	populateBuildSelector() {
 		const select = document.getElementById("optionsBuildSelector")
 		select.textContent = "" //wipe with textContent to avoid .innerHTML
 
-		const builds = optionsValues.buildsArray;
+		const builds = this.#buildsOptions.getOption("buildsArray")
 		if (builds.length == 0) {
 			console.warn("warning, no builds. something has probably gone wrong.")
 			return;
 		}
-		for (build of builds) {
+		for (let build of builds) {
 			const option = document.createElement("option");
 			option.value = build
 			option.innerText = build
 			select.appendChild(option)
 		}
 
-		select.value = optionsValues.build
+		select.value = this.#buildsOptions.getOption("build")
 	}
 
 	/**
@@ -92,149 +150,224 @@ class pageHandler {
 		}
 	}
 
-	//create a handler for selection button to call
-	tabChangeHandlerCreator(targetTab) {
-		var root = getComputedStyle(document.querySelector(":root"))
-
-		// handle changing the tab, 'this' becomes called button.
-		var tabChangeHandler = function () {
-			document.querySelectorAll("#selector button")
-			for (button of document.querySelectorAll("#selector button")) {
-				button.style.backgroundColor = root.getPropertyValue("--unselected-button-color")
-			}
-			this.style.backgroundColor = root.getPropertyValue("--selected-button-color")
-			redrawAllSaveTables();
-			hideAllBut(targetTab);
+	/**
+	 * change tab button colors then change to target tab
+	 * do not override this context when passing to event listenter
+	 * if this != 
+	 * @param {Event} event 
+	 * @param {string} targetTabID
+	 * @example .addeventListener("click", (event) => { changeTabButtonListener(event, "someTabID") })
+	 */
+	changeTabButtonListener(event, targetTabID) {
+		pageHandler.contextCheck();
+		let root = getComputedStyle(document.querySelector(":root"))
+		for (let button of document.querySelectorAll("#selector button")) {
+			button.style.backgroundColor = root.getPropertyValue("--unselected-button-color")
 		}
-
-		return tabChangeHandler
+		event.currentTarget.style.backgroundColor = root.getPropertyValue("--selected-button-color")
+		this.changeTabTo(targetTabID);
 	}
 
-	//redraw important cross tab tables from source to reflect modifications made on other tabs
-	redrawAllSaveTables() {
-		//we don't want to update cookies here
-		redrawSaveTable(document.getElementById("saveTable"), savedItemRolls, false);
-		redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls, false);
-		redrawSaveTable(document.getElementById("buildItemsTable"), savedItemRolls, false);
-		redrawSaveTable(document.getElementById("buildCursesTable"), savedCurseRolls, false);
+	/**
+	 * if this is not pageHandler throw a referenceError
+	 */
+	static contextCheck() {
+		if (!(this instanceof pageHandler)) throw new ReferenceError("this is not and instance of pageHandler. did you override the context?");
 	}
 
-	// set all tabs display to none then the one targetTab to block
-	hideAllBut(targetTab) {
+	/**
+	 * 
+	 * @param {string} targetTabID 
+	 */
+	changeTabTo(targetTabID) {
+		const tab = document.getElementById(targetTabID)
 		for (tab of document.querySelectorAll(".tabcontent")) {
 			tab.style.display = "none"
 		}
-		targetTab.style.display = "block";
+		tab.style.display = "block";
+	}
+	/**
+	 * function to call when button is clicked.
+	 * only other thing that eventlistener does is redraw the table after callback function runs
+	 * 
+	 * @callback buttonCallback
+	 * @param {gachaTerm[]} sourceDataArray
+	 * @param {number} index index of calling item in sourceDataArray
+	 * @param {...*} args wildcard, whatever you want to define
+	 */
+	
+	/**
+	 * redraw a table with a button, determined by the content and function arguments
+	 * @param {string} tableID 
+	 * @param {(gachaTerm)[]} dataArray 
+	 * @param {string|Element} buttonContent what to apppend to the button element
+	 * @param {buttonCallback} buttonCallback
+	 * @param {*[]} args args to pass to buttonCallback
+	 */
+
+	#redrawTableWithButton(tableID, dataArray, buttonContent, buttonCallback, args) {
+		const rows = []
+
+		for(let i = 0; i < dataArray.length; i++){
+			const row = dataArray[i].toFullRow()
+			const button = document.createElement("button")
+			row.appendChild(document.createElement("td")).appendChild(button)
+
+			button.append(buttonContent)
+			button.addEventListener("click", () => { 
+				buttonCallback(dataArray, i, ...args)
+			})
+		}
+
+		this.#redrawTableBody(tableID, rows)
 	}
 
-	/*
-	History handler creator returns a function to be called on click that will handle history.
-	takes ID of the table to draw, history array to use, and save array to save to.
-	*/
-	redrawHistoryTable(tableID, historyArray, saveArray) {
+	/**
+	 * listener to handle redrawing a history table.
+	 * call using => function. do not override this.
+	 * @param {event} e passed by event listener
+	 * @param {string} term "items"/curses
+	 */
+	redrawHistoryTableListener(e, term){
+		const historyDataArray = this.#history[term]
 
-		//function to pass to additionalButtonTableData
-		function saveButtonFunctionCreator(saveArray, index) {
-			var saveButtonFunction = function () {
-				saveArray.push(historyArray[index])
-				buildCookieSetFunction()
-				redrawAllSaveTables()
-			}
-			return saveButtonFunction
-		}
-
-		var table = document.getElementById(tableID)
-		var rows = [];
-
-		for (var i = 0; i < historyArray.length; i++) {
-			if (!historyArray[i]) break;
-			var row = createRow(historyArray[i])
-			row.append(additionalButtonTableData(saveButtonFunctionCreator(saveArray, i), "Save"))
-			rows.push(row)
-		}
-
-		drawTableBody(table, rows)
+		this.#redrawTableWithButton(e.currentTarget, historyDataArray, "Save", this.#buttonCallbackSave, term)
 	}
 
-
-
-
-	//function that gets the index to sort on, and if isAscending == true, sort ascend. else sort by descending.
-	compareFunctionCreator(index, isAscending) {
-		var lessValue;
-		var greaterValue;
-		if (isAscending) {
-			lessValue = -1
-			greaterValue = 1
-		}
-		else {
-			lessValue = 1
-			greaterValue = -1
-		}
-		function compare(a, b) {
-			switch (true) {
-				case (a < b):
-					return lessValue;
-				case (a > b):
-					return greaterValue;
-				default:
-					return 0;
-			}
-		}
-
-		function standardCompare(a, b) {
-			return compare(a[index], b[index])
-		}
-
-		function rankCompare(a, b) {
-			return compare(rankToNumber(a[index]), rankToNumber(b[index]))
-		}
-
-		var compareFunction
-		if ((ITEMS.MAGIC <= index && index <= ITEMS.MYTH) || index == ITEMS.RANK) compareFunction = rankCompare
-		else compareFunction = standardCompare
-		return compareFunction
+	/**
+	 * listener to handle redrawing a save table.
+	 * call using => function. do not override this.
+	 * @param {event} e passed by event listener
+	 * @param {string} term "items"/curses
+	 */
+	redrawSaveTableListener(e, term){
+		this.#redrawTableWithButton(e.currentTarget, this.#buildsOptions.getCurrentSaved(term), "remove", this.#buttonCallbackRemove, term)
 	}
-	//converts a rank to a number for sorting/ordering purposes, and returns the number. if rank doesn't match anything return rank.
-	rankToNumber(rank) {
-		switch (rank.toLowerCase()) {
-			case "f":
-				return 0;
-			case "e":
-				return 1;
-			case "d":
-				return 2;
-			case "c":
-				return 3;
-			case "b":
-				return 4;
-			case "a":
-				return 5;
-			case "s":
-				return 6;
-			case "ss":
-				return 7;
-			case "sss":
-				return 8;
-			case "ex":
-				return 9;
+
+	/**
+	 * listener to handle redrawing a search table.
+	 * call using => function. do not override this.
+	 * @param {event} e passed by event listener
+	 * @param {string} term "items"/curses
+	 */
+	redrawSearchTableListener(e, term){
+		const searchString = this.getSearchString(term);
+		const dataArray = this.#filteringHandler.searchTerm(searchString, term)
+
+		this.#redrawTableWithButton(e.currentTarget, dataArray, "save", this.#buttonCallbackSave, term)
+	}
+
+	/**
+	 * listener to handle redrawing a roll table.
+	 * call using => function. do not override this.
+	 * @param {event} e passed by event listener
+	 * @param {string} term "items"/curses
+	 */
+	redrawRollTableListener(e, term){
+		this.#redrawTableWithButton(e.currentTarget, [historyDataArray[0]], "Save", this.#buttonCallbackSave, term)
+	}
+
+	/**
+	 * get the proper search string for search to use
+	 * @param {string} term 
+	 * @returns {string}
+	 */
+	getSearchString(term){
+		let idLookup;
+		switch(term){
+			case "items":
+				idLookup = "searchItems"
+				break;
+			case "curses":
+				idLookup = "searchCurses"
+				break;
 			default:
-				return rank;
+				throw new ReferenceError(`"${term}" invalid, use "items" or "curses"`)
+				break;
+		}
+
+		return document.getElementById(idLookup + "Advanced").value
+	}
+
+	/**
+	 * 
+	 * @param {string} tableID id of table to draw to
+	 * @param {gachaTerm[]} dataArray what to draw
+	 */
+	redrawTable(tableID, dataArray){
+		const rows = []
+
+		for(let data of dataArray){
+			rows.push(data.toFullRow())
+		}
+		
+		this.drawTableBody(tableID, rows)
+	}
+
+	/**
+	 * redraw all save tables, or just items or curses tables. determined by term
+	 * any nonstandard term will be treated the same as no term at all
+	 * @param {string=} term 
+	 */
+	redrawAllSaveTables(term){
+		let classLookup = ".saveTable"
+		if(term == "items" | term == "curses") classLookup += `.${term}Table`
+		for(let table of document.querySelectorAll(classLookup)){
+			table.dispatchEvent(pageHandler.tableRedrawRequest)
 		}
 	}
 
-	// get all items and curses, convert to strings (same as copy paste) then let user download txt file of them.
+	/**
+	 * saveTerm and dispatch redraw request event for relevant tables
+	 * @type {buttonCallback}
+	 * @param {gachaTerm[]} sourceDataArray 
+	 * @param {number} index 
+	 * @param {string} term "items"/"curses"
+	 */
+	#buttonCallbackSave(sourceDataArray, index, term){
+		this.#buildsOptions.saveTerm(term, sourceDataArray("index"))
+		redrawAllSaveTables(term)
+	}
+
+	/**
+	 * @type {buttonCallback}
+	 * @param {gachaTerm[]} sourceDataArray unused, part of how callback is called.
+	 * @param {number} index index of what to remove
+	 * @param {string} term "items/curses"
+	 */
+	#buttonCallbackRemove(sourceDataArray, index, term){
+		this.#buildsOptions.removeCurrentSaved(term, index)
+		this.redrawAllSaveTables(term)
+	}
+
+	/**
+	 * 
+	 * @param {string} tableID table to draw to
+	 * @param {HTMLTableRowElement[]} rows what to draw in it
+	 */
+	#redrawTableBody(tableID, rows){
+		const tbody = document.querySelector(`#${tableID} > tbody`)
+		tbody.innerText = ""
+
+		for(let row of rows){
+			tbody.appendChild(row)
+		}
+	}
+
+	/**
+	 * export current build to txt file
+	 */
 	exportSaved() {
 
-		var text = "<ITEMS>\n\n\n";
+		let text = "<ITEMS>\n\n\n";
 
-		for (item of savedItemRolls) {
-			text += `${itemToString(item)}\n\n`;
+		for (let item of this.#buildsOptions.getCurrentSavedItems()) {
+			text += `${item}\n\n`;
 		}
 
 		text += "\n<CURSES>\n\n";
-		for (curse of savedCurseRolls) {
-			text += `${curseToString(curse)}\n\n`;
+		for (let curse of this.#buildsOptions.getCurrentSavedCurses()) {
+			text += `${curse}\n\n`;
 		}
 
 		console.log(text)
@@ -247,65 +380,18 @@ class pageHandler {
 		URL.revokeObjectURL(link.href);
 	}
 
-	// gets random value from items or curses
-	getRandomValue(array) {
-		var randomIndex = Math.floor(Math.random() * array.length);
-		return array[randomIndex];
+
+	/**
+	 * get a random result, dispatch proper redrawRequest events
+	 * @param {string} term "items"/"curses"
+	 */
+	roll(term){
+		const rollTable = document.querySelector(`.rollTable.${term}Table`)
+		const result = this.#filteringHandler.getRandomTerm(term)
+		this.#history[term].unshift(result)
+
+		// history[0] is the current item
+		document.querySelector(`.historyTable.${term}Table`).dispatchEvent(pageHandler.tableRedrawRequest)
+		rollTable.dispatchEvent(pageHandler.tableRedrawRequest)
 	}
-	// given a table element, a item/curse value and history array;
-	// draw the value data and add the value to the historyArray.
-	drawRollData(table, value, historyArray) {
-		var newRow = createRow(value);
-
-		drawTableBody(table, [newRow]);
-		historyArray.unshift(value);
-		return value;
-	}
-
-	//redraw a save table
-	redrawSaveTable(table, data, save = true) {
-
-		//if save tables are being redrawn, they're changing.
-		//if they're changing, gotta update cookies.
-		// save paramater exists so redrawAllSaveTables can override.
-		if (save) buildCookieSetFunction()
-
-		var rows = [];
-
-		function buttonFunctionCreator(index) {
-			var buttonFunction = function () {
-				data.splice(index, 1);
-				redrawSaveTable(table, data);
-			}
-			return buttonFunction
-		}
-		for (var i = 0; i < data.length; i++) {
-			//for some unholy reason, on some browsers it's running when .length = 0, which should be impossible but whatever. fine. we deal.
-			if (!data[i]) {
-				//bad data, break;
-				break;
-			}
-			var row = createRow(data[i])
-
-			row.append(additionalButtonTableData(buttonFunctionCreator(i), "Remove"));
-
-			rows.push(row);
-		}
-
-		drawTableBody(table, rows);
-	}
-
-	//return an additional TD element with an on "click" listener.
-	//function and value determined by inputs.
-	additionalButtonTableData(buttonFunction, buttonText) {
-		var additionalItem = document.createElement("td");
-		var itemButton = document.createElement("button");
-		itemButton.innerText = buttonText;
-		additionalItem.appendChild(itemButton);
-
-		itemButton.addEventListener("click", buttonFunction);
-		return additionalItem
-	}
-
-
 }

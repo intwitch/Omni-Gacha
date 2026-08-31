@@ -29,7 +29,7 @@ class gachaBuildsOptionsHandler {
 	#savedRolls
 	#cookiesHandler
 
-	constructor(buildsValues, optionsValues, savedRolls){
+	constructor(buildsValues, optionsValues, savedRolls) {
 		this.#buildsValues = buildsValues
 		this.#optionsValues = optionsValues
 		this.#savedRolls = savedRolls
@@ -40,7 +40,7 @@ class gachaBuildsOptionsHandler {
 	 * initalize builds and options
 	 * @returns promise resolved when ititalization done.
 	 */
-	async intialize(){
+	async intialize() {
 		return this.#cookiesHandler.cookieInit()
 	}
 
@@ -61,10 +61,9 @@ class gachaBuildsOptionsHandler {
 	/**
 	 * create a new build but do not switch to it, instead call switchBuild()
 	 * @param {string} newBuild 
- * @param {object} buildsValues 
- * @param {object} optionsValues 
- * @returns true on success
- * @returns false on failure
+ 	 * @param {object} buildsValues 
+ 	 * @param {object} optionsValues 
+ 	 * @returns {true|false} depending on success
 	*/
 	createNewBuild(newBuild, buildsValues = this.#buildsValues, optionsValues = this.#optionsValues) {
 		if (optionsValues.buildsArray.indexOf(newBuild) != -1) {
@@ -137,7 +136,7 @@ class gachaBuildsOptionsHandler {
 		if (confirm(`Are you sure you want to delete build "${currentBuild}"?`)) deleteBuild(currentBuild)
 	}
 
-	
+
 	/**
 	 * save current savedRolls to build.
 	 * @param {string} build default current build
@@ -151,11 +150,11 @@ class gachaBuildsOptionsHandler {
 	 * if none provided simply return and don't save
 	 * @param  {...{key: string, value: string}} pairs 
 	 */
-	changeOptionMultiple(...pairs){
-		if(pairs.length == 0){
+	changeOptionMultiple(...pairs) {
+		if (pairs.length == 0) {
 			return;
 		}
-		for (pair of pairs){
+		for (pair of pairs) {
 			this.#optionsValues[pair.key] = pair.value
 		}
 		this.saveOptions()
@@ -166,7 +165,7 @@ class gachaBuildsOptionsHandler {
 	 * @param {string} key
 	 * @param {string} value
 	 */
-	changeOption(key, value){
+	changeOption(key, value) {
 		this.#optionsValues[pair.key] = pair.value
 		this.saveOptions()
 		return value
@@ -176,7 +175,7 @@ class gachaBuildsOptionsHandler {
 	 * @param {string} key key of the option to get
 	 * @returns option value
 	 */
-	getOption(key){
+	getOption(key) {
 		return this.#optionsValues[key]
 	}
 
@@ -185,9 +184,9 @@ class gachaBuildsOptionsHandler {
 	 * @param {...string} keys 
 	 * @returns {string[]}
 	 */
-	getOptions(...keys){
+	getOptions(...keys) {
 		const values = []
-		for(let key of arguments){
+		for (let key of arguments) {
 			values.push(this.getOption(key))
 		}
 		return values
@@ -201,7 +200,7 @@ class gachaBuildsOptionsHandler {
 	 * 	curses: gachaCurse[]
 	 * }}
 	 */
-	#getBuild(buildName = this.#optionsValues.build){
+	#getBuild(buildName = this.#optionsValues.build) {
 		return this.#buildsValues[buildName]
 	}
 
@@ -209,14 +208,14 @@ class gachaBuildsOptionsHandler {
 	 * get shallow copy of items
 	 * @returns {gachaItem[]} Shallow Copy of saved items
 	 */
-	getCurrentSavedItems(){
+	getCurrentSavedItems() {
 		return this.getCurrentSaved("items")
 	}
 	/**
 	 * get shallow copy of curses
 	 * @returns {gachaCurse[]} Shallow Copy of saved curses
 	 */
-	getCurrentSavedCurses(){
+	getCurrentSavedCurses() {
 		return this.getCurrentSaved("curses")
 	}
 	/**
@@ -224,8 +223,8 @@ class gachaBuildsOptionsHandler {
 	 * @param {string} term "items"/"curses"
 	 * @returns {null|gachaCurse[]|gachaItem[]} null on invalid term, gachaTerm[] depending on term.
 	 */
-	getCurrentSaved(term){
-		if(term != "items" || term != "curses") {
+	getCurrentSaved(term) {
+		if (term != "items" || term != "curses") {
 			console.warn(`not meant to be called by "${term}", please use "items" or "curses"`)
 			return null
 		}
@@ -237,17 +236,17 @@ class gachaBuildsOptionsHandler {
 	 * @param {number} index index to splice out 
 	 * @returns {gachaItem|gachaCurse} removed term
 	 */
-	removeCurrentSaved(term, index){
+	removeCurrentSaved(term, index) {
 		//splice always returns an array, which is 1 long, so [0] just kills the unnessary other step
 		return this.#getBuild()[term].splice(index, 1)[0]
 		this.saveBuilds();
 	}
 
-	removeCurrentSavedItem(index){
+	removeCurrentSavedItem(index) {
 		return this.removeCurrentSaved("items", index)
 	}
 
-	removeCurrentSavedCurse(index){
+	removeCurrentSavedCurse(index) {
 		return this.removeCurrentSaved("curses", index)
 	}
 
@@ -255,7 +254,7 @@ class gachaBuildsOptionsHandler {
 	 * 
 	 * @returns {string} name of current build
 	 */
-	getCurrentBuildKey(){
+	getCurrentBuildKey() {
 		return this.optionsValues.build
 	}
 
@@ -265,7 +264,7 @@ class gachaBuildsOptionsHandler {
 	 * @param {gachaItem|gachaCurse} newTerm 
 	 * @returns {gachaItem|gachaCurse} newTerm
 	 */
-	saveTerm(term, newTerm){
+	saveTerm(term, newTerm) {
 		this.#getBuild()[term].append(newTerm)
 		this.saveBuilds()
 		return newTerm
@@ -276,7 +275,7 @@ class gachaBuildsOptionsHandler {
 	 * @param {gachaItem} newItem 
 	 * @returns {gachaItem} newItem
 	 */
-	saveItem(newItem){
+	saveItem(newItem) {
 		return this.saveTerm("items", newItem)
 	}
 
@@ -285,27 +284,27 @@ class gachaBuildsOptionsHandler {
 	 * @param {gachaCurse} newCurse 
 	 * @returns {gachaCurse} newCurse
 	 */
-	saveCurse(newCurse){
+	saveCurse(newCurse) {
 		return this.saveTerm("curses", newCurse)
 	}
 
 	/**
 	 * save everything
 	 */
-	saveAll(){
+	saveAll() {
 		this.saveBuilds
 		this.saveOptions
 	}
 	/**
 	 * save builds
 	 */
-	saveBuilds(){
+	saveBuilds() {
 		this.#cookiesHandler.buildCookieSave()
 	}
 	/**
 	 * save options
 	 */
-	saveOptions(){
+	saveOptions() {
 		this.#cookiesHandler.optionsCookieSave()
 	}
 };
