@@ -49,7 +49,7 @@ class gachaTerm{
      * TODO: make this legacy
      * @returns {HTMLTableRowElement}
      */
-    toFulllRow(){
+    toFullRow(){
         const row = document.createElement("tr")
 
         for(let value of this.#values){
