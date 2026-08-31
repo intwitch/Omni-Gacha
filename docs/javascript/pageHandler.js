@@ -1,4 +1,7 @@
 import { filteringHandler } from "./filteringHandler";
+import { gachaBuildsOptionsHandler } from "./gachaBuildsOptionsHandler";
+import { gachaCurse } from "./gachaCurse";
+import { gachaItem } from "./gachaItem";
 
 class pageHandler {
 	

@@ -1,4 +1,4 @@
-import { gachaItem } from "./gachaItems.js";
+import { gachaItem } from "./gachaItem.js";
 import { describe, expect, test } from "vitest";
 import valuesJson from "../data/values.json" assert {type: "json"}
 

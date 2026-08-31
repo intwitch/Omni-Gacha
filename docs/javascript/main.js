@@ -24,8 +24,8 @@ import {
 	tabChangeHandlerCreator,
 } from "./pageElements.js";
 
-import { gachaItem } from "./gachaItems.js"
-import { gachaCurse } from "./gachaCurses.js"
+import { gachaItem } from "./gachaItem.js"
+import { gachaCurse } from "./gachaCurse.js"
 
 export {
 	ITEMS,

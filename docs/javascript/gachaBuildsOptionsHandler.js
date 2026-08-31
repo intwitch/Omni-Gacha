@@ -6,8 +6,10 @@ import {
 	redrawAllSaveTables
 }
 	from "./pageElements.js"
-import { item } from "./gachaItems.js"
-import { curse } from "./gachaCurses.js"
+import { item } from "./gachaItem.js"
+import { curse } from "./gachaCurse.js"
+
+export { gachaBuildsOptionsHandler }
 
 /**
  * handle builds and options values, as they are intertwined

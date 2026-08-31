@@ -15,6 +15,9 @@ export {
 	filteringHandler
 }
 
+import { gachaItem } from "./gachaItem.js";
+import { gachaCurse } from "./gachaCurse.js";
+
 /**
  * handle all filtering, prepping, 
  * and searching (which is also just filtering to user defined paramaters)
