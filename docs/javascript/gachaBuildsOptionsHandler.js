@@ -207,7 +207,7 @@ class gachaBuildsOptionsHandler {
 
 	/**
 	 * get shallow copy of items
-	 * @returns {gachaTerm[]} Shallow Copy of saved items
+	 * @returns {gachaItem[]} Shallow Copy of saved items
 	 */
 	getCurrentSavedItems(){
 		return this.getCurrentSaved("items")
@@ -231,6 +231,26 @@ class gachaBuildsOptionsHandler {
 		}
 		return Array.from(this.#getBuild()[term])
 	}
+	/**
+	 * 
+	 * @param {string} term "items"/"curses"
+	 * @param {number} index index to splice out 
+	 * @returns {gachaItem|gachaCurse} removed term
+	 */
+	removeCurrentSaved(term, index){
+		//splice always returns an array, which is 1 long, so [0] just kills the unnessary other step
+		return this.#getBuild()[term].splice(index, 1)[0]
+		this.saveBuilds();
+	}
+
+	removeCurrentSavedItem(index){
+		return this.removeCurrentSaved("items", index)
+	}
+
+	removeCurrentSavedCurse(index){
+		return this.removeCurrentSaved("curses", index)
+	}
+
 	/**
 	 * 
 	 * @returns {string} name of current build
