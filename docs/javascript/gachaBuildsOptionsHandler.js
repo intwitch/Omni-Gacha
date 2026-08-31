@@ -6,8 +6,9 @@ import {
 	redrawAllSaveTables
 }
 	from "./pageElements.js"
-import { item } from "./gachaItem.js"
-import { curse } from "./gachaCurse.js"
+import { gachaItem, item } from "./gachaItem.js"
+import { curse, gachaCurse } from "./gachaCurse.js"
+import { gachaTerm } from "./gachaTerm.js"
 
 export { gachaBuildsOptionsHandler }
 
@@ -16,7 +17,15 @@ export { gachaBuildsOptionsHandler }
  */
 class gachaBuildsOptionsHandler {
 	#buildsValues
-	#optionsValues
+	#optionsValues = {
+		"backgroundImage": true,
+		"build": "default",
+		"buildsArray": ["default"],
+
+		"NSFW": false,
+		"NSFWOnly": false
+
+	}
 	#savedRolls
 	#cookiesHandler
 
@@ -154,11 +163,13 @@ class gachaBuildsOptionsHandler {
 
 	/**
 	 * change and save option accordingly.
-	 * @param {{key: string, value: string}} pair 
+	 * @param {string} key
+	 * @param {string} value
 	 */
-	changeOption(pair){
+	changeOption(key, value){
 		this.#optionsValues[pair.key] = pair.value
-		this.saveOptions
+		this.saveOptions()
+		return value
 	}
 	/**
 	 * get an option value
@@ -171,11 +182,91 @@ class gachaBuildsOptionsHandler {
 
 	/**
 	 * 
-	 * @param {string} buildName 
-	 * @returns build
+	 * @param {...string} keys 
+	 * @returns {string[]}
 	 */
-	getBuild(buildName = this.#optionsValues.build){
+	getOptions(...keys){
+		const values = []
+		for(let key of arguments){
+			values.push(this.getOption(key))
+		}
+		return values
+	}
+
+	/**
+	 * return a specific build, or the current one if blank.
+	 * @param {string} buildName current build by default
+	 * @returns {{
+	 * 	items: gachaItem[]
+	 * 	curses: gachaCurse[]
+	 * }}
+	 */
+	#getBuild(buildName = this.#optionsValues.build){
 		return this.#buildsValues[buildName]
+	}
+
+	/**
+	 * get shallow copy of items
+	 * @returns {gachaTerm[]} Shallow Copy of saved items
+	 */
+	getCurrentSavedItems(){
+		return this.getCurrentSaved("items")
+	}
+	/**
+	 * get shallow copy of curses
+	 * @returns {gachaCurse[]} Shallow Copy of saved curses
+	 */
+	getCurrentSavedCurses(){
+		return this.getCurrentSaved("curses")
+	}
+	/**
+	 * get shallow copy of current saved items or curses
+	 * @param {string} term "items"/"curses"
+	 * @returns {null|gachaCurse[]|gachaItem[]} null on invalid term, gachaTerm[] depending on term.
+	 */
+	getCurrentSaved(term){
+		if(term != "items" || term != "curses") {
+			console.warn(`not meant to be called by "${term}", please use "items" or "curses"`)
+			return null
+		}
+		return Array.from(this.#getBuild()[term])
+	}
+	/**
+	 * 
+	 * @returns {string} name of current build
+	 */
+	getCurrentBuildKey(){
+		return this.optionsValues.build
+	}
+
+	/**
+	 * 
+	 * @param {string} term "items"/"curses"
+	 * @param {gachaItem|gachaCurse} newTerm 
+	 * @returns {gachaItem|gachaCurse} newTerm
+	 */
+	saveTerm(term, newTerm){
+		this.#getBuild()[term].append(newTerm)
+		this.saveBuilds()
+		return newTerm
+	}
+
+	/**
+	 * 
+	 * @param {gachaItem} newItem 
+	 * @returns {gachaItem} newItem
+	 */
+	saveItem(newItem){
+		return this.saveTerm("items", newItem)
+	}
+
+	/**
+	 * 
+	 * @param {gachaCurse} newCurse 
+	 * @returns {gachaCurse} newCurse
+	 */
+	saveCurse(newCurse){
+		return this.saveTerm("curses", newCurse)
 	}
 
 	/**
