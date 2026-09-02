@@ -40,105 +40,52 @@ class gachaBuildsOptionsHandler {
 		return this.#cookiesHandler.cookieInit(rawData)
 	}
 
-	/**
-	 * handles input validation on the event and calls createNewBuild()
-	 * @param {object} buildsValues 
-	 * @param {object} optionsValues 
-	 * @param {event} event 
-	 * @returns nothing
-	*/
-	createNewBuildEventHandler(event, buildsValues = this.#buildsValues, optionsValues = this.#optionsValues) {
-		const value = event.target.value
-		if (event.key != "Enter" || value == "") return;
-
-		//TODO, handle if fail
-		if (createNewBuild(value, buildsValues, optionsValues)) switchBuild(value)
-	}
+	
 	/**
 	 * create a new build but do not switch to it, instead call switchBuild()
 	 * @param {string} newBuild 
- 	 * @param {object} buildsValues 
- 	 * @param {object} optionsValues 
+ 	 * @param {object} this.#buildsValues 
+ 	 * @param {object} this.#optionsValues 
  	 * @returns {true|false} depending on success
 	*/
-	createNewBuild(newBuild, buildsValues = this.#buildsValues, optionsValues = this.#optionsValues) {
-		if (optionsValues.buildsArray.indexOf(newBuild) != -1) {
-			alert(`"${newBuild}" already a build`)
-			return false;
-		}
+	createNewBuild(newBuild) {
+		this.#optionsValues.buildsArray.push(newBuild)
+		this.#buildsValues[newBuild].items = []
+		this.#buildsValues[newBuild].curses = []
 
-		optionsValues.buildsArray.push(newBuild)
-		buildsValues[newBuild].items = []
-		buildsValues[newBuild].curses = []
-
-		populateBuildSelector()
-		return true
+		this.switchBuild(newBuild)
 	}
-
-	/**
-	 * event handler to get value then call switchBuild()
-	 * @param {Event} event
-	**/
-	switchBuildEventHandler(event) {
-		switchBuild(event.target.value)
-	}
+	
 	/**
 	 * switch build to the desired.
 	 * @param {String} value 
 	*/
 	switchBuild(value) {
-		if (optionsValues.buildsArray.indexOf(value) == -1) {
-			console.err(`"${value}" not in buildsList`)
-			return;
-		}
 		const select = document.getElementById("optionsBuildSelector")
 		select.value = value
 
 		optionsValues.build = value
-		savedRolls.items = buildsValues[value]["items"]
-		savedRolls.curses = buildsValues[value]["curses"]
-		optionsCookieSetFunction(optionsValues)
-		redrawAllSaveTables()
+		this.saveOptions();
 	}
 
 	/**
 	 * delete build determined by string.
 	 * @param {String} build 
 	*/
-	deleteBuild(build, buildsValues = this.#buildsValues, optionsValues = this.#optionsValues, savedRolls = this.#savedRolls) {
-		delete buildsValues[build]
-		optionsValues.buildsArray.splice(optionsValues.buildsArray.indexOf(build), 1)
+	deleteBuild(build) {
+		delete this.#buildsValues[build]
+		this.#optionsValues.buildsArray.splice(this.#optionsValues.buildsArray.indexOf(build), 1)
 		switch (true) {
-			case (optionsValues.buildsArray.length == 0):
-				createNewBuild("default", buildsValues, optionsValues)
-				switchBuild("default", buildsValues, optionsValues, savedRolls)
+			case (this.#optionsValues.buildsArray.length == 0):
+				this.createNewBuild("default")
 				break;
-			case (optionsValues.build == build):
-				switchBuild(optionsValues.buildsArray[0], buildsValues, optionsValues, savedRolls)
-				populateBuildSelector()
+			case (this.#optionsValues.build == build):
+				this.switchBuild(this.#optionsValues.buildsArray[0])
 				break;
 			default:
-				populateBuildSelector()
 				break;
 		}
-		optionsCookieSetFunction(optionsValues)
-		buildCookieSetFunction(buildsValues)
-	}
-	/**
-	 * confirm user wants to delete current build then call deleteBuild
-	*/
-	deleteCurrentBuildConfirm() {
-		const currentBuild = optionsValues.build
-		if (confirm(`Are you sure you want to delete build "${currentBuild}"?`)) deleteBuild(currentBuild)
-	}
-
-
-	/**
-	 * save current savedRolls to build.
-	 * @param {string} build default current build
-	 */
-	buildsValuesUpdate(build = this.#optionsValues.build) {
-		this.#buildsValues[build] = structuredClone(this.#savedRolls)
+		this.saveAll()
 	}
 
 	/**
@@ -162,14 +109,14 @@ class gachaBuildsOptionsHandler {
 	 * @param {string} value
 	 */
 	changeOption(key, value) {
-		this.#optionsValues[pair.key] = pair.value
+		this.#optionsValues[key] = value
 		this.saveOptions()
 		return value
 	}
 	/**
 	 * get an option value
 	 * @param {string} key key of the option to get
-	 * @returns option value
+	 * @returns {string|string[]}
 	 */
 	getOption(key) {
 		return this.#optionsValues[key]
@@ -237,11 +184,20 @@ class gachaBuildsOptionsHandler {
 		return this.#getBuild()[term].splice(index, 1)[0]
 		this.saveBuilds();
 	}
-
+	/**
+	 * 
+	 * @param {number} index index of item to remove 
+	 * @returns {gachaItem} removed item
+	 */
 	removeCurrentSavedItem(index) {
 		return this.removeCurrentSaved("items", index)
 	}
 
+	/**
+	 * 
+	 * @param {number} index index of curse to remove 
+	 * @returns {gachaCurse} removed curse
+	 */
 	removeCurrentSavedCurse(index) {
 		return this.removeCurrentSaved("curses", index)
 	}

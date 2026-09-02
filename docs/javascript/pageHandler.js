@@ -170,7 +170,6 @@ class pageHandler {
 	 * @example .addeventListener("click", (event) => { changeTabButtonListener(event, "someTabID") })
 	 */
 	changeTabButtonListener(event, targetTabID) {
-		pageHandler.contextCheck();
 		let root = getComputedStyle(document.querySelector(":root"))
 		for (let button of document.querySelectorAll("#selector button")) {
 			button.style.backgroundColor = root.getPropertyValue("--unselected-button-color")
@@ -180,10 +179,43 @@ class pageHandler {
 	}
 
 	/**
-	 * if this is not pageHandler throw a referenceError
-	 */
-	static contextCheck() {
-		if (!(this instanceof pageHandler)) throw new ReferenceError("this is not and instance of pageHandler. did you override the context?");
+	 * handles input validation on the event and calls createNewBuild()
+	 * @param {event} event 
+	 * @returns nothing
+	*/
+	createNewBuildEventHandler(event) {
+		const value = event.target.value
+		if (event.key != "Enter" || value == "") return;
+
+		if (this.#buildsOptions.getOption("buildsArray").indexOf(value) != -1) {
+			alert(`"${value}" already a build`)
+			return;
+		}
+
+		this.#buildsOptions.createNewBuild(value)
+		this.populateBuildSelector()
+	}
+
+	/**
+	 * event handler to get value then call switchBuild()
+	 * @param {Event} event
+	**/
+	switchBuildEventHandler(event) {
+		this.#buildsOptions.switchBuild(event.currentTarget.value)
+		this.redrawAllSaveTables()
+	}
+
+	/**
+	 * confirm user wants to delete current build then call deleteBuild
+	 * @param {Event} event
+	*/
+	deleteCurrentBuildListener(event){
+		const currentBuild = this.#buildsOptions.getOption("build")
+		if (confirm(`Are you sure you want to delete build "${currentBuild}"?`)) {
+			this.#buildsOptions.deleteBuild(currentBuild)
+			this.populateBuildSelector()
+			this.redrawAllSaveTables()
+		}
 	}
 
 	/**
