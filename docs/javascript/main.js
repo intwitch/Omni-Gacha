@@ -1,58 +1,23 @@
 
 import { gachaItem } from "./gachaItem.js"
 import { gachaCurse } from "./gachaCurse.js"
+import { pageHandler } from "./pageHandler.js"
 
 export {
 	smartSplit,
 	arrayMerge
 };
 
+const page = pageHandler.build()
+
 window.onload = function () {
-
-	var data = {
-		raw: {
-			items: [],
-			curses: []
-		},
-
-		filtered: {
-			items: [],
-			curses: []
-		},
-
-		roll: {
-			items: [],
-			curses: []
-		}
-	}
-
-	// blocked commented out values are only meant to show deafults, they will be set later
-	var optionsValues = {
-		"backgroundImage": true,
-		"build": "default",
-		"buildsArray": ["default"],
-		"NSFW": false,
-		"NSFWOnly": false
-	}
 	
-	var buildsValues = {
-		default: {
-			items: [],
-			curses: []
-		}
-	}
-
-	const cookiePromise = cookieInit(optionsValues, buildsValues)
-	const jsonPromise = loadParseJSON(data.raw)
-	
-	cookiePromise.then(function () { jsonPromise.then() }).then((function () {
-		createAllEventHandlers()
-		switchBuild(optionsValues.build)
-		createAllSortButtons()
-		applyAllOptions()
+	page.then(function (pageHandler) {
+		createAllEventHandlers(pageHandler)
+		pageHandler.createAllSortButtons()
+		pageHandler.applyAllOptions()
 		canvasInit("rollButton", "gachaFinish")
-		homeButton.click()
-	}))
+	})
 }
 
 

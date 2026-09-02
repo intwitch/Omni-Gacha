@@ -4,6 +4,8 @@ import { gachaCurse } from "./gachaCurse";
 import { gachaItem } from "./gachaItem";
 import { gachaTerm } from "./gachaTerm";
 
+export { pageHandler }
+
 class pageHandler {
 
 	/**@type {filteringHandler} */
@@ -37,7 +39,8 @@ class pageHandler {
 		const buildsOptionsHandler = new gachaBuildsOptionsHandler()
 		const filterHandler = filteringHandler.build(buildsOptionsHandler)
 
-		return new pageHandler(await filterHandler, buildsOptionsHandler)
+		const page = new pageHandler(await filterHandler, buildsOptionsHandler)
+		return page
 	}
 
 	/**
@@ -66,11 +69,12 @@ class pageHandler {
 	}
 
 	/**
-	 * update option checkboxes/other things, and then apply them
+	 * update option checkboxes/other things, and then apply those changes
+	 * should only be used once to initalize page
 	 */
-	#applyAllOptions() {
-
-		this.#applyBackgroundImage()
+	applyAllOptions() {
+		this.#initalizeBackgroundImageOption()
+		this.#updateContentOptionsElement()
 
 		populateBuildSelector();
 	}
@@ -78,7 +82,7 @@ class pageHandler {
 	 * update the background image checkbox element
 	 * @param {boolean} isOn if it's on or not 
 	 */
-	#updateBackgroundImageOptionElement(isOn = this.#buildsOptions.getOption("backgroundImage")){
+	#initalizeBackgroundImageOption(isOn = this.#buildsOptions.getOption("backgroundImage")){
 		document.getElementById("optionsBackgroundToggle").checked = isOn
 		this.updateBackgroundImage(isOn)
 	}
@@ -87,7 +91,7 @@ class pageHandler {
 	 * update the background image itself.
 	 * @param {boolean} isOn 
 	 */
-	#applyBackgroundImage(isOn = this.#buildsOptions.getOption("backgroundImage")) {
+	updateBackgroundImage(isOn = this.#buildsOptions.getOption("backgroundImage")) {
 		const root = document.querySelector(":root")
 		if (optionsValues.backgroundImage) {
 			document.body.style.backgroundImage = 'url("assets/Omni_Gacha_Background.png")';
@@ -144,7 +148,7 @@ class pageHandler {
 	/**
 	 * create the logic for all sort buttons
 	 */
-	#createAllSortButtons() {
+	createAllSortButtons() {
 		
 		//search tab
 		for (let button of document.querySelectorAll("#searchItemsTable th button")) {
