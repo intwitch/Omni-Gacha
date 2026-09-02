@@ -46,7 +46,6 @@ class gachaBuildsOptionsHandler {
 	 * @param {string} newBuild 
  	 * @param {object} this.#buildsValues 
  	 * @param {object} this.#optionsValues 
- 	 * @returns {true|false} depending on success
 	*/
 	createNewBuild(newBuild) {
 		this.#optionsValues.buildsArray.push(newBuild)
@@ -97,7 +96,7 @@ class gachaBuildsOptionsHandler {
 		if (pairs.length == 0) {
 			return;
 		}
-		for (pair of pairs) {
+		for (let pair of pairs) {
 			this.#optionsValues[pair.key] = pair.value
 		}
 		this.saveOptions()
