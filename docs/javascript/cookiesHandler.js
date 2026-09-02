@@ -1,7 +1,3 @@
-import {
-	CURSES,
-	ITEMS,
-} from "./main.js";
 import { gachaItem } from "./gachaItem.js"
 import { gachaCurse } from "./gachaCurse.js"
 
@@ -71,7 +67,7 @@ class cookiesHandler {
 					"items": [],
 					"curses": []
 				};
-				
+
 				for (let item of json[build].items) {
 					buildValues.items.push(gachaItem.nameToFull(item, rawData.items));
 				}

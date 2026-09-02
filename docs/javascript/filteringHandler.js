@@ -1,6 +1,4 @@
 import {
-	CURSES,
-	ITEMS,
 	smartSplit,
 	arrayMerge
 } from "./main.js";

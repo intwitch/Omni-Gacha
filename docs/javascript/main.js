@@ -4,48 +4,8 @@ import { gachaCurse } from "./gachaCurse.js"
 
 export {
 	smartSplit,
-	arrayMerge,
-	itemHeaderToIndex,
-	curseHeaderToIndex,
-	ITEMS,
-	CURSES
+	arrayMerge
 };
-
-
-const ITEMS = {
-	NAME: 0,
-	SERIES: 1,
-	DESCRIPTION: 2,
-	CATEGORY: 3,
-	GENDER: 4,
-	MAGIC: 5,
-	MEMETIC: 6,
-	MIGHT: 7,
-	MIND: 8,
-	MOTION: 9,
-	MOXIE: 10,
-	MUTATION: 11,
-	MYTH: 12,
-	STATS: 13,
-	RANK: 14,
-	GROWTH_TYPE: 15,
-	GROWTH_RATE: 16,
-	RESTOCK: 17,
-	RETURN: 18,
-	GIFT: 19,
-	NSFW: 20,
-}
-
-const CURSES = {
-	NAME: 0,
-	DESCRIPTION: 1,
-	RESOLUTION: 2,
-	LEVEL: 3,
-	TARGET: 4,
-	AFFECTS: 5,
-	NSFW: 6,
-	REWARD: 7
-}
 
 window.onload = function () {
 
@@ -155,28 +115,6 @@ function arrayMerge(sourceArrays) {
 	//enter recursion
 	return arrayMerge(sourceArrays);
 }
-
-/**
- * based on a header, return the index such that:
- * ITEMS.(header) = return
- * @param {string} header 
- * @returns {int}
- */
-function itemHeaderToIndex(header) {
-	var headerArray = ["name", "series", "description", "category", "gender", "magic", "memetic", "might", "mind", "motion", "moxie", "mutation", "myth", "stats", "rank", "growth type", "growth rate", "restock", "return", "gift", "nsfw"]
-	return headerArray.indexOf(header.toLowerCase())
-}
-/**
- * based on a header, return the index such that:
- * CURSES.(header) = return
- * @param {string} header 
- * @returns {int}
- */
-function curseHeaderToIndex(header) {
-	var headerArray = ["curse", "description", "resolution", "level", "target", "affects", "nsfw", "reward"]
-	return headerArray.indexOf(header.toLowerCase())
-}
-
 
 //takes a string of the rank and returns the proper css variable value
 function rankToColor(rank) {
