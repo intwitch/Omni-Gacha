@@ -2,9 +2,7 @@ import {
 	CURSES,
 	ITEMS,
 	smartSplit,
-	arrayMerge,
-	itemHeaderToIndex,
-	curseHeaderToIndex
+	arrayMerge
 } from "./main.js";
 import {
 	gachaBuildsOptionsHandler
@@ -84,8 +82,9 @@ class filteringHandler {
 	 */
 	async static build(buildsOptionsHandler){
 		const rawData = this.loadParseJSON()
-		const filteringHandler = new filteringHandler(buildsOptionsHandler, rawData)
+		const filteringHandler = new filteringHandler(buildsOptionsHandler, await rawData)
 		await buildsOptionsHandler.intialize(await rawData)
+		filteringHandler.updateContentFilter()
 		return filteringHandler
 	}
 
@@ -99,6 +98,9 @@ class filteringHandler {
 		this.#data.raw = rawData;
 	}
 
+	/**
+	 * update the filtered data, then update the roll data
+	 */
 	updateContentFilter() {
 		const nsfw = this.#buildsOptions.getOption("NSFWOnly")
 		const nsfwOnly = this.#buildsOptions.getOption("NSFWOnly")
@@ -173,14 +175,14 @@ class filteringHandler {
 	 * and filterArray to check the value, of index against.
 	 * 
 	 * @param {string[]} filterArray array of things to match to
-	 * @param {int} index what index of the item/curse to check against
+	 * @param {string} key what key to check against
 	 * @returns function to use in array.filter()
 	 */
-	static textValueFilter(filterArray, index) {
-		let filterFunctionCreator = function (value) {
-			const valuePart = value[index].toLowerCase();
+	static textValueFilter(filterArray, key) {
+		let filterFunctionCreator = function (term) {
+			const value = term.get(key).toString().toLowerCase();
 			for (filter of filterArray) {
-				if (valuePart.includes(filter.toLowerCase())) return true
+				if (value.includes(filter.toLowerCase())) return true
 			}
 			return false;
 		}
@@ -227,40 +229,7 @@ class filteringHandler {
 	 * @returns {gachaItem[]}
 	 */
 	searchItems(searchText){
-		const indexToFilterFunction = function (index) {
-			switch (index) {
-				case ITEMS.NAME:
-				case ITEMS.SERIES:
-				case ITEMS.DESCRIPTION:
-				case ITEMS.CATEGORY:
-				case ITEMS.GENDER:
-
-				case ITEMS.GROWTH_RATE:
-				case ITEMS.GROWTH_TYPE:
-				case ITEMS.RESTOCK:
-				case ITEMS.RETURN:
-				case ITEMS.GIFT:
-				case ITEMS.NSFW:
-					return filteringHandler.textValueFilter
-					break;
-				case ITEMS.MAGIC:
-				case ITEMS.MEMETIC:
-				case ITEMS.MIGHT:
-				case ITEMS.MIND:
-				case ITEMS.MOTION:
-				case ITEMS.MOXIE:
-				case ITEMS.MUTATION:
-				case ITEMS.MYTH:
-				case ITEMS.STATS:
-				case ITEMS.RANK:
-					return filteringHandler.exactValueFilter
-					break;
-				default:
-					consolelog("Search Header Index not found, something seems to have gone wrong.")
-			}
-		}
-
-		return this.#search(searchText, this.#data.filtered.items, indexToFilterFunction, itemHeaderToIndex)
+		return this.searchTerm(searchText, "items")
 	}
 
 	/**
@@ -269,17 +238,7 @@ class filteringHandler {
 	 * @returns {gachaCurse[]}
 	 */
 	searchCurses(searchText){
-		/*
-		we do it like this for two reasons:
-		align with how searchItems does it
-		we always want to search curses by text value
-		but if that ever changes all we have to do is implement a switch and cases
-		 */
-		const indexToFilterFunction = function(index){
-			return filteringHandler.textValueFilter
-		}
-
-		return this.#search(searchText, this.#data.filtered.curses, indexToFilterFunction, curseHeaderToIndex)
+		return this.searchTerm(searchText, "curses")
 	}
 
 	/**
@@ -289,16 +248,15 @@ class filteringHandler {
 	 * @returns {gachaItem[]|gachaCurse[]|null} null if term invalid
 	 */
 	searchTerm(searchText, term){
-		if(term == "items") return this.searchItems(searchText);
-		if(term == "curses") return this.searchCurses(searchText);
-		return null;
+		if(term != "items" || term != "curses") return null
+		return this.#search(searchText, term)
 	}
 
 	/**
 	 * verify the search text, and construct the search objects
 	 * 
 	 * @param {string} searchText 
-	 * @returns {{keys: string[], values: string[]}[]} searchObjects
+	 * @returns {{properties: string[], values: string[]}[]} searchObjects
 	 */
 	#searchTextToObjects(searchText){
 		const searchValues = this.#searchTextVerifySplit(searchText)
@@ -307,7 +265,7 @@ class filteringHandler {
 		for(string of searchValues){
 			const parts = string.split(":")
 			searchObjects.push({
-				keys: smartSplit(parts[0], ","),
+				properties: smartSplit(parts[0], ","),
 				values: smartSplit(parts[1], ",")
 			})
 		}
@@ -334,26 +292,60 @@ class filteringHandler {
 	}
 
 	/**
-	 * search a set of data, based on the searchtext string.
-	 * indexToFilter and headerToIndex are item/curse dependant and thus 
-	 * are passed along by the public methods.
+	 * 
+	 * @param {string} key 
+	 * @param {string} term 
+	 * @returns {function}
+	 */
+	#keyToFilter(key, term){
+		if(term == "curses") return filteringHandler.textValueFilter
+		switch (key) {
+			case "name":
+			case "series":
+			case "description":
+			case "category":
+			case "gender":
+
+			case "growthType":
+			case "growthRate":
+			case "restock":
+			case "returnValue":
+			case "gift":
+			case "nsfw":
+				return filteringHandler.textValueFilter
+				break;
+			case "magic":
+			case "memetic":
+			case "might":
+			case "mind":
+			case "motion":
+			case "moxie":
+			case "mutation":
+			case "myth":
+			case "stats":
+			case "rank":
+				return filteringHandler.exactValueFilter
+				break;
+			default:
+				consolelog("Search Header not found, something seems to have gone wrong.")
+		}
+	}
+
+	/**
+	 * 
 	 * 
 	 * @param {string} searchText 
-	 * @param {string[][]} data data.filtered.items/curses
-	 * @param {function} indexToFilter
-	 * @param {function} headerToIndex
-	 * @returns {string[][]}
+	 * @param {string} term "items"/"curses"
 	 */
-	#search(searchText, data, indexToFilter, headerToIndex) {
+	#search(searchText, term) {
 		const searchObjects = this.#searchTextToObjects(searchText)
 
-		let resultsData = data
-		for(searchObject of searchObjects){
+		let resultsData = this.#data.filtered[term]
+		for(let searchObject of searchObjects){
 			let resultsDataParts = []
-			for(key of searchObjects){
-				const index = headerToIndex(key)
-				const filterFunction = indexToFilter(index)
-				resultsDataParts.push( resultsData.filter(filterFunction(searchObjects.values), index) )
+			for(let key of searchObjects.properties){
+				const filterFunction = this.#keyToFilter(key, term)
+				resultsDataParts.push( resultsData.filter(filterFunction(searchObjects.values), key) )
 			}
 			resultsData = arrayMerge(resultsDataParts)
 		}
