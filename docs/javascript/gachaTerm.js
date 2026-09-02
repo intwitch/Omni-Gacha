@@ -78,4 +78,36 @@ class gachaTerm{
 
         return row
     }
+
+    /**
+     * 
+     * @param {gachaTerm[]} termArray 
+     * @returns {string[]}
+     */
+    static toNameArray(termArray){
+        const nameArray = []
+        for(let term of termArray){
+            nameArray.push(term.get("name"))
+        }
+        return nameArray
+    }
+
+    /**
+	 * given a name of item or curse, return the array of all data
+	 * if passed argument is not a string, assume it's an array, and return that array (backwards compatibility with old saves)
+	 * if name is not found return undefined
+	 * @param {string} name
+	 * @param {gachaTerm[]} rawTerms
+     * @returns {gachaTerm} Term that matches the name.
+	*/
+	static nameToFull(name, rawTerms) {
+		if (typeof name != "string") return name;
+
+		for (term of rawTerms) {
+			if (data.get("name") == name) return data;
+		}
+
+		console.error(`${name} not found in raw data array. something has gone wrong`);
+		return name;
+	}
 }

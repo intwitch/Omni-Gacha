@@ -54,4 +54,26 @@ class gachaCurse extends gachaTerm{
         const basicValues = [this.#values.name, this.#values.description, this.#values.resolution, this.#values.level]
         return super.toBasicForm(basicValues)
     }
+
+     /**
+     * convert an array of gacha curses to an array of their names. used to save builds.
+     * @param {gachaCurse[]} cursesArray 
+     * @returns {string[]}
+     */
+    static toNameArray(cursesArray){
+        return super.toNameArray(cursesArray)
+    }
+
+    /**
+	 * given a name of a curse, return the array of all data
+	 * if passed argument is not a string, assume it's an array, and return that array (backwards compatibility with old saves)
+	 * if name is not found return undefined
+	 * @param {string} name
+	 * @param {gachaCurse[]} rawCurses
+     * @returns {gachaCurse} Curse that matches the name
+	*/
+	static nameToFull(name, rawCurses){
+        return super.nameToFull(name, rawCurses)
+    }
+
 }

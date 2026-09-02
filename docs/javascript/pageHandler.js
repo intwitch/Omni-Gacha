@@ -30,13 +30,24 @@ class pageHandler {
 	static tableRedrawRequest = new Event("tableRedrawRequest")
 
 	/**
-	 * 
-	 * @param {filteringHandler} filteringHandler constructed filtering handler
-	 * @param {gachaBuildsOptionsHandler} buildsOptions constructed handler
+	 * async build a lot of important async things.
+	 * @returns {Promise<pageHandler>} pageHandler promise
 	 */
-	constructor(filteringHandler, buildsOptions){
+	async static build(){
+		const buildsOptionsHandler = new gachaBuildsOptionsHandler()
+		const filterHandler = filteringHandler.build(buildsOptionsHandler)
+
+		return new pageHandler(await filterHandler, buildsOptionsHandler)
+	}
+
+	/**
+	 * DO NOT USE THIS RAW, USE static .build method. need to do some async things.
+	 * @param {filteringHandler} filteringHandler 
+	 * @param {gachaBuildsOptionsHandler} buildsOptionsHandler 
+	 */
+	constructor(filteringHandler, buildsOptionsHandler){
 		this.#filteringHandler = filteringHandler
-		this.#buildsOptions = buildsOptions
+		this.#buildsOptions = buildsOptionsHandler
 	}
 	
 

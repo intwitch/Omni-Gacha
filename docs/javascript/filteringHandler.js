@@ -23,6 +23,8 @@ import { gachaCurse } from "./gachaCurse.js";
  * and searching (which is also just filtering to user defined paramaters)
  * do not read/write to dom do not pass go, do not collect 100 dollars, etc.
  * do keep track of filters, and change when function called
+ * 
+ * do not construct raw, use filteringHandler.build() to get a promise that resolves to the object.
  */
 class filteringHandler {
 	//set here to get intellesense to pick up on type, will always be set by constructor anyway
@@ -34,7 +36,11 @@ class filteringHandler {
 	 *   roll: { items: gachaItem[], curses: gachaCurse[] }
 	 * }}
 	 */
-	#data
+	#data = {
+		"raw": {},
+		"filtered": {},
+		"roll": {}
+	}
 
 	#filters = {
 		"rank": [
@@ -46,15 +52,51 @@ class filteringHandler {
 	}
 
 	/**
+	 * async static function to load and parse the json data
+	 * @param rawData json of rawData to mutate with fetch results
+	 * @returns {Promise<{
+	 * "items": gachaItem[] 
+	 * "curses": gachaCurse[]
+	 * }>}
+	 */
+	async static loadParseJSON() {
+		const values = await fetch("data/values.json")
+
+		const itemsArray = []
+		const cursesArray = []
+
+		for (let value of values.items) {
+			itemsArray.push(new gachaItem(gachaItem.arrayToKeyedObject(value), value.splice(22, Infinity)))
+		}
+		for (let value of values.curses) {
+			cursesArray.push(new gachaCurse(gachaCurse.arrayToKeyedObject(values)))
+		}
+
+		return {
+			items: itemsArray,
+			curses: cursesArray
+		}
+	}
+
+	/**
+	 * @param {gachaBuildsOptionsHandler} buildsOptionsHandler unitialized buildsOptions Handler
+	 * @returns {Promise<filteringHandler>} promised resolved on initialization complete
+	 */
+	async static build(buildsOptionsHandler){
+		const rawData = this.loadParseJSON()
+		const filteringHandler = new filteringHandler(buildsOptionsHandler, rawData)
+		await buildsOptionsHandler.intialize(await rawData)
+		return filteringHandler
+	}
+
+	/**
 	 * 
-	 * @param {gachaBuildsOptionsHandler} gachaBuildsOptionsHandler 
+	 * @param {gachaBuildsOptionsHandler} buildsOptionsHandler 
 	 * @param {object} data
 	 */
-	constructor(gachaBuildsOptionsHandler, data) {
-		this.#buildsOptions = gachaBuildsOptionsHandler
-		this.#data = data
-
-		
+	constructor(buildsOptionsHandler, rawData) {
+		this.#buildsOptions = buildsOptionsHandler
+		this.#data.raw = rawData;
 	}
 
 	updateContentFilter() {
@@ -143,27 +185,6 @@ class filteringHandler {
 			return false;
 		}
 		return filterFunctionCreator
-	}
-
-	/**
-	 * given a name of item or curse, return the array of all data
-	 * if passed argument is not a string, assume it's an array, and return that array (backwards compatibility with old saves)
-	 * if name is not found return undefined
-	 * @param {string} name
-	 * @param {boolean} isItem is the raw item array and not curse array
-	*/
-	static nameToFull(name, isItem = true) {
-		if (typeof name != "string") return name;
-		let dataArray;
-		if (isItem) dataArray = rawItemsData;
-		else dataArray = rawCursesData;
-
-		// i feel hoorible about the amount if statements here, unfortunately it's a lot of searching in an unsorted array
-		for (data of dataArray) {
-			if (data[ITEMS.NAME] == name) return data;
-		}
-		console.error(`${name} not found in raw data array. something has gone wrong`);
-		return name;
 	}
 
 	/**

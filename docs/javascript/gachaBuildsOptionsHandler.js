@@ -26,22 +26,18 @@ class gachaBuildsOptionsHandler {
 		"NSFWOnly": false
 
 	}
-	#savedRolls
 	#cookiesHandler
 
-	constructor(buildsValues, optionsValues, savedRolls) {
-		this.#buildsValues = buildsValues
-		this.#optionsValues = optionsValues
-		this.#savedRolls = savedRolls
-		this.#cookiesHandler = new cookiesHandler(buildsValues, optionsValues)
+	constructor() {
+		this.#cookiesHandler = new cookiesHandler(this.#buildsValues, this.#optionsValues)
 	}
 
 	/**
 	 * initalize builds and options
-	 * @returns promise resolved when ititalization done.
+	 * @returns {Promise<void} promise resolved when ititalization done.
 	 */
-	async intialize() {
-		return this.#cookiesHandler.cookieInit()
+	async intialize(rawData) {
+		return this.#cookiesHandler.cookieInit(rawData)
 	}
 
 	/**

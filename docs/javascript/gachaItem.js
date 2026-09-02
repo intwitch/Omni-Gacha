@@ -98,4 +98,25 @@ class gachaItem extends gachaItem {
         const basicValues = [this.#values.name, this.#values.series, this.#values.description, this.#values.category]
         return super.toBasicForm(basicValues)
     }
+
+    /**
+     * convert an array of gacha items to an array of their names. used to save builds.
+     * @param {gachaItem[]} itemsArray 
+     * @returns {string[]}
+     */
+    static toNameArray(itemsArray){
+        return super.toNameArray(itemsArray)
+    }
+
+    /**
+	 * given a name of a curse, return the array of all data
+	 * if passed argument is not a string, assume it's an array, and return that array (backwards compatibility with old saves)
+	 * if name is not found return undefined
+	 * @param {string} name
+	 * @param {gachaItems[]} rawItems
+     * @returns {gachaItem} Item that matches the name
+	*/
+	static nameToFull(name, rawItems){
+        return super.nameToFull(name, rawItems)
+    }
 }

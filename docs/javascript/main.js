@@ -1,40 +1,16 @@
-import {
-	createNewBuildEventHandler,
-	deleteCurrentBuildConfirm,
-	switchBuild,
-	switchBuildEventHandler,
-} from "./gachaBuildsOptionsHandler.js";
-import { cookieInit } from "./cookiesHandler.js";
-import {
-	contentFilterChange,
-	updateItemFilterData,
-} from "./filteringHandler.js";
-import {
-	applyAllOptions,
-	closeOptions,
-	createAllSortButtons,
-	drawRollData,
-	exportSaved,
-	getRandomValue,
-	openOptions,
-	optionChange,
-	redrawHistoryTable,
-	redrawSaveTable,
-	searchHandlerCreator,
-	tabChangeHandlerCreator,
-} from "./pageElements.js";
 
 import { gachaItem } from "./gachaItem.js"
 import { gachaCurse } from "./gachaCurse.js"
 
 export {
-	ITEMS,
-	CURSES,
 	smartSplit,
 	arrayMerge,
 	itemHeaderToIndex,
-	curseHeaderToIndex
+	curseHeaderToIndex,
+	ITEMS,
+	CURSES
 };
+
 
 const ITEMS = {
 	NAME: 0,
@@ -89,22 +65,6 @@ window.onload = function () {
 			curses: []
 		}
 	}
-	
-	var savedRolls = {
-		items: [],
-		curses: []
-	}
-
-	var itemRollInfo = {
-		current: undefined,
-		history: []
-	}
-
-	var curseRollInfo = {
-		current: undefined,
-		history: []
-	}
-
 
 	// blocked commented out values are only meant to show deafults, they will be set later
 	var optionsValues = {
@@ -135,32 +95,7 @@ window.onload = function () {
 	}))
 }
 
-/**
- * 
- * @param rawData json of rawData to mutate with fetch results
- * @returns {{
- * "items": gachaItem[]
- * "curses": gachaCurse[]
- * }}
- */
-async function loadParseJSON(rawData) {
-	const values = await fetch("data/values.json")
 
-	const itemsArray = []
-	const cursesArray = []
-
-	for(let value of values.items){
-		itemsArray.push(new gachaItem(gachaItem.arrayToKeyedObject(value), value.splice(22, Infinity)))
-	}
-	for(let value of values.curses){
-		cursesArray.push(new gachaCurse(gachaCurse.arrayToKeyedObject(values)))
-	}
-
-	rawData = {
-		items: itemsArray,
-		curses: cursesArray
-	}
-}
 
 /**
  *  string.split() method does not respect split string exlusion based on quote
