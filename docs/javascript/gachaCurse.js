@@ -35,9 +35,9 @@ class gachaCurse extends gachaTerm{
     }
 
     constructor(curseObject) {
-        for (let key in curseObject) {
-            this[key] = curseObject[key]
-        }
+        const values = structuredClone(curseObject)
+        super(values)
+        this.#values = values
     }
 
     /**
@@ -46,8 +46,8 @@ class gachaCurse extends gachaTerm{
     */
     toString() {
         let sfw = ""
-        if (this.nsfw) sfw = " | NSFW"
-        return `${this.name} | ${this.level}${sfw}\n${this.description}\nResolution: ${this.resolution}`
+        if (this.#values.nsfw) sfw = " | NSFW"
+        return `${this.#values.name} | ${this.#values.level}${sfw}\n${this.#values.description}\nResolution: ${this.#values.resolution}`
     }
 
     toBasicForm(){

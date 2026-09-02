@@ -13,6 +13,10 @@ class gachaTerm{
      */
     #values
 
+    constructor(values){
+        this.#values = values
+    }
+
     /**
      * 
      * @param {string} key 

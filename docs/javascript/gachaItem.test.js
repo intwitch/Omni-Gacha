@@ -24,16 +24,17 @@ function setup(rawData) {
     return rawData
 }
 
-test("first item tests", function(){
+
+test("first item tests", function () {
     const data = setup()
 
     const firstItem = data.items[0]
-    expect(firstItem.name).toEqual("Fire Manipulation")
-    expect(firstItem.nsfw).toBe(false)
-    expect(firstItem["stats"]).toBe(10)
+    expect(firstItem.get("name")).toEqual("Fire Manipulation")
+    expect(firstItem.get("nsfw")).toBe(false)
+    expect(firstItem.get("stats")).toBe(10)
 })
 
-test("first item tag tests", function(){
+test("first item tag tests", function () {
     const data = setup()
     const firstItem = data.items[0]
 

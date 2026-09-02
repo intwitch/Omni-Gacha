@@ -3,7 +3,7 @@ export {gachaItem}
 import { itemTags } from "./itemTags"
 import { gachaTerm } from "./gachaTerm"
 
-class gachaItem extends gachaItem {
+class gachaItem extends gachaTerm {
     /** @type {{
      *   name: string,
      *   series: string,
@@ -69,11 +69,11 @@ class gachaItem extends gachaItem {
      * @param {boolean[]} tags array of tags values gotten from sheet
      */
     constructor(object, tags){
-        for(let key in object){
-            this.#values[key] = object[key]
-        }
+        const values = structuredClone(object)
+        super(values)
+        this.#values
 
-        this.#tags = new itemTags(tags)
+        this.tags = new itemTags(tags)
     }
 
     
@@ -84,8 +84,8 @@ class gachaItem extends gachaItem {
      */
     toString() {
         let sfw = ""
-        if (this.#nsfw) sfw = " | NSFW"
-        return `${this.#name} | ${this.#series}\nRank ${this.#series} | ${this.#category}${sfw}\n${this.#description}`
+        if (this.#values.nsfw) sfw = " | NSFW"
+        return `${this.#values.name} | ${this.#values.series}\nRank ${this.#values.series} | ${this.#values.category}${sfw}\n${this.#values.description}`
     }
 
     /**

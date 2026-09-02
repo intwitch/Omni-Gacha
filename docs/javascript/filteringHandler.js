@@ -62,7 +62,7 @@ class filteringHandler {
 		const cursesArray = []
 
 		for (let value of values.items) {
-			itemsArray.push(new gachaItem(gachaItem.arrayToKeyedObject(value), value.splice(22, Infinity)))
+			itemsArray.push(new gachaItem(gachaItem.arrayToKeyedObject(value), value.splice(23, Infinity)))
 		}
 		for (let value of values.curses) {
 			cursesArray.push(new gachaCurse(gachaCurse.arrayToKeyedObject(values)))
