@@ -1,13 +1,6 @@
-import {
-	cookiesHandler
-}
-	from "./cookiesHandler.js"
-import {
-	redrawAllSaveTables
-}
-	from "./pageElements.js"
-import { gachaItem, item } from "./gachaItem.js"
-import { curse, gachaCurse } from "./gachaCurse.js"
+import { cookiesHandler } from "./cookiesHandler.js"
+import { gachaItem } from "./gachaItem.js"
+import { gachaCurse } from "./gachaCurse.js"
 import { gachaTerm } from "./gachaTerm.js"
 
 export { gachaBuildsOptionsHandler }
@@ -16,7 +9,7 @@ export { gachaBuildsOptionsHandler }
  * handle builds and options values, as they are intertwined
  */
 class gachaBuildsOptionsHandler {
-	#buildsValues
+	#buildsValues = {}
 	#optionsValues = {
 		"backgroundImage": true,
 		"build": "default",
@@ -180,8 +173,9 @@ class gachaBuildsOptionsHandler {
 	 */
 	removeCurrentSaved(term, index) {
 		//splice always returns an array, which is 1 long, so [0] just kills the unnessary other step
-		return this.#getBuild()[term].splice(index, 1)[0]
+		const returnValue = this.#getBuild()[term].splice(index, 1)[0]
 		this.saveBuilds();
+		return returnValue
 	}
 	/**
 	 * 

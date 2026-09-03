@@ -56,7 +56,7 @@ class cookiesHandler {
 	 * 	curses: gachaCurse[]}} rawData
 	 * @returns {Promise<object>} promise resolved on function complete
 	*/
-	async static buildCookieInit(rawData) {
+	static async buildCookieInit(rawData) {
 
 		let returnValues = {}
 
@@ -95,7 +95,7 @@ class cookiesHandler {
 	 * trys to load the saved options cookie and if that fails, return a default
 	 * @returns optionsValues
 	*/
-	async static optionCookieInit() {
+	static async optionCookieInit() {
 		//defaults
 		let optionsValues = {
 			"backgroundImage": true,
@@ -107,7 +107,7 @@ class cookiesHandler {
 		try {
 			const optionsResults = JSON.parse(await cookieStore.get("options").values)
 			console.log("options cookies got!")
-			for (option in optionsResults) {
+			for (let option in optionsResults) {
 				optionsValues[option] = optionsResults[options]
 			}
 		}
@@ -122,13 +122,13 @@ class cookiesHandler {
 	 * @returns {Promise<void>} promise resolved on function completion
 	 */
 	async cookieInit(rawData) {
-		const optionsCookieResults = cookiesHandler.optionCookieInit()
-		const buildCookieResults = cookiesHandler.buildCookieInit(rawData)
+		const optionsCookieResults = await cookiesHandler.optionCookieInit()
+		const buildCookieResults = await cookiesHandler.buildCookieInit(rawData)
 
-		for (option in await optionsCookieResults) {
+		for (let option in optionsCookieResults) {
 			this.#optionsValues[option] = optionsCookieResults[option]
 		}
-		for (build in await buildCookieResults) {
+		for (let build in buildCookieResults) {
 			this.#buildsValues[build] = buildCookieResults[build]
 		}
 		return;

@@ -4,3 +4,4 @@
 node_modules/
 src/data/values.json
 src/dist
+dist

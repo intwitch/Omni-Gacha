@@ -58,8 +58,8 @@ class gachaItem extends gachaTerm {
             growthRate: array[16],
             restock: array[17],
             returnValue: array[18],
-            gift: array[19],
-            nsfw: array[20] === true,
+            gift: array[19] == "TRUE",
+            nsfw: array[20] == "TRUE",
         }
     }
 

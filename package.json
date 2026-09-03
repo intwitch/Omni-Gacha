@@ -16,7 +16,8 @@
   "main": "",
   "scripts": {
     "test": "vitest",
-    "start": "node build.js"
+    "start": "node build.js",
+    "dev": "vite --port 4000"
   },
   "dependencies": {
     "dotenv": "^17.4.2"

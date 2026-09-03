@@ -16,7 +16,6 @@ window.onload = function () {
 		createAllEventHandlers(page)
 		page.createAllSortButtons()
 		page.applyAllOptions()
-		canvasInit("rollButton", "gachaFinish")
 	})
 }
 
@@ -125,7 +124,7 @@ function createAllEventHandlers(page) {
 	document.getElementById("buildButton").addEventListener("click", () => {page.changeTabTo("build")});
 	document.getElementById("searchButton").addEventListener("click", () => {page.changeTabTo("search")});
 
-	document.getElementById("rollButton").addEventListener("click", () => {page.roll("items")});
+	document.getElementById("itemRollButton").addEventListener("click", () => {page.roll("items")});
 	document.getElementById("saveButton").addEventListener("click", () => {page.saveLatest("items")});
 	document.getElementById("cursesRollButton").addEventListener("click", () => {page.roll("curses")});
 	document.getElementById("cursesSaveButton").addEventListener("click", () => {page.saveLatest("curses")});
@@ -133,7 +132,7 @@ function createAllEventHandlers(page) {
 	document.getElementById("buildExportButton").addEventListener("click", () => {page.exportSaved()});
 
 	
-	const itemCategoriesFilters = itemCategorySelector.querySelectorAll("#itemsCategoryFilter input");
+	const itemCategoriesFilters = Array.from(document.querySelectorAll("#itemsCategoryFilter input"))
 	const allCategoryBox = itemCategoriesFilters.splice(0, 1)[0]
 	for(let checkbox of itemCategoriesFilters){
 		checkbox.addEventListener("change", (e) => { page.categoryFilterChangeListener(e) })

@@ -2,17 +2,14 @@ import {
 	smartSplit,
 	arrayMerge
 } from "./main.js";
-import {
-	gachaBuildsOptionsHandler
-}
-	from "./gachaBuildsOptionsHandler.js"
+import { gachaBuildsOptionsHandler } from "./gachaBuildsOptionsHandler.js"
 
-export {
-	filteringHandler
-}
+export { filteringHandler }
 
 import { gachaItem } from "./gachaItem.js";
 import { gachaCurse } from "./gachaCurse.js";
+
+import rawJson from "../data/values.json?url"
 
 /**
  * handle all filtering, prepping, 
@@ -23,8 +20,10 @@ import { gachaCurse } from "./gachaCurse.js";
  * do not construct raw, use filteringHandler.build() to get a promise that resolves to the object.
  */
 class filteringHandler {
-	//set here to get intellesense to pick up on type, will always be set by constructor anyway
-	#buildsOptions = gachaBuildsOptionsHandler()
+	/**
+	 * @type {buildsOptionsHandler}
+	 */
+	#buildsOptions
 	/**
 	 * @type {{
 	 *   raw: { items: gachaItem[], curses: gachaCurse[] },
@@ -50,25 +49,28 @@ class filteringHandler {
 	#filters = filteringHandler.defualtFilters
 	
 	/**
-	 * async static function to load and parse the json data
+	 * static async function to load and parse the json data
 	 * @param rawData json of rawData to mutate with fetch results
 	 * @returns {Promise<{
 	 * "items": gachaItem[] 
 	 * "curses": gachaCurse[]
 	 * }>}
 	 */
-	async static loadParseJSON() {
-		const values = await fetch("data/values.json")
+	static async loadParseJSON() {
+		const rawfetch = await fetch("../data/values.json")
+		const values = await rawfetch.json()
 
 		const itemsArray = []
 		const cursesArray = []
 
-		for (let value of values.items) {
+		for (let value of await values.items) {
 			itemsArray.push(new gachaItem(gachaItem.arrayToKeyedObject(value), value.splice(23, Infinity)))
 		}
-		for (let value of values.curses) {
+		for (let value of await values.curses) {
 			cursesArray.push(new gachaCurse(gachaCurse.arrayToKeyedObject(values)))
 		}
+
+		console.log(`items: ${await values.items.length}`)
 
 		return {
 			items: itemsArray,
@@ -80,12 +82,11 @@ class filteringHandler {
 	 * @param {gachaBuildsOptionsHandler} buildsOptionsHandler unitialized buildsOptions Handler
 	 * @returns {Promise<filteringHandler>} promised resolved on initialization complete
 	 */
-	async static build(buildsOptionsHandler){
-		const rawData = this.loadParseJSON()
-		const filteringHandler = new filteringHandler(buildsOptionsHandler, await rawData)
-		await buildsOptionsHandler.intialize(await rawData)
-		filteringHandler.updateContentFilter()
-		return filteringHandler
+	static async build(buildsOptionsHandler){
+		const rawData = await this.loadParseJSON()
+		await buildsOptionsHandler.intialize(rawData)
+		const filter = new filteringHandler(buildsOptionsHandler, rawData)
+		return filter
 	}
 
 	/**
@@ -96,6 +97,7 @@ class filteringHandler {
 	constructor(buildsOptionsHandler, rawData) {
 		this.#buildsOptions = buildsOptionsHandler
 		this.#data.raw = rawData;
+		this.updateContentFilter()
 	}
 
 	/**
@@ -199,8 +201,8 @@ class filteringHandler {
 	 * update #data.roll
 	 */
 	updateRollData() {
-		this.updateItemRollData()
-		this.updateCurseRollData()
+		this.#updateItemRollData()
+		this.#updateCurseRollData()
 	}
 
 	/**
@@ -219,7 +221,7 @@ class filteringHandler {
 	static exactValueFilter(filterArray, key) {
 		var filterFunction = function (value) {
 			const valuePart = value.get(key)
-			for (filter of filterArray) {
+			for (let filter of filterArray) {
 				if (valuePart === filter) return true
 			}
 			return false;

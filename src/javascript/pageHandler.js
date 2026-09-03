@@ -35,7 +35,7 @@ class pageHandler {
 	 * async build a lot of important async things.
 	 * @returns {Promise<pageHandler>} pageHandler promise
 	 */
-	async static build(){
+	static async build(){
 		const buildsOptionsHandler = new gachaBuildsOptionsHandler()
 		const filterHandler = filteringHandler.build(buildsOptionsHandler)
 
@@ -76,7 +76,7 @@ class pageHandler {
 		this.#initalizeBackgroundImageOption()
 		this.#initalizeContentOptionsElement()
 
-		populateBuildSelector();
+		this.populateBuildSelector();
 	}
 	/**
 	 * update the background image checkbox element
@@ -93,7 +93,7 @@ class pageHandler {
 	 */
 	updateBackgroundImage(isOn = this.#buildsOptions.getOption("backgroundImage")) {
 		const root = document.querySelector(":root")
-		if (optionsValues.backgroundImage) {
+		if (isOn) {
 			document.body.style.backgroundImage = 'url("assets/Omni_Gacha_Background.png")';
 			root.style.setProperty('--tint', "#00000066")
 		}
@@ -277,11 +277,11 @@ class pageHandler {
 	 * @param {string} targetTabID 
 	 */
 	changeTabTo(targetTabID) {
-		const tab = document.getElementById(targetTabID)
-		for (tab of document.querySelectorAll(".tabcontent")) {
+		const newTab = document.getElementById(targetTabID)
+		for (let tab of document.querySelectorAll(".tabcontent")) {
 			tab.style.display = "none"
 		}
-		tab.style.display = "block";
+		newTab.style.display = "block";
 	}
 	/**
 	 * function to call when button is clicked.
