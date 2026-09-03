@@ -71,7 +71,7 @@ class gachaItem extends gachaTerm {
     constructor(object, tags){
         const values = structuredClone(object)
         super(values)
-        this.#values
+        this.#values = super.values
 
         this.tags = new itemTags(tags)
     }

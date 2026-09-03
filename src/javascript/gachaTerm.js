@@ -11,10 +11,10 @@ class gachaTerm{
      *  "key": string|boolean|number,
      * }}
      */
-    #values
+    values
 
     constructor(values){
-        this.#values = values
+        this.values = values
     }
 
     /**
@@ -23,7 +23,7 @@ class gachaTerm{
      * @returns {string|number|boolean} value of that key
      */
     get(key){
-        return this.#values[key]
+        return this.values[key]
     }
 
     /**
@@ -34,16 +34,16 @@ class gachaTerm{
      */
     set(key, value){
         this.#keyValueMatchCheck(key, value)
-        return this.#values[key] = value
+        return this.values[key] = value
     }
 
     /**
-     * throws a type error if #values[key] type isn't the same as provided value
+     * throws a type error if values[key] type isn't the same as provided value
      * @param {string} key 
      * @param {string|number|boolean} value 
      */
     #keyValueMatchCheck(key, value){
-        const keyType = typeof this.#values[key]
+        const keyType = typeof this.values[key]
         const valueType = typeof value
         if(keyType != valueType) throw new TypeError(`given value type "${valueType}" does not match resolved key value "${keyType}"`);
     }
@@ -56,9 +56,9 @@ class gachaTerm{
     toFullRow(){
         const row = document.createElement("tr")
 
-        for(let value of this.#values){
+        for(let key in this.values){
             const cell = document.createElement("td")
-            cell.append(value)
+            cell.append(this.values[key])
             row.appendChild(cell)
         }
 

@@ -361,7 +361,7 @@ class pageHandler {
 	 * @param {string} term "items"/curses
 	 */
 	redrawRollTableListener(e, term){
-		this.#redrawTableBody(e.currentTarget, [historyDataArray[0]])
+		this.#redrawTableBody(e.currentTarget, [this.#history[term][0].toFullRow()])
 	}
 
 	/**
@@ -443,7 +443,7 @@ class pageHandler {
 	 * @param {HTMLTableRowElement[]} rows what to draw in it
 	 */
 	#redrawTableBody(table, rows){
-		const tbody = document.querySelector(`#${table} > tbody`)
+		const tbody = table.querySelector(`tbody`)
 		tbody.innerText = ""
 
 		for(let row of rows){

@@ -37,7 +37,7 @@ class gachaCurse extends gachaTerm{
     constructor(curseObject) {
         const values = structuredClone(curseObject)
         super(values)
-        this.#values = values
+        this.#values = super.values
     }
 
     /**

@@ -42,7 +42,7 @@ class filteringHandler {
 			"F", "E", "D", "C", "B", "A", "S", "SS", "SSS", "EX"
 		],
 		"category": [
-			"Ability", "Arsenal", "Consumable", "Familiar", "Farmable", "Novelty", "Passive", "Race", "Skill", "Vehicle", "Wearible", "World"
+			"Ability", "Arsenal", "Consumable", "Familiar", "Farmable", "Novelty", "Passive", "Race", "Skill", "Vehicle", "Wearable", "World"
 		]
 	}
 
@@ -111,7 +111,7 @@ class filteringHandler {
 			this.#data.filtered[key] = Array.from(this.#data.raw[key])
 		}
 		else for(let key in this.#data.raw){
-			this.#data.filtered[key] = this.#data.raw[key].filter(filteringHandler.exactValueFilter([nsfwOnly]), "nsfw")
+			this.#data.filtered[key] = this.#data.raw[key].filter(filteringHandler.exactValueFilter([nsfwOnly], "nsfw"))
 		}
 
 		this.updateRollData()
@@ -185,8 +185,9 @@ class filteringHandler {
 	#updateItemRollData() {
 		let workingItems = this.#data.filtered.items
 		for(let key in this.#filters){
-			workingItems = workingItems.filter(filteringHandler.exactValueFilter(this.#filters[key]), key)
+			workingItems = workingItems.filter(filteringHandler.exactValueFilter(this.#filters[key], key))
 		}
+		this.#data.roll.items = workingItems
 	}
 
 	/**
@@ -222,7 +223,7 @@ class filteringHandler {
 		var filterFunction = function (value) {
 			const valuePart = value.get(key)
 			for (let filter of filterArray) {
-				if (valuePart === filter) return true
+				if (valuePart == filter) return true
 			}
 			return false;
 		}
