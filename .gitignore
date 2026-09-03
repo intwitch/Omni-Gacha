@@ -2,5 +2,5 @@
 .vscode
 .env
 node_modules/
-docs/data/values.json
-docs/dist
+src/data/values.json
+src/dist

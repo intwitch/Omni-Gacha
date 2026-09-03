@@ -14,9 +14,6 @@
   "author": "",
   "type": "commonjs",
   "main": "",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
     "test": "vitest",
     "start": "node build.js"

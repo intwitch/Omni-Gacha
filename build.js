@@ -50,7 +50,7 @@ function buildData() {
         curses: cursesData
     });
     //overwrite is desireable. Files shouldn't be tracked as they will be built when the site deploys.
-    fs.writeFile('docs/data/values.json', finalJson, callback)
+    fs.writeFile('src/data/values.json', finalJson, callback)
 }
 
 //minor error handling in file write
