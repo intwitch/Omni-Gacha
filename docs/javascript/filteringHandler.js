@@ -38,7 +38,7 @@ class filteringHandler {
 		"roll": {}
 	}
 
-	#filters = {
+	static defualtFilters = {
 		"rank": [
 			"F", "E", "D", "C", "B", "A", "S", "SS", "SSS", "EX"
 		],
@@ -47,6 +47,8 @@ class filteringHandler {
 		]
 	}
 
+	#filters = filteringHandler.defualtFilters
+	
 	/**
 	 * async static function to load and parse the json data
 	 * @param rawData json of rawData to mutate with fetch results
@@ -112,6 +114,68 @@ class filteringHandler {
 
 		this.updateRollData()
 	}
+
+	/**
+	 * update the rank filter based on numeric star level
+	 * @param {number} starLevel 
+	 */
+	updateRankFilter(starLevel) {
+		switch (starLevel) {
+			case "0":
+			default:
+				this.#filters.rank = filteringHandler.defualtFilters.rank
+				break;
+			case "1":
+				this.#filters.rank = ["F", "E", "D"];
+				break;
+			case "2":
+				this.#filters.rank = ["E", "D", "C"];
+				break;
+			case "3":
+				this.#filters.rank = ["D", "C", "B"];
+				break;
+			case "4":
+				this.#filters.rank = ["C", "B", "A"];
+				break;
+			case "5":
+				this.#filters.rank = ["B", "A", "S"];
+				break;
+			case "6":
+				this.#filters.rank = ["A", "S", "SS"];
+				break;
+			case "7":
+				this.#filters.rank = ["S", "SS", "SSS"];
+				break;
+			case "8":
+				this.#filters.rank = ["SS", "SSS", "EX"];
+				break;
+		}
+	}
+
+	/**
+	 * to reset them all to nothing, or all on
+	 * @param {boolean} isAll 
+	 */
+	resetCategoryFilter(isAll){
+		if(isAll) { this.#filters.category = Array.from(filteringHandler.defualtFilters) }
+		else { this.#filters.category = [] }
+	}
+	
+	/**
+	 * based on the string and the boolean, either take the filter out or put it in
+	 * @param {string} category 
+	 * @param {boolean} isChecked 
+	 */
+	updateCategoryFilter(category, isChecked){
+		if(isChecked) {
+			this.#filters.category.push(category)
+		}
+		else {
+			const index = this.#filters.category.indexOf(category)
+			this.#filters.category.splice(index, 1);
+		}
+	}
+
 	/**
 	 * get a constant reference to data.filtered.items, mutate acordingly
 	 * and assign to data.roll.items

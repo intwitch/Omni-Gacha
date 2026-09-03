@@ -74,7 +74,7 @@ class pageHandler {
 	 */
 	applyAllOptions() {
 		this.#initalizeBackgroundImageOption()
-		this.#updateContentOptionsElement()
+		this.#initalizeContentOptionsElement()
 
 		populateBuildSelector();
 	}
@@ -103,13 +103,19 @@ class pageHandler {
 		}
 	}
 
+	backgroundImageOptionChangeListener(event){
+		const isOn = event.target.checked
+		this.#buildsOptions.changeOption("backgroundImage", isOn)
+		this.updateBackgroundImage(isOn)
+	}
+
 	/**
 	 * update the physical checkboxes with the saved options, then update the #filteringHandlers data
 	 * should not be called outside of initialization
 	 * @param {boolean} NSFW 
 	 * @param {boolean} NSFWOnly 
 	 */
-	#updateContentOptionsElement(NSFW = this.#buildsOptions.getOption("NSFW"), NSFWOnly = this.#buildsOptions.getOption("NSFWOnly")){
+	#initalizeContentOptionsElement(NSFW = this.#buildsOptions.getOption("NSFW"), NSFWOnly = this.#buildsOptions.getOption("NSFWOnly")){
 		const nsfwElement = document.getElementById("nsfwCheckbox")
 		const nsfwOnlyElement = document.getElementById("nsfwOnlyCheckbox")
 
@@ -120,6 +126,50 @@ class pageHandler {
 		else nsfwOnlyElement.display = "block"
 
 		this.#filteringHandler.updateContentFilter()
+	}
+
+	/**
+	 * conent options change listener
+	 * @param {Event} event 
+	 */
+	contentOptionsChangeListener(event){
+		const nsfwElement = event.currentTarget.getElementById("nsfwCheckbox")
+		const nsfwOnlyElement = event.currentTarget.getElementById("nsfwOnlyCheckbox")
+
+		if(nsfwElement.checked) nsfwOnlyElement.style.visibility = "hidden"
+
+		this.#buildsOptions.changeOptionMultiple({"key": nsfw, "value": nsfwElement.checked}, {"key": nsfwOnly, "value": nsfwOnlyElement.checked})
+		this.#filteringHandler.updateContentFilter()
+	}
+
+	/**
+	 * called by each category filter checkbox, pass on it's current value
+	 * and uncheck the all checkbox
+	 * @param {Event} event 
+	 */
+	categoryFilterChangeListener(event){
+		this.#filteringHandler.updateCategoryFilter(event.currentTarget.value, event.currentTarget.checked)
+		document.querySelector("#itemsCategoryFilter input").checked = false
+	}
+
+	/**
+	 * called by the all checkbox only. changes everything else.
+	 * @param {Event} event 
+	 */
+	categoryFilterAllChangeListener(event){
+		const isAll = event.target.currentTarget.checked
+		for(let checkbox of document.querySelectorAll("#itemsCategoryFilter input")){
+			checkbox.checked = isAll;
+		}
+		this.#filteringHandler.resetCategoryFilter(isAll)
+	}
+
+	/**
+	 * update the ticket rank filter
+	 * @param {Event} event 
+	 */
+	rankFilterChangeListener(event){
+		this.#filteringHandler.updateRankFilter(event.currentTarget.value)
 	}
 
 	/**
@@ -245,14 +295,14 @@ class pageHandler {
 	
 	/**
 	 * redraw a table with a button, determined by the content and function arguments
-	 * @param {string} tableID 
+	 * @param {HTMLTableElement} table 
 	 * @param {(gachaTerm)[]} dataArray 
 	 * @param {string|Element} buttonContent what to apppend to the button element
 	 * @param {buttonCallback} buttonCallback
 	 * @param {*[]} args args to pass to buttonCallback
 	 */
 
-	#redrawTableWithButton(tableID, dataArray, buttonContent, buttonCallback, args) {
+	#redrawTableWithButton(table, dataArray, buttonContent, buttonCallback, args) {
 		const rows = []
 
 		for(let i = 0; i < dataArray.length; i++){
@@ -266,7 +316,7 @@ class pageHandler {
 			})
 		}
 
-		this.#redrawTableBody(tableID, rows)
+		this.#redrawTableBody(table, rows)
 	}
 
 	/**
@@ -311,7 +361,7 @@ class pageHandler {
 	 * @param {string} term "items"/curses
 	 */
 	redrawRollTableListener(e, term){
-		this.#redrawTableWithButton(e.currentTarget, [historyDataArray[0]], "Save", this.#buttonCallbackSave, term)
+		this.#redrawTableBody(e.currentTarget, [historyDataArray[0]])
 	}
 
 	/**
@@ -389,11 +439,11 @@ class pageHandler {
 
 	/**
 	 * 
-	 * @param {string} tableID table to draw to
+	 * @param {HTMLTableElement} table table to draw to
 	 * @param {HTMLTableRowElement[]} rows what to draw in it
 	 */
-	#redrawTableBody(tableID, rows){
-		const tbody = document.querySelector(`#${tableID} > tbody`)
+	#redrawTableBody(table, rows){
+		const tbody = document.querySelector(`#${table} > tbody`)
 		tbody.innerText = ""
 
 		for(let row of rows){
@@ -440,5 +490,10 @@ class pageHandler {
 		// history[0] is the current item
 		document.querySelector(`.historyTable.${term}Table`).dispatchEvent(pageHandler.tableRedrawRequest)
 		rollTable.dispatchEvent(pageHandler.tableRedrawRequest)
+	}
+
+	saveLatest(term){
+		this.#buildsOptions.saveTerm(term, this.#history[term][0])
+		this.redrawAllSaveTables(term)
 	}
 }

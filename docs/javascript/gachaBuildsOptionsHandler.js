@@ -90,7 +90,7 @@ class gachaBuildsOptionsHandler {
 	/**
 	 * change multiple options at once
 	 * if none provided simply return and don't save
-	 * @param  {...{key: string, value: string}} pairs 
+	 * @param  {...{key: string, value: string|boolean}} pairs 
 	 */
 	changeOptionMultiple(...pairs) {
 		if (pairs.length == 0) {
@@ -105,7 +105,7 @@ class gachaBuildsOptionsHandler {
 	/**
 	 * change and save option accordingly.
 	 * @param {string} key
-	 * @param {string} value
+	 * @param {string|boolean} value
 	 */
 	changeOption(key, value) {
 		this.#optionsValues[key] = value
@@ -210,7 +210,7 @@ class gachaBuildsOptionsHandler {
 	}
 
 	/**
-	 * 
+	 * save an item/curse to the build
 	 * @param {string} term "items"/"curses"
 	 * @param {gachaItem|gachaCurse} newTerm 
 	 * @returns {gachaItem|gachaCurse} newTerm

@@ -8,14 +8,14 @@ export {
 	arrayMerge
 };
 
-const page = pageHandler.build()
+const pagePromise = pageHandler.build()
 
 window.onload = function () {
 	
-	page.then(function (pageHandler) {
-		createAllEventHandlers(pageHandler)
-		pageHandler.createAllSortButtons()
-		pageHandler.applyAllOptions()
+	pagePromise.then(function (page) {
+		createAllEventHandlers(page)
+		page.createAllSortButtons()
+		page.applyAllOptions()
 		canvasInit("rollButton", "gachaFinish")
 	})
 }
@@ -81,235 +81,74 @@ function arrayMerge(sourceArrays) {
 	return arrayMerge(sourceArrays);
 }
 
-//takes a string of the rank and returns the proper css variable value
-function rankToColor(rank) {
-	const style = window.getComputedStyle(document.body)
-	switch (rank.toLowerCase()) {
-		case "f":
-			return style.getPropertyValue("--Frank")
-		case "e":
-			return style.getPropertyValue("--Erank")
-		case "d":
-			return style.getPropertyValue("--Drank")
-		case "c":
-			return style.getPropertyValue("--Crank")
-		case "b":
-			return style.getPropertyValue("--Brank")
-		case "a":
-			return style.getPropertyValue("--Arank")
-		case "s":
-			return style.getPropertyValue("--Srank")
-		case "ss":
-			return style.getPropertyValue("--SSrank")
-		case "sss":
-			return style.getPropertyValue("--SSSrank")
-		case "ex":
-			return style.getPropertyValue("--EXrank")
-		default:
-			return "#000000"
+/**
+ * 
+ * @param {pageHandler} page 
+ */
+function createAllEventHandlers(page) {
+
+	const itemsRollTable = document.querySelector(".rollTable.itemsTable")
+	const cursesRollTable = document.querySelector(".rollTable.cursesTable")
+	const itemsHistoryTable = document.querySelector(".historyTable.itemsTable")
+	const cursesHistoryTable = document.querySelector(".historyTable.cursesTable")
+	const itemsSaveTables = document.querySelectorAll(".savedTable.itemsTable")
+	const cursesSaveTables = document.querySelectorAll(".savedTable.cursesTable")
+	const searchItemsTable = document.getElementById("searchItemsTable")
+	const searchCursesTable = document.getElementById("searchCursesTable")
+
+	itemsRollTable.addEventListener("tableRedrawRequest", (e) => { page.redrawRollTableListener(e, "items") })
+	cursesRollTable.addEventListener("tableRedrawRequest", (e) => { page.redrawRollTableListener(e, "curses") })
+	itemsHistoryTable.addEventListener("tableRedrawRequest", (e) => { page.redrawHistoryTableListener(e, "items") })
+	cursesHistoryTable.addEventListener("tableRedrawRequest", (e) => { page.redrawHistoryTableListener(e, "curses") })
+	searchItemsTable.addEventListener("tableRedrawRequest", (e) => { page.redrawSearchTableListener(e, "items") })
+	searchCursesTable.addEventListener("tableRedrawRequest", (e) => { page.redrawSearchTableListener(e, "curses") })
+	for(let table of itemsSaveTables){
+		table.addEventListener("tableRedrawRequest", (e) => { page.redrawSaveTableListener(e, "items") })
 	}
-}
+	for(let table of cursesSaveTables){
+		table.addEventListener("tableRedrawRequest", (e) => { page.redrawSaveTableListener(e, "curses") })
+	}
 
-/*
-I'm fucking sorry for whatever this is.
-init the canvas, load the image, create the animation functions, and finally create the event handler.
-TODO; make this call roll at end of animation, and click to skip and get roll early.
-*/
-function canvasInit(canvasID, eventName) {
-	var event;
-	const canvas = document.getElementById(canvasID)
-	const gumballImage = new Image()
+	document.getElementById("contentOptions").addEventListener("change", () => {page.changeTabButtonListener()})
 
-	gumballImage.addEventListener("load", function () {
-		const scale = 1
-		canvas.width = this.naturalWidth * scale
-		canvas.height = this.naturalHeight * scale
-		const ctx = canvas.getContext("2d")
-		ctx.drawImage(this, 0, 0, canvas.width, canvas.height)
-		const cutoff = 255 * scale
-		const radius = 20 * scale
-		var y = cutoff - radius;
-		const velocity = 2 * scale
-		const dialCenter = 215 * scale
-		const dialRadius = scale
-		var angle = 0;
-		const angleVelocity = Math.PI / 16.0
-		var ballColor;
+	document.getElementById("ticketSelector").addEventListener("change", (e) => {page.rankFilterChangeListener(e)});
 
-		ctx.lineWidth = 1
-		drawTurnDial()
-		ctx.save()
-
-		// draw the dial, rotated by angle default 0
-		function drawTurnDial(angle = 0) {
-			ctx.beginPath()
-			ctx.clearRect(0, 0, canvas.width, canvas.height)
-			ctx.drawImage(gumballImage, 0, 0, canvas.width, canvas.height)
-			ctx.fillStyle = "grey"
-			ctx.arc(canvas.width / 2, dialCenter, radius, 0, 2 * Math.PI)
-			ctx.fill()
-			ctx.beginPath()
-			ctx.translate(canvas.width / 2, dialCenter)
-			ctx.rotate(angle)
-			ctx.fillStyle = "#404040"
-			ctx.moveTo(0 - dialRadius * 10, 0)
-			ctx.lineTo(dialRadius * 10, 0)
-			ctx.lineWidth = 3 * scale;
-			ctx.stroke()
-			ctx.resetTransform()
-		}
-		// animation to rotate dial
-		var currentFrame;
-		function rotateTurnDial() {
-			ctx.clearRect(0, 0, canvas.width, canvas.height)
-			ctx.drawImage(gumballImage, 0, 0, canvas.width, canvas.height)
-			drawTurnDial(angle)
-			if (angle > Math.PI) {
-				window.cancelAnimationFrame(currentFrame)
-				angle = 0
-				ctx.beginPath()
-				ctx.rect(0, cutoff, canvas.width, canvas.height)
-				ctx.clip()
-				currentFrame = window.requestAnimationFrame(dropBall)
-				return
-			}
-			angle += angleVelocity;
-			currentFrame = window.requestAnimationFrame(rotateTurnDial)
-
-		}
-		// animation to drop ball.
-		function dropBall() {
-			ctx.clearRect(0, 0, canvas.width, canvas.height)
-			ctx.drawImage(gumballImage, 0, 0, canvas.width, canvas.height)
-			ctx.beginPath()
-			ctx.fillStyle = ballColor;
-			ctx.arc(canvas.width / 2, y, radius, 0, Math.PI, false)
-			ctx.closePath()
-			ctx.fill()
-			ctx.beginPath()
-			ctx.fillStyle = "white";
-			ctx.arc(canvas.width / 2, y, radius, 0, Math.PI, true)
-			ctx.closePath()
-			ctx.fill()
-			y += velocity
-			if (y >= 280 * scale) {
-				window.cancelAnimationFrame(currentFrame)
-				currentFrame = null
-				y = cutoff - radius * 2;
-				canvas.dispatchEvent(event)
-				return;
-			}
-			currentFrame = window.requestAnimationFrame(dropBall)
-		}
-
-		function animationSetupPlay() {
-			ctx.restore()
-			ctx.save()
-			var filteredData
-			if (eventName === "gachaFinish") filteredData = filteredItemsData
-			else filteredData = filteredCursesData
-			var data = getRandomValue(filteredData)
-			event = new CustomEvent(eventName, {
-				"detail": data
-			})
-			ballColor = rankToColor(data[ITEMS.RANK])
-			currentFrame = window.requestAnimationFrame(rotateTurnDial)
-		}
-
-		canvas.addEventListener("click", function () {
-			// if there's already a currentFrame, return.
-			if (currentFrame) return
-			animationSetupPlay()
-		})
-	})
-	gumballImage.src = "assets/Ball_machine_overworld.png"
-}
-
-
-
-
-
-function createAllEventHandlers() {
-
-	document.getElementById("contentOptions").addEventListener("change", contentFilterChange)
-
-	document.getElementById("ticketSelector").addEventListener("change", updateItemFilterData);
-
-	let homeTab = document.getElementById("home");
-	let aboutTab = document.getElementById("about");
-	let startsTab = document.getElementById("starts")
-	let itemsTab = document.getElementById("items");
-	let cursesTab = document.getElementById("curses");
-	let buildTab = document.getElementById("build");
-	let searchTab = document.getElementById("search");
-
-	homeButton = document.getElementById("homeButton");
-	homeButton.addEventListener("click", tabChangeHandlerCreator(homeTab));
+	const homeButton = document.getElementById("homeButton");
+	homeButton.addEventListener("click", () => {page.changeTabTo("home") });
+	
 	document.getElementById("logo").addEventListener("click", function () { homeButton.click() }) //mirror above event
 
-	document.getElementById("aboutButton").addEventListener("click", tabChangeHandlerCreator(aboutTab));
+	document.getElementById("aboutButton").addEventListener("click", () => {page.changeTabTo("about")});
+	document.getElementById("startsButton").addEventListener("click", () => {page.changeTabTo("starts")})
+	document.getElementById("itemsButton").addEventListener("click", () => {page.changeTabTo("items")});
+	document.getElementById("cursesButton").addEventListener("click", () => {page.changeTabTo("curses")});
+	document.getElementById("buildButton").addEventListener("click", () => {page.changeTabTo("build")});
+	document.getElementById("searchButton").addEventListener("click", () => {page.changeTabTo("search")});
 
-	document.getElementById("startsButton").addEventListener("click", tabChangeHandlerCreator(startsTab))
+	document.getElementById("rollButton").addEventListener("click", () => {page.roll("items")});
+	document.getElementById("saveButton").addEventListener("click", () => {page.saveLatest("items")});
+	document.getElementById("cursesRollButton").addEventListener("click", () => {page.roll("curses")});
+	document.getElementById("cursesSaveButton").addEventListener("click", () => {page.saveLatest("curses")});
 
-	document.getElementById("itemsButton").addEventListener("click", tabChangeHandlerCreator(itemsTab));
+	document.getElementById("buildExportButton").addEventListener("click", () => {page.exportSaved()});
 
-	document.getElementById("cursesButton").addEventListener("click", tabChangeHandlerCreator(cursesTab));
-
-	document.getElementById("buildButton").addEventListener("click", tabChangeHandlerCreator(buildTab));
-
-	document.getElementById("searchButton").addEventListener("click", tabChangeHandlerCreator(searchTab));
-
-	document.getElementById("rollButton").addEventListener("gachaFinish", function (e) {
-		currentItemRoll = e.detail
-		drawRollData(document.getElementById("rollTable"), currentItemRoll, itemRollHistory);
-		redrawHistoryTable("itemRollHistoryTable", itemRollHistory, savedItemRolls)
-	});
-	document.getElementById("saveButton").addEventListener("click", function () {
-		savedItemRolls.push(currentItemRoll);
-		redrawSaveTable(document.getElementById("saveTable"), savedItemRolls)
-	});
-
-	document.getElementById("cursesRollButton").addEventListener("click", function () {
-		currentCurseRoll = getRandomValue(filteredCursesData)
-		drawRollData(document.getElementById("cursesRollTable"), currentCurseRoll, curseRollHistory);
-		redrawHistoryTable("curseRollHistoryTable", curseRollHistory, savedCurseRolls)
-	});
-
-	document.getElementById("cursesSaveButton").addEventListener("click", function () {
-		savedCurseRolls.push(currentCurseRoll);
-		redrawSaveTable(document.getElementById("cursesSaveTable"), savedCurseRolls)
-	});
-
-	document.getElementById("buildExportButton").addEventListener("click", exportSaved);
-
-	var itemsCategoriesFilters = document.querySelectorAll("#itemsCategoryFilter input");
-	console.log(itemsCategoriesFilters);
-	itemsCategoriesFilters[0].addEventListener("change", function () { //all gets special behavior
-		for (var i = 1; i < itemsCategoriesFilters.length; i++) {
-			itemsCategoriesFilters[i].checked = document.getElementById("itemsCategoryFilterAll").checked;
-		}
-		updateItemFilterData();
-	})
-	for (var i = 1; i < itemsCategoriesFilters.length; i++) {
-		itemsCategoriesFilters[i].addEventListener("change", function () {
-			itemsCategoriesFilters[0].checked = false;
-			updateItemFilterData();
-		})
+	
+	const itemCategoriesFilters = itemCategorySelector.querySelectorAll("#itemsCategoryFilter input");
+	const allCategoryBox = itemCategoriesFilters.splice(0, 1)[0]
+	for(let checkbox of itemCategoriesFilters){
+		checkbox.addEventListener("change", (e) => { page.categoryFilterChangeListener(e) })
 	}
+	allCategoryBox.addEventListener("change", (e) => { page.categoryFilterAllChangeListener(e) })
+	
 
-	document.getElementById("optionsButton").addEventListener("click", openOptions)
-	document.getElementById("optionsClose").addEventListener("click", closeOptions)
+	document.getElementById("optionsButton").addEventListener("click", () => { pageHandler.openOptions })
+	document.getElementById("optionsClose").addEventListener("click", () => { pageHandler.closeOptions })
 
-	document.getElementById("optionsBackgroundToggle").addEventListener("change", optionChange)
-	document.getElementById("optionsBuildSelector").addEventListener("change", switchBuildEventHandler)
-	document.getElementById("optionsBuildsNewName").addEventListener("keydown", createNewBuildEventHandler)
-	document.getElementById("optionsBuildsDeleteButton").addEventListener("click", deleteCurrentBuildConfirm)
+	document.getElementById("optionsBackgroundToggle").addEventListener("change", (e) => { page.backgroundImageOptionChangeListener(e) })
+	document.getElementById("optionsBuildSelector").addEventListener("change", (e) => { page.switchBuildEventHandler(e) })
+	document.getElementById("optionsBuildsNewName").addEventListener("keydown", (e) => { page.createNewBuildEventHandler(e) })
+	document.getElementById("optionsBuildsDeleteButton").addEventListener("click", (e) => { page.deleteCurrentBuildListener(e) })
 
-
-	document.getElementById("searchItemsButton").addEventListener("click", function () {
-		searchHandlerCreator(itemsData, savedItemRolls, "searchItemsTable")(this)
-	})
-	document.getElementById("searchCursesButton").addEventListener("click", function () {
-		searchHandlerCreator(cursesData, savedCurseRolls, "searchCursesTable")(this)
-	})
+	document.getElementById("searchItemsButton").addEventListener("click", (e) => { searchItemsTable.dispatchEvent(pageHandler.tableRedrawRequest) })
+	document.getElementById("searchCursesButton").addEventListener("click", (e) => { searchCursesTable.dispatchEvent(pageHandler.tableRedrawRequest) })
 };
