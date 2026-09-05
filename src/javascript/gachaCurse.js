@@ -3,20 +3,6 @@ import { gachaTerm } from "./gachaTerm";
 
 class gachaCurse extends gachaTerm{
     /**
-     * @type {{
-     *   name: string,
-     *   description: string,
-     *   resolution: string,
-     *   level: string,
-     *   target: string,
-     *   affects: string,
-     *   nsfw: boolean,
-     *   reward: string,
-     * }}
-     */
-    #values;
-
-    /**
      * 
      * @param {string[]} array 
      * @returns object to pass to constructor
@@ -29,7 +15,7 @@ class gachaCurse extends gachaTerm{
             level: array[3],
             target: array[4],
             affects: array[5],
-            nsfw: array[6],
+            nsfw: (array[6] == "TRUE"),
             reward: array[7],
         }
     }
@@ -37,7 +23,6 @@ class gachaCurse extends gachaTerm{
     constructor(curseObject) {
         const values = structuredClone(curseObject)
         super(values)
-        this.#values = super.values
     }
 
     /**
@@ -46,12 +31,12 @@ class gachaCurse extends gachaTerm{
     */
     toString() {
         let sfw = ""
-        if (this.#values.nsfw) sfw = " | NSFW"
-        return `${this.#values.name} | ${this.#values.level}${sfw}\n${this.#values.description}\nResolution: ${this.#values.resolution}`
+        if (super.get("nsfw")) sfw = " | NSFW"
+        return `${super.get("name")} | ${super.get("level")}${sfw}\n${super.get("description")}\nResolution: ${super.get("resolution")}`
     }
 
     toBasicForm(){
-        const basicValues = [this.#values.name, this.#values.description, this.#values.resolution, this.#values.level]
+        const basicValues = [super.get("name"), super.get("description"), super.get("resolution"), super.get("level")]
         return super.toBasicForm(basicValues)
     }
 

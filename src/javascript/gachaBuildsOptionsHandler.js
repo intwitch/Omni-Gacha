@@ -159,7 +159,7 @@ class gachaBuildsOptionsHandler {
 	 * @returns {null|gachaCurse[]|gachaItem[]} null on invalid term, gachaTerm[] depending on term.
 	 */
 	getCurrentSaved(term) {
-		if (term != "items" || term != "curses") {
+		if (term != "items" && term != "curses") {
 			console.warn(`not meant to be called by "${term}", please use "items" or "curses"`)
 			return null
 		}
@@ -210,7 +210,7 @@ class gachaBuildsOptionsHandler {
 	 * @returns {gachaItem|gachaCurse} newTerm
 	 */
 	saveTerm(term, newTerm) {
-		this.#getBuild()[term].append(newTerm)
+		this.#getBuild()[term].push(newTerm)
 		this.saveBuilds()
 		return newTerm
 	}

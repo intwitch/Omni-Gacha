@@ -32,7 +32,7 @@ class cookiesHandler {
 		//saving all that data takes a lot of the 4098 Byte limit, save just names instead.
 		//for now it works, an outright ID or further compression shouldn't be required, yet.
 		let truncatedBuildValues = {};
-		for (build in this.#buildsValues) {
+		for (let build in this.#buildsValues) {
 			let truncatedBuild = {};
 			truncatedBuild.items = gachaItem.toNameArray(this.#buildsValues[build].items);
 			truncatedBuild.curses = gachaCurse.toNameArray(this.#buildsValues[build].curses)

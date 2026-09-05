@@ -302,8 +302,9 @@ class pageHandler {
 	 * @param {*[]} args args to pass to buttonCallback
 	 */
 
-	#redrawTableWithButton(table, dataArray, buttonContent, buttonCallback, args) {
+	#redrawTableWithButton(table, dataArray, buttonContent, buttonCallback, ...args) {
 		const rows = []
+		const bindedCallBack = buttonCallback.bind(this)
 
 		for(let i = 0; i < dataArray.length; i++){
 			const row = dataArray[i].toFullRow()
@@ -312,8 +313,9 @@ class pageHandler {
 
 			button.append(buttonContent)
 			button.addEventListener("click", () => { 
-				buttonCallback(dataArray, i, ...args)
+				bindedCallBack(dataArray, i, ...args)
 			})
+			rows.push(row)
 		}
 
 		this.#redrawTableBody(table, rows)
@@ -422,8 +424,8 @@ class pageHandler {
 	 * @param {string} term "items"/"curses"
 	 */
 	#buttonCallbackSave(sourceDataArray, index, term){
-		this.#buildsOptions.saveTerm(term, sourceDataArray("index"))
-		redrawAllSaveTables(term)
+		this.#buildsOptions.saveTerm(term, sourceDataArray[index])
+		this.redrawAllSaveTables(term)
 	}
 
 	/**

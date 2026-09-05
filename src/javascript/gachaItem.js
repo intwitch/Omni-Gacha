@@ -4,30 +4,6 @@ import { itemTags } from "./itemTags"
 import { gachaTerm } from "./gachaTerm"
 
 class gachaItem extends gachaTerm {
-    /** @type {{
-     *   name: string,
-     *   series: string,
-     *   description: string,
-     *   category: string,
-     *   gender: string,
-     *   magic: string,
-     *   memetic: string,
-     *   might: string,
-     *   mind: string,
-     *   motion: string,
-     *   moxie: string,
-     *   mutation: string,
-     *   myth: string,
-     *   stats: number,
-     *   rank: string,
-     *   growthType: string,
-     *   growthRate: string,
-     *   restock: string,
-     *   returnValue: string,
-     *   gift: string,
-     *   nsfw: boolean
-     * }} */
-    #values
 
     /** @type {itemTags} */
     tags
@@ -71,7 +47,6 @@ class gachaItem extends gachaTerm {
     constructor(object, tags){
         const values = structuredClone(object)
         super(values)
-        this.#values = super.values
 
         this.tags = new itemTags(tags)
     }
@@ -84,8 +59,8 @@ class gachaItem extends gachaTerm {
      */
     toString() {
         let sfw = ""
-        if (this.#values.nsfw) sfw = " | NSFW"
-        return `${this.#values.name} | ${this.#values.series}\nRank ${this.#values.series} | ${this.#values.category}${sfw}\n${this.#values.description}`
+        if (super.get("nsfw")) sfw = " | NSFW"
+        return `${super.get("name")} | ${super.get("series")}\nRank ${super.get("series")} | ${super.get("category")}${sfw}\n${super.get("description")}`
     }
 
     /**
@@ -95,7 +70,7 @@ class gachaItem extends gachaTerm {
      * @returns {HTMLTableRowElement}
      */
     toBasicForm(){
-        const basicValues = [this.#values.name, this.#values.series, this.#values.description, this.#values.category]
+        const basicValues = [super.get("name"), super.get("series"), super.get("description"), super.get("category")]
         return super.toBasicForm(basicValues)
     }
 

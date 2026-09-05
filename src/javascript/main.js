@@ -90,8 +90,8 @@ function createAllEventHandlers(page) {
 	const cursesRollTable = document.querySelector(".rollTable.cursesTable")
 	const itemsHistoryTable = document.querySelector(".historyTable.itemsTable")
 	const cursesHistoryTable = document.querySelector(".historyTable.cursesTable")
-	const itemsSaveTables = document.querySelectorAll(".savedTable.itemsTable")
-	const cursesSaveTables = document.querySelectorAll(".savedTable.cursesTable")
+	const itemsSaveTables = document.querySelectorAll(".saveTable.itemsTable")
+	const cursesSaveTables = document.querySelectorAll(".saveTable.cursesTable")
 	const searchItemsTable = document.getElementById("searchItemsTable")
 	const searchCursesTable = document.getElementById("searchCursesTable")
 

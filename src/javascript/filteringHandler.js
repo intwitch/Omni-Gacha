@@ -67,7 +67,7 @@ class filteringHandler {
 			itemsArray.push(new gachaItem(gachaItem.arrayToKeyedObject(value), value.splice(23, Infinity)))
 		}
 		for (let value of await values.curses) {
-			cursesArray.push(new gachaCurse(gachaCurse.arrayToKeyedObject(values)))
+			cursesArray.push(new gachaCurse(gachaCurse.arrayToKeyedObject(value)))
 		}
 
 		console.log(`items: ${await values.items.length}`)
