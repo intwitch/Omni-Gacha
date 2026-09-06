@@ -36,7 +36,7 @@ function smartSplit(input, split) {
 	var finalArray = [""]
 	var index = 0;
 
-	for (char of splitArray) {
+	for (let char of splitArray) {
 		if (char == '\"') {
 			insideQuote = !insideQuote;
 			continue;

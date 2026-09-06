@@ -58,7 +58,8 @@ class gachaTerm{
 
         for(let key in this.#values){
             const cell = document.createElement("td")
-            cell.append(this.#values[key])
+            if(typeof this.#values[key] == "boolean") { cell.append(this.#values[key].toString().toUpperCase()) }
+            else { cell.append(this.#values[key]) }
             row.appendChild(cell)
         }
 

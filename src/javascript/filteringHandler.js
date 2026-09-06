@@ -231,6 +231,25 @@ class filteringHandler {
 	}
 
 	/**
+	 * filter by non case sensitive exact text value
+	 * for filter by contains, use textFilter
+	 * 
+	 * @param {(string|number|boolean)[]} filterArray array of things to match to
+	 * @param {string} key what key of the item/curse to check against
+	 * @returns function to use in array.filter()
+	 */
+	static exactTextValueFilter(filterArray, key) {
+		var filterFunction = function (value) {
+			const valuePart = value.get(key).toLowerCase()
+			for (let filter of filterArray) {
+				if (valuePart == filter.toLowerCase()) return true
+			}
+			return false;
+		}
+		return filterFunction
+	}
+
+	/**
 	 * filter by text value. text only needs to be part of, not exact match
 	 * for exact match use valueFilter
 	 * 
@@ -313,7 +332,7 @@ class filteringHandler {
 	 * @returns {gachaItem[]|gachaCurse[]|null} null if term invalid
 	 */
 	searchTerm(searchText, term){
-		if(term != "items" || term != "curses") return null
+		if(term != "items" && term != "curses") return null
 		return this.#search(searchText, term)
 	}
 
@@ -327,7 +346,7 @@ class filteringHandler {
 		const searchValues = this.#searchTextVerifySplit(searchText)
 		const searchObjects = []
 
-		for(string of searchValues){
+		for(let string of searchValues){
 			const parts = string.split(":")
 			searchObjects.push({
 				properties: smartSplit(parts[0], ","),
@@ -387,12 +406,14 @@ class filteringHandler {
 			case "moxie":
 			case "mutation":
 			case "myth":
-			case "stats":
 			case "rank":
+				return filteringHandler.exactTextValueFilter
+				break;
+			case "stats":
 				return filteringHandler.exactValueFilter
 				break;
 			default:
-				consolelog("Search Header not found, something seems to have gone wrong.")
+				console.log("Search Header not found, something seems to have gone wrong.")
 		}
 	}
 
@@ -408,9 +429,9 @@ class filteringHandler {
 		let resultsData = this.#data.filtered[term]
 		for(let searchObject of searchObjects){
 			let resultsDataParts = []
-			for(let key of searchObjects.properties){
+			for(let key of searchObject.properties){
 				const filterFunction = this.#keyToFilter(key, term)
-				resultsDataParts.push( resultsData.filter(filterFunction(searchObjects.values), key) )
+				resultsDataParts.push( resultsData.filter(filterFunction(searchObject.values, key) ))
 			}
 			resultsData = arrayMerge(resultsDataParts)
 		}
