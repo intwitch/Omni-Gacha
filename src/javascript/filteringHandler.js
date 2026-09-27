@@ -1,7 +1,7 @@
 import {
 	smartSplit,
 	arrayMerge
-} from "./main.js";
+} from "./helperLibrary.js";
 import { gachaBuildsOptionsHandler } from "./gachaBuildsOptionsHandler.js"
 
 export { filteringHandler }
@@ -265,7 +265,7 @@ class filteringHandler {
 	static textValueFilter(filterArray, key) {
 		let filterFunctionCreator = function (term) {
 			const value = term.get(key).toString().toLowerCase();
-			for (filter of filterArray) {
+			for (let filter of filterArray) {
 				if (value.includes(filter.toLowerCase())) return true
 			}
 			return false;
