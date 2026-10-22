@@ -17,7 +17,7 @@ var result = ""
 
 // function for filter to call
 function filterData(value, index, array) {
-    if( value.at(-1) === "FALSE" || value[0] === "" || value[1] === "" || value[2] === ""){
+    if( value.at(21) == "FALSE"){
         return false;
     }
     else return true;
@@ -29,11 +29,7 @@ function buildData() {
     console.log("Finished API Request")
 
     var itemsData = result.valueRanges[0].values.filter(filterData);
-    var cursesData = result.valueRanges[1].values.filter(filterData);
-
-    for(item of itemsData){
-        item.splice(-1)
-    }
+    var cursesData = result.valueRanges[1].values
 
     
     //remove header values

@@ -6,6 +6,8 @@ import { gachaTerm } from "./gachaTerm";
 
 export { pageHandler }
 
+import backgroundImage from "/assets/Omni_Gacha_Background.webp?url"
+
 class pageHandler {
 
 	/**@type {filteringHandler} */
@@ -94,7 +96,7 @@ class pageHandler {
 	updateBackgroundImage(isOn = this.#buildsOptions.getOption("backgroundImage")) {
 		const root = document.querySelector(":root")
 		if (isOn) {
-			document.body.style.backgroundImage = 'url("assets/Omni_Gacha_Background.png")';
+			document.body.style.backgroundImage = `url("${backgroundImage}")`;
 			root.style.setProperty('--tint', "#00000066")
 		}
 		else {

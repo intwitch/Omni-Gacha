@@ -9,7 +9,7 @@ export { filteringHandler }
 import { gachaItem } from "./gachaItem.js";
 import { gachaCurse } from "./gachaCurse.js";
 
-import rawJson from "../data/values.json?url"
+import valuesURL from "/data/values.json?url&no-inline"
 
 /**
  * handle all filtering, prepping, 
@@ -57,7 +57,7 @@ class filteringHandler {
 	 * }>}
 	 */
 	static async loadParseJSON() {
-		const rawfetch = await fetch("../data/values.json")
+		const rawfetch = await fetch(valuesURL)
 		const values = await rawfetch.json()
 
 		const itemsArray = []
