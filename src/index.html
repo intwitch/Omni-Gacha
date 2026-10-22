@@ -3,9 +3,9 @@
 
 <head>
     <title>Omni Gacha</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="style.css?v=0.2.2">
-    <script src="javascript/main.js?v=0.2.2" type="module"></script>
+    <script src="./javascript/main.js" type="module"></script>
     <link rel="icon" type="image/x-icon" href="assets/favicon.png?v=0.2.2">
 </head>
 
@@ -626,13 +626,10 @@
         </div>
 
         <div id="items" class="tabcontent">
-            <div class="canvasContainer">
-                <canvas id="rollButton">
-                </canvas>
-            </div>
             <div class="solidBackground">
                 <div>
                     <div class="options">
+                        <button id="itemRollButton">Roll</button>
                         <button id="saveButton">Save Item</button>
                         <select id="ticketSelector">
                             <option value="0" selected disabled hidden>select coin</option>
@@ -657,59 +654,59 @@
                                         </li>
                                         <li>
                                             <input type="checkbox" id="itemsCategoryFilterAbility" checked
-                                                value="ability">
+                                                value="Ability">
                                             <label for="itemsCategoryFilterAbility">Ability</label>
                                         </li>
                                         <li>
                                             <input type="checkbox" id="itemsCategoryFilterArsenal" checked
-                                                value="arsenal">
+                                                value="Arsenal">
                                             <label for="itemsCategoryFilterArsenal">Arsenal</label>
                                         </li>
                                         <li>
                                             <input type="checkbox" id="itemsCategoryFilterConsumable" checked
-                                                value="consumable">
+                                                value="Consumable">
                                             <label for="itemsCategoryFilterConsumable">Consumable</label>
                                         </li>
                                         <li>
                                             <input type="checkbox" id="itemsCategoryFilterFamiliar" checked
-                                                value="familiar">
+                                                value="Familiar">
                                             <label for="itemsCategoryFilterFamiliar">Familiar</label>
                                         </li>
                                         <li>
                                             <input type="checkbox" id="itemsCategoryFilterFarmable" checked
-                                                value="farmable">
+                                                value="Farmable">
                                             <label for="itemsCategoryFilterFarmable">Farmable</label>
                                         </li>
                                         <li>
                                             <input type="checkbox" id="itemsCategoryFilterNovelty" checked
-                                                value="novelty">
+                                                value="Novelty">
                                             <label for="itemsCategoryFilterNovelty">Novelty</label>
                                         </li>
                                         <li>
                                             <input type="checkbox" id="itemsCategoryFilterPassive" checked
-                                                value="passive">
+                                                value="Passive">
                                             <label for="itemsCategoryFilterPassive">Passive</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" id="itemsCategoryFilterRace" checked value="race">
+                                            <input type="checkbox" id="itemsCategoryFilterRace" checked value="Race">
                                             <label for="itemsCategoryFilterRace">Race</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" id="itemsCategoryFilterSkill" checked value="skill">
+                                            <input type="checkbox" id="itemsCategoryFilterSkill" checked value="Skill">
                                             <label for="itemsCategoryFilterSkill">Skill</label>
                                         </li>
                                         <li>
                                             <input type="checkbox" id="itemsCategoryFilterVehicle" checked
-                                                value="vehicle">
+                                                value="Vehicle">
                                             <label for="itemsCategoryFilterVehicle">Vehicle</label>
                                         </li>
                                         <li>
                                             <input type="checkbox" id="itemsCategoryFilterWearable" checked
-                                                value="wearable">
+                                                value="Wearable">
                                             <label for="itemsCategoryFilterWearable">Wearable</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" id="itemsCategoryFilterWorld" checked value="world">
+                                            <input type="checkbox" id="itemsCategoryFilterWorld" checked value="World">
                                             <label for="itemsCategoryFilterWorld">World</label>
                                         </li>
                                     </ul>
@@ -717,7 +714,7 @@
                             </span>
                         </span>
                     </div>
-                    <table id="rollTable" class="itemsTable">
+                    <table id="rollTable" class="itemsTable rollTable">
                         <caption>
                             <h2>Rolls</h2>
                         </caption>
@@ -755,7 +752,7 @@
                 </div>
 
                 <div>
-                    <table id="saveTable" class="itemsTable">
+                    <table id="saveTable" class="itemsTable saveTable">
                         <caption>
                             <h2>Saved Rolls</h2>
                         </caption>
@@ -784,93 +781,6 @@
                                 <th>NSFW</th>
                                 <th>Remove</th>
                             </tr>
-                            <tr>
-                                <th>
-                                    <button class="ascendingButton" value="0">↑</button>
-                                    <button class="descendingButton" value="0">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="1">↑</button>
-                                    <button class="descendingButton" value="1">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="2">↑</button>
-                                    <button class="descendingButton" value="2">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="3">↑</button>
-                                    <button class="descendingButton" value="3">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="4">↑</button>
-                                    <button class="descendingButton" value="4">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="5">↑</button>
-                                    <button class="descendingButton" value="5">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="6">↑</button>
-                                    <button class="descendingButton" value="6">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="7">↑</button>
-                                    <button class="descendingButton" value="7">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="8">↑</button>
-                                    <button class="descendingButton" value="8">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="9">↑</button>
-                                    <button class="descendingButton" value="9">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="10">↑</button>
-                                    <button class="descendingButton" value="10">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="11">↑</button>
-                                    <button class="descendingButton" value="11">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="12">↑</button>
-                                    <button class="descendingButton" value="12">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="13">↑</button>
-                                    <button class="descendingButton" value="13">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="14">↑</button>
-                                    <button class="descendingButton" value="14">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="15">↑</button>
-                                    <button class="descendingButton" value="15">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="16">↑</button>
-                                    <button class="descendingButton" value="16">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="17">↑</button>
-                                    <button class="descendingButton" value="17">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="18">↑</button>
-                                    <button class="descendingButton" value="18">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="19">↑</button>
-                                    <button class="descendingButton" value="19">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="20">↑</button>
-                                    <button class="descendingButton" value="20">↓</button>
-                                </th>
-                                <th></th>
-                            </tr>
                         </thead>
                         <tbody>
                         </tbody>
@@ -878,7 +788,7 @@
                 </div>
 
                 <div id="itemRollHistory">
-                    <table id="itemRollHistoryTable" class="itemsTable">
+                    <table id="itemRollHistoryTable" class="itemsTable historyTable">
                         <caption>
                             <h2>Roll History</h2>
                         </caption>
@@ -907,93 +817,6 @@
                                 <th>NSFW</th>
                                 <th>Save</th>
                             </tr>
-                            <tr>
-                                <th>
-                                    <button class="ascendingButton" value="0">↑</button>
-                                    <button class="descendingButton" value="0">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="1">↑</button>
-                                    <button class="descendingButton" value="1">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="2">↑</button>
-                                    <button class="descendingButton" value="2">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="3">↑</button>
-                                    <button class="descendingButton" value="3">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="4">↑</button>
-                                    <button class="descendingButton" value="4">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="5">↑</button>
-                                    <button class="descendingButton" value="5">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="6">↑</button>
-                                    <button class="descendingButton" value="6">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="7">↑</button>
-                                    <button class="descendingButton" value="7">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="8">↑</button>
-                                    <button class="descendingButton" value="8">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="9">↑</button>
-                                    <button class="descendingButton" value="9">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="10">↑</button>
-                                    <button class="descendingButton" value="10">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="11">↑</button>
-                                    <button class="descendingButton" value="11">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="12">↑</button>
-                                    <button class="descendingButton" value="12">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="13">↑</button>
-                                    <button class="descendingButton" value="13">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="14">↑</button>
-                                    <button class="descendingButton" value="14">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="15">↑</button>
-                                    <button class="descendingButton" value="15">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="16">↑</button>
-                                    <button class="descendingButton" value="16">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="17">↑</button>
-                                    <button class="descendingButton" value="17">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="18">↑</button>
-                                    <button class="descendingButton" value="18">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="19">↑</button>
-                                    <button class="descendingButton" value="19">↓</button>
-                                </th>
-                                <th>
-                                    <button class="ascendingButton" value="20">↑</button>
-                                    <button class="descendingButton" value="20">↓</button>
-                                </th>
-                                <th></th>
-                            </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
@@ -1006,7 +829,7 @@
             <div>
                 <button id="cursesRollButton">Get Curse</button>
                 <button id="cursesSaveButton">Save Curse</button>
-                <table id="cursesRollTable" class="cursesTable">
+                <table id="cursesRollTable" class="cursesTable rollTable">
                     <caption>
                         <h2>Rolls</h2>
                     </caption>
@@ -1028,7 +851,7 @@
                 </table>
             </div>
             <div>
-                <table id="cursesSaveTable" class="cursesTable">
+                <table id="cursesSaveTable" class="cursesTable saveTable">
                     <caption>
                         <h2>Saved Curses</h2>
                     </caption>
@@ -1044,46 +867,11 @@
                             <th>Reward</th>
                             <th>Remove</th>
                         </tr>
-                        <tr>
-                            <th>
-                                <button class="ascendingButton" value="0">↑</button>
-                                <button class="descendingButton" value="0">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="1">↑</button>
-                                <button class="descendingButton" value="1">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="2">↑</button>
-                                <button class="descendingButton" value="2">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="3">↑</button>
-                                <button class="descendingButton" value="3">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="4">↑</button>
-                                <button class="descendingButton" value="4">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="5">↑</button>
-                                <button class="descendingButton" value="5">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="6">↑</button>
-                                <button class="descendingButton" value="6">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="7">↑</button>
-                                <button class="descendingButton" value="7">↓</button>
-                            </th>
-                            <th></th>
-                        </tr>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
-                <table id="curseRollHistoryTable" class="cursesTable">
+                <table id="curseRollHistoryTable" class="cursesTable historyTable">
                     <caption>
                         <h2>Roll History</h2>
                     </caption>
@@ -1099,41 +887,6 @@
                             <th>Reward</th>
                             <th>Remove</th>
                         </tr>
-                        <tr>
-                            <th>
-                                <button class="ascendingButton" value="0">↑</button>
-                                <button class="descendingButton" value="0">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="1">↑</button>
-                                <button class="descendingButton" value="1">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="2">↑</button>
-                                <button class="descendingButton" value="2">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="3">↑</button>
-                                <button class="descendingButton" value="3">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="4">↑</button>
-                                <button class="descendingButton" value="4">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="5">↑</button>
-                                <button class="descendingButton" value="5">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="6">↑</button>
-                                <button class="descendingButton" value="6">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="7">↑</button>
-                                <button class="descendingButton" value="7">↓</button>
-                            </th>
-                            <th></th>
-                        </tr>
                     </thead>
                     <tbody>
                     </tbody>
@@ -1145,7 +898,7 @@
         <div id="build" class="tabcontent transparentBackground">
             <button id="buildExportButton">Export all</button>
             <div>
-                <table id="buildItemsTable" class="itemsTable">
+                <table id="buildItemsTable" class="itemsTable saveTable">
                     <caption>
                         <h2>Saved Items</h2>
                     </caption>
@@ -1174,100 +927,13 @@
                             <th>NSFW</th>
                             <th>Remove</th>
                         </tr>
-                        <tr>
-                            <th>
-                                <button class="ascendingButton" value="0">↑</button>
-                                <button class="descendingButton" value="0">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="1">↑</button>
-                                <button class="descendingButton" value="1">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="2">↑</button>
-                                <button class="descendingButton" value="2">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="3">↑</button>
-                                <button class="descendingButton" value="3">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="4">↑</button>
-                                <button class="descendingButton" value="4">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="5">↑</button>
-                                <button class="descendingButton" value="5">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="6">↑</button>
-                                <button class="descendingButton" value="6">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="7">↑</button>
-                                <button class="descendingButton" value="7">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="8">↑</button>
-                                <button class="descendingButton" value="8">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="9">↑</button>
-                                <button class="descendingButton" value="9">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="10">↑</button>
-                                <button class="descendingButton" value="10">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="11">↑</button>
-                                <button class="descendingButton" value="11">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="12">↑</button>
-                                <button class="descendingButton" value="12">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="13">↑</button>
-                                <button class="descendingButton" value="13">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="14">↑</button>
-                                <button class="descendingButton" value="14">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="15">↑</button>
-                                <button class="descendingButton" value="15">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="16">↑</button>
-                                <button class="descendingButton" value="16">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="17">↑</button>
-                                <button class="descendingButton" value="17">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="18">↑</button>
-                                <button class="descendingButton" value="18">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="19">↑</button>
-                                <button class="descendingButton" value="19">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="20">↑</button>
-                                <button class="descendingButton" value="20">↓</button>
-                            </th>
-                            <th></th>
-                        </tr>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
             </div>
             <div>
-                <table id="buildCursesTable" class="cursesTable">
+                <table id="buildCursesTable" class="cursesTable saveTable">
                     <caption>
                         <h2>Saved Curses</h2>
                     </caption>
@@ -1282,41 +948,6 @@
                             <th>NSFW</th>
                             <th>Reward</th>
                             <th>Remove</th>
-                        </tr>
-                        <tr>
-                            <th>
-                                <button class="ascendingButton" value="0">↑</button>
-                                <button class="descendingButton" value="0">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="1">↑</button>
-                                <button class="descendingButton" value="1">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="2">↑</button>
-                                <button class="descendingButton" value="2">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="3">↑</button>
-                                <button class="descendingButton" value="3">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="4">↑</button>
-                                <button class="descendingButton" value="4">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="5">↑</button>
-                                <button class="descendingButton" value="5">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="6">↑</button>
-                                <button class="descendingButton" value="6">↓</button>
-                            </th>
-                            <th>
-                                <button class="ascendingButton" value="7">↑</button>
-                                <button class="descendingButton" value="7">↓</button>
-                            </th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1344,7 +975,7 @@
                     <input type="text" id="searchItemsAdvanced" class="advancedSearch" placeholder='Magic:F Motion:C,D'>
                     <button id="searchItemsButton">search</button>
                 </forum>
-                <table id="searchItemsTable" class="itemsTable">
+                <table id="searchItemsTable" class="itemsTable searchTable">
                     <caption>
                         <h2>Items</h2>
                     </caption>
@@ -1484,7 +1115,7 @@
                         placeholder='Target:You,Others Name:sin'>
                     <button id="searchCursesButton">search</button>
                 </forum>
-                <table id="searchCursesTable" class="cursesTable">
+                <table id="searchCursesTable" class="cursesTable searchTable">
                     <caption>
                         <h2>Curses</h2>
                     </caption>

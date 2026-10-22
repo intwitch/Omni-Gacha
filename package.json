@@ -14,17 +14,16 @@
   "author": "",
   "type": "commonjs",
   "main": "",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
-    "test": "",
-    "start": "node build.js"
+    "test": "vitest",
+    "start": "node build.js",
+    "dev": "vite --port 4000"
   },
   "dependencies": {
     "dotenv": "^17.4.2"
   },
   "devDependencies": {
-    "vite": "^8.2.2"
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   }
 }

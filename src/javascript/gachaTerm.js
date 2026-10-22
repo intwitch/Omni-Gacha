@@ -1,0 +1,118 @@
+export { gachaTerm }
+
+/**
+ * a superclass for gachaItem & gachaCurse due to a certain amount of shared functionality
+ * do not attempt to actually use it
+ */
+class gachaTerm{
+    /**
+     * some amount of keys with values of one of those types.
+     * @type {{
+     *  "key": string|boolean|number,
+     * }}
+     */
+    #values
+
+    constructor(values){
+        this.#values = values
+    }
+
+    /**
+     * 
+     * @param {string} key 
+     * @returns {string|number|boolean} value of that key
+     */
+    get(key){
+        return this.#values[key]
+    }
+
+    /**
+     * 
+     * @param {string} key 
+     * @param {string|number|boolean} value value to set
+     * @returns {string|number|boolean} value
+     */
+    set(key, value){
+        this.#keyValueMatchCheck(key, value)
+        return this.#values[key] = value
+    }
+
+    /**
+     * throws a type error if values[key] type isn't the same as provided value
+     * @param {string} key 
+     * @param {string|number|boolean} value 
+     */
+    #keyValueMatchCheck(key, value){
+        const keyType = typeof this.#values[key]
+        const valueType = typeof value
+        if(keyType != valueType) throw new TypeError(`given value type "${valueType}" does not match resolved key value "${keyType}"`);
+    }
+
+    /**
+     * returns a row with all data attached. Soon to be legacy. for now while refactoring, it stays.
+     * TODO: make this legacy
+     * @returns {HTMLTableRowElement}
+     */
+    toFullRow(){
+        const row = document.createElement("tr")
+
+        for(let key in this.#values){
+            const cell = document.createElement("td")
+            if(typeof this.#values[key] == "boolean") { cell.append(this.#values[key].toString().toUpperCase()) }
+            else { cell.append(this.#values[key]) }
+            row.appendChild(cell)
+        }
+
+        return row
+    }
+
+    /**
+     * basic row conversion of the item.
+     * TODO, replace with a better presentation
+     * @param {(string|number|boolean)[]} values values to be put inside the basic form
+     * @returns {HTMLTableRowElement}
+     */
+    toBasicForm(values){
+        const row = document.createElement("tr")
+
+        for(let value of values){
+            const cell = document.createElement("td")
+            cell.append(value)
+            row.appendChild(cell)
+        }
+
+        return row
+    }
+
+    /**
+     * 
+     * @param {gachaTerm[]} termArray 
+     * @returns {string[]}
+     */
+    static toNameArray(termArray){
+        const nameArray = []
+        for(let term of termArray){
+            nameArray.push(term.get("name"))
+        }
+        return nameArray
+    }
+
+    /**
+	 * given a name of item or curse, return the array of all data
+	 * if passed argument is not a string, assume it's an array, and return that array (backwards compatibility with old saves)
+	 * if name is not found return undefined
+	 * @param {string} name
+	 * @param {gachaTerm[]} rawTerms
+     * @returns {gachaTerm} Term that matches the name.
+	*/
+	static nameToFull(name, rawTerms) {
+		if (typeof name != "string") return name;
+
+		for (term of rawTerms) {
+			if (data.get("name") == name) return data;
+		}
+
+		console.error(`${name} not found in raw data array. something has gone wrong`);
+		return name;
+	}
+}
