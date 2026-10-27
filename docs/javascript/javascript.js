@@ -821,13 +821,18 @@ function buildCookieSetFunction() {
 		truncatedBuildValues[build] = truncatedBuild
 	}
 
-	cookieStore.set({
-		"name": "builds",
-		value: JSON.stringify(truncatedBuildValues),
-		expires: Date.now() + 1000*60*60*24*365
-	}).then(function () {
-		//TODO, PROPER COOKIE PROMISE HANDLING
-	})
+	try{
+		cookieStore.set({
+			"name": "builds",
+			value: JSON.stringify(truncatedBuildValues),
+			expires: Date.now() + 1000*60*60*24*365
+		}).then(function () {
+			//TODO, PROPER COOKIE PROMISE HANDLING
+		})
+	}
+	catch(error){
+		saveCookieFailAlert(error, "builds")
+	}
 }
 // initiate the old build cookie data, if it exits
 // changing to have everything handled in one builds cookie instead of individual
@@ -1053,17 +1058,24 @@ function closeOptions(){
 
 //save a cookie with name options and value string of optionsValues stringified, because a raw json doesn't work
 function updateSavedOptions(){
-	cookieStore.set({
-		name: "options",
-		value: JSON.stringify(optionsValues),
-		expires: Date.now() + 1000*60*60*24*365
-	}).then(function(value){
-		return;
-	}, function(reason){
-		console.error("saving cookies failed")
-		console.error(reason)
-	})
+	try {
+		cookieStore.set({
+			name: "options",
+			value: JSON.stringify(optionsValues),
+			expires: Date.now() + 1000 * 60 * 60 * 24 * 365
+		}).then(function (value) {
+			return;
+		})
+	}
+	catch(error){
+		saveCookieFailAlert(error, "options")
+	}
 }
+
+function saveCookieFailAlert(error, type){
+	alert(`Warning! failed to save cookie: ${type}, due to\n${error}\nContact Intwitch Immediately.`)
+}
+
 //call every function that has something changed by options and change it, along with the html elements.
 function applyAllOptions(){
 	document.getElementById("optionsBackgroundToggle").checked = optionsValues.backgroundImage
