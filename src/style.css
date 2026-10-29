@@ -579,6 +579,7 @@ canvas {
 
 .solidBackground{
     background-color: var(--main-background-color);
+    margin-top: 0;
 }
 
 .noTopPadding{
@@ -620,3 +621,68 @@ canvas {
     justify-content: center;
 }
 
+.gachaMachine{
+    width: fit-content;
+    height: 70vh;
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+}
+
+.gachaMachine > img{
+    object-fit: contain;
+    width: min-content;
+    height: 100%;
+    margin: 0;
+}
+
+.gachaMachine button{
+    background-color: #FF000000;
+    border: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+}
+
+#itemRollButton{
+    top: 56%;
+    left: 73.5%;
+    height: 19%;
+    width: 19%;
+    z-index: 1;
+}
+
+.gachaMachine .rectangleButton{
+    width: 15%;
+    height: 6%;;
+}
+
+#saveButton{
+    top: 52.5%;
+    left: 34%;
+}
+
+#itemStarLevel{
+    top: 52.5%;
+    left: 51%;
+}
+
+#itemCopyRoll{
+    top: 60%;
+    left: 34%;
+}
+
+#itemCategorySelector{
+    top: 60%;
+    left: 51%;
+}
+
+#itemAdjust{
+    top: 67.5%;
+    left: 34%;
+}
+
+#itemFilters{
+    top:67.5%;
+    left: 51%;
+}
