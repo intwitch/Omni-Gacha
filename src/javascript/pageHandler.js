@@ -525,4 +525,13 @@ class pageHandler {
 		this.#buildsOptions.saveTerm(term, this.#history[term][0])
 		this.redrawAllSaveTables(term)
 	}
+
+	copyLatestItem(){
+		this.copyItem(this.#history.items[0])
+	}
+
+
+	copyItem(item){
+		navigator.clipboard.writeText(item.toString())
+	}
 }

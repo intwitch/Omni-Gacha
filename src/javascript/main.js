@@ -112,6 +112,7 @@ function createAllEventHandlers(page) {
 
 	document.getElementById("itemTokenDropdown").addEventListener("click", (e) => {page.rankFilterChangeListener(e)})
 	document.getElementById("itemStarLevel").addEventListener("click", () => {pageHandler.toggleMenu(document.getElementById("itemTokenDropdown"))})
+	document.getElementById("itemCopyRoll").addEventListener("click", () => {page.copyLatestItem()})
 
 	const homeButton = document.getElementById("homeButton");
 	homeButton.addEventListener("click", () => {page.changeTabTo("home") });
