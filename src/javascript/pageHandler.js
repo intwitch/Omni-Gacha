@@ -71,6 +71,17 @@ class pageHandler {
 	}
 
 	/**
+	 * if display is block, switch to none.
+	 * otherwise, switch to block.
+	 * @param {HTMLElement} menu menu to toggle display for
+	 */
+	static toggleMenu(menu){
+		const currentlyOn = (menu.style.display == "block")
+		if(currentlyOn) { menu.style.display = "none"}
+		else{ menu.style.display = "block" }
+	}
+
+	/**
 	 * update option checkboxes/other things, and then apply those changes
 	 * should only be used once to initalize page
 	 */
@@ -168,10 +179,24 @@ class pageHandler {
 
 	/**
 	 * update the ticket rank filter
-	 * @param {Event} event 
+	 * @param {Event} event with target of img or its sorrounding li
 	 */
 	rankFilterChangeListener(event){
-		this.#filteringHandler.updateRankFilter(event.currentTarget.value)
+		let eventTarget = event.target
+		let value;
+
+		if(eventTarget.nodeName=="IMG"){
+			eventTarget = eventTarget.parentElement
+		}
+		if(eventTarget.nodeName=="LI"){
+			value = eventTarget.value
+		}
+		else{
+			console.error(`Bad call for rankFilterChangeListener:\n${event}`)
+			return
+		}
+
+		this.#filteringHandler.updateRankFilter(value)
 	}
 
 	/**

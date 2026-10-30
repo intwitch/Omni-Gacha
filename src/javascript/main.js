@@ -110,7 +110,8 @@ function createAllEventHandlers(page) {
 
 	document.getElementById("contentOptions").addEventListener("change", () => {page.changeTabButtonListener()})
 
-	document.getElementById("ticketSelector").addEventListener("change", (e) => {page.rankFilterChangeListener(e)});
+	document.getElementById("itemTokenDropdown").addEventListener("click", (e) => {page.rankFilterChangeListener(e)})
+	document.getElementById("itemStarLevel").addEventListener("click", () => {pageHandler.toggleMenu(document.getElementById("itemTokenDropdown"))})
 
 	const homeButton = document.getElementById("homeButton");
 	homeButton.addEventListener("click", () => {page.changeTabTo("home") });

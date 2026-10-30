@@ -686,3 +686,24 @@ canvas {
     top:67.5%;
     left: 51%;
 }
+
+#itemTokenDropdown{
+    display: none;
+    background-color: var(--sub-element-color);
+    position: absolute;
+    top: 25%;
+    right: 0%;
+    z-index: 3;
+
+    overflow-y: scroll;
+    height: 50%;
+    width: 20%;
+}
+
+#itemTokenDropdown img{
+    height: 3.5em;
+    width: 3.5em;
+    margin: 0;
+
+    cursor: pointer;
+}

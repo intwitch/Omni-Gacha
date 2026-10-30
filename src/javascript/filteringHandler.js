@@ -119,39 +119,40 @@ class filteringHandler {
 
 	/**
 	 * update the rank filter based on numeric star level
-	 * @param {number} starLevel 
+	 * @param {Number} starLevel 
 	 */
 	updateRankFilter(starLevel) {
 		switch (starLevel) {
-			case "0":
+			case 0:
 			default:
 				this.#filters.rank = filteringHandler.defualtFilters.rank
 				break;
-			case "1":
+			case 1:
 				this.#filters.rank = ["F", "E", "D"];
 				break;
-			case "2":
+			case 2:
 				this.#filters.rank = ["E", "D", "C"];
 				break;
-			case "3":
+			case 3:
 				this.#filters.rank = ["D", "C", "B"];
 				break;
-			case "4":
+			case 4:
 				this.#filters.rank = ["C", "B", "A"];
 				break;
-			case "5":
+			case 5:
 				this.#filters.rank = ["B", "A", "S"];
 				break;
-			case "6":
+			case 6:
 				this.#filters.rank = ["A", "S", "SS"];
 				break;
-			case "7":
+			case 7:
 				this.#filters.rank = ["S", "SS", "SSS"];
 				break;
-			case "8":
+			case 8:
 				this.#filters.rank = ["SS", "SSS", "EX"];
 				break;
 		}
+		this.#updateItemRollData()
 	}
 
 	/**
