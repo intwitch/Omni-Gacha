@@ -580,6 +580,8 @@ canvas {
 .solidBackground{
     background-color: var(--main-background-color);
     margin-top: 0;
+    z-index: 10;
+    position: relative;
 }
 
 .noTopPadding{
@@ -688,22 +690,29 @@ canvas {
 }
 
 #itemTokenDropdown{
-    display: none;
+    display: block;
     background-color: var(--sub-element-color);
     position: absolute;
-    top: 25%;
-    right: 0%;
+    bottom: 0%;
+    left: 0%;
     z-index: 3;
 
-    overflow-y: scroll;
-    height: 50%;
-    width: 20%;
+    overflow-y: auto;
+    height: 90%;
+    width: 25%;
+    animation: itemTokenDropdownAnimation 0.65s ease-in-out 0s infinite alternate forwards;
+    animation-play-state: paused;
 }
 
 #itemTokenDropdown img{
-    height: 3.5em;
-    width: 3.5em;
+    height: 3.7em;
+    width: 3.7em;
     margin: 0;
 
     cursor: pointer;
+}
+
+@keyframes itemTokenDropdownAnimation {
+    from{bottom: -100%; display: none;}
+    to{bottom: 0%; display: block;}
 }

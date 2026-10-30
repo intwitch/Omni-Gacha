@@ -82,6 +82,20 @@ class pageHandler {
 	}
 
 	/**
+	 * 
+	 * @param {HTMLElement} element element to toggle play pause on
+	 * @param {boolean} doNotPause do not pause if thats what it would toggle to
+	 */
+	static playPauseAnimation(element, doNotPause = false){
+		if(element.style.animationPlayState != "running" || doNotPause){
+			element.style.animationPlayState = "running"
+		}
+		else{
+			element.style.animationPlayState = "paused"
+		}
+	}
+
+	/**
 	 * update option checkboxes/other things, and then apply those changes
 	 * should only be used once to initalize page
 	 */
