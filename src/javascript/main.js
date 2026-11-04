@@ -111,8 +111,8 @@ function createAllEventHandlers(page) {
 	document.getElementById("contentOptions").addEventListener("change", () => {page.changeTabButtonListener()})
 
 	document.getElementById("itemTokenDropdown").addEventListener("click", (e) => {page.rankFilterChangeListener(e)})
-	document.getElementById("itemStarLevel").addEventListener("click", () => {pageHandler.playPauseAnimation(document.getElementById("itemTokenDropdown"), true)})
-	document.getElementById("itemTokenDropdown").addEventListener("animationiteration", () => {pageHandler.playPauseAnimation(document.getElementById("itemTokenDropdown"))})
+	document.getElementById("itemStarLevel").addEventListener("click", () => { page.itemsSubMenuGroup.toggle("itemTokenDropdown") })
+	//document.getElementById("itemTokenDropdown").addEventListener("animationiteration", () => {pageHandler.playPauseAnimation(document.getElementById("itemTokenDropdown"))})
 
 	document.getElementById("itemCopyRoll").addEventListener("click", () => {page.copyLatestItem()})
 

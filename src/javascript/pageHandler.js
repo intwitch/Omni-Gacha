@@ -3,6 +3,7 @@ import { gachaBuildsOptionsHandler } from "./gachaBuildsOptionsHandler";
 import { gachaCurse } from "./gachaCurse";
 import { gachaItem } from "./gachaItem";
 import { gachaTerm } from "./gachaTerm";
+import { subMenuHandler } from "./subMenuHandler"
 
 export { pageHandler }
 
@@ -26,6 +27,20 @@ class pageHandler {
 		items: [],
 		curses: []
 	}
+
+	/**
+	 * @type {subMenuHandler}
+	 */
+	itemsSubMenuGroup = new subMenuHandler({"itemTokenDropdown": {
+		"animation": [
+			{bottom: "-100%"},
+			{bottom: "0%"}
+		],
+		"options": {
+			duration: 500,
+			fill: "forwards"
+		}
+	}})
 
 	/**
 	 * event for a table to dispatch when redraw is wanted. Alows better handling
