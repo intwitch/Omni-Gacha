@@ -1,5 +1,10 @@
 export { subMenuHandler }
 
+/**
+ * class designed to handle a group of submenus, with dynamic animations
+ * only one menu per group is allowed to be open at a time.
+ * only other class other than page handler allowed to interact with document.
+ */
 class subMenuHandler{
     /**
      * @type {{
@@ -29,6 +34,10 @@ class subMenuHandler{
         }
     }
     
+    /**
+     * once a fully completed closing animation is done, cancel the animation and hide the element.
+     * @param {string} elementID 
+     */
     #close(elementID){
         const animationStatus = this.#properties[elementID].status
 
@@ -38,7 +47,7 @@ class subMenuHandler{
     }
 
     /**
-     * 
+     * open something completely closed by creating an animation
      * @param {string} elementID 
      */
     #open(elementID){
@@ -52,6 +61,10 @@ class subMenuHandler{
         this.#properties[elementID].status = element.animate(this.#properties[elementID].animation, this.#properties[elementID].options)
     }
 
+    /**
+     * define new current meant-to-be-open submenu, close reverse one (if it exists)
+     * @param {elementID} elementID 
+     */
     #newCurrent(elementID){
         if(elementID != ""){
             this.#reverse(elementID)
@@ -62,6 +75,10 @@ class subMenuHandler{
         this.#currentOpenID = elementID
     }
 
+    /**
+     * reverse animation for element and once it's done closing kill animation
+     * @param {string} elementID 
+     */
     #reverse(elementID) {
         const animationStatus = this.#properties[elementID].status
 
@@ -75,7 +92,8 @@ class subMenuHandler{
     }
 
     /**
-     * open the element if it's closed and close the currently open element (if any), or close it if it's open
+     * open the given element if it's closed or closing and close any other open or opening elements
+     * or close the open or opening element.
      * @param {string} elementID 
      */
     toggle(elementID){
