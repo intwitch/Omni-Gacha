@@ -591,12 +591,22 @@ class pageHandler {
 	}
 
 	saveLatest(term){
-		this.#buildsOptions.saveTerm(term, this.#history[term][0])
-		this.redrawAllSaveTables(term)
+		try{
+			this.#buildsOptions.saveTerm(term, this.#history[term][0])
+			this.redrawAllSaveTables(term)
+		}
+		catch(e){
+			console.log("tried to save nothing: " + e.name)
+		}
 	}
 
 	copyLatestItem(){
-		this.copyItem(this.#history.items[0])
+		try{
+			this.copyItem(this.#history.items[0])
+		}
+		catch(e){
+			console.log("tried to copy nothing: " + e.name)
+		}
 	}
 
 
