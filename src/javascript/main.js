@@ -137,12 +137,8 @@ function createAllEventHandlers(page) {
 	document.getElementById("buildExportButton").addEventListener("click", () => {page.exportSaved()});
 
 	
-	const itemCategoriesFilters = Array.from(document.querySelectorAll("#itemsCategoryFilter input"))
-	const allCategoryBox = itemCategoriesFilters.splice(0, 1)[0]
-	for(let checkbox of itemCategoriesFilters){
-		checkbox.addEventListener("change", (e) => { page.categoryFilterChangeListener(e) })
-	}
-	allCategoryBox.addEventListener("change", (e) => { page.categoryFilterAllChangeListener(e) })
+	document.getElementById("itemsCategoryFilter").addEventListener("change", (e) => { page.categoryFilterChangeListener(e) })
+	document.getElementById("itemsCategoryFilterAll").addEventListener("change", (e) => { page.categoryFilterAllChangeListener(e) })
 	
 
 	document.getElementById("optionsButton").addEventListener("click", () => { pageHandler.openOptions })

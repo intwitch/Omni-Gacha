@@ -212,25 +212,25 @@ class pageHandler {
 	}
 
 	/**
-	 * called by each category filter checkbox, pass on it's current value
-	 * and uncheck the all checkbox
+	 * called by category filter checkbox parent element. uses target to avoid repeat code.
 	 * @param {Event} event 
 	 */
 	categoryFilterChangeListener(event){
-		this.#filteringHandler.updateCategoryFilter(event.currentTarget.value, event.currentTarget.checked)
+		this.#filteringHandler.updateCategoryFilter(event.target.value, event.target.checked)
 		document.querySelector("#itemsCategoryFilter input").checked = false
 	}
 
 	/**
-	 * called by the all checkbox only. changes everything else.
+	 * called by the all checkbox only. changes everything else to match new all. stops further propigation
 	 * @param {Event} event 
 	 */
 	categoryFilterAllChangeListener(event){
-		const isAll = event.target.currentTarget.checked
+		const isAll = event.target.checked
 		for(let checkbox of document.querySelectorAll("#itemsCategoryFilter input")){
 			checkbox.checked = isAll;
 		}
 		this.#filteringHandler.resetCategoryFilter(isAll)
+		event.stopPropagation()
 	}
 
 	/**
@@ -574,14 +574,20 @@ class pageHandler {
 	 * get a random result, dispatch proper redrawRequest events
 	 * @param {string} term "items"/"curses"
 	 */
-	roll(term){
-		const rollTable = document.querySelector(`.rollTable.${term}Table`)
-		const result = this.#filteringHandler.getRandomTerm(term)
-		this.#history[term].unshift(result)
+	roll(term) {
+		try {
+			const rollTable = document.querySelector(`.rollTable.${term}Table`)
+			const result = this.#filteringHandler.getRandomTerm(term)
 
-		// history[0] is the current item
-		document.querySelector(`.historyTable.${term}Table`).dispatchEvent(pageHandler.tableRedrawRequest)
-		rollTable.dispatchEvent(pageHandler.tableRedrawRequest)
+			this.#history[term].unshift(result)
+
+			// history[0] is the current item
+			document.querySelector(`.historyTable.${term}Table`).dispatchEvent(pageHandler.tableRedrawRequest)
+			rollTable.dispatchEvent(pageHandler.tableRedrawRequest)
+		}
+		catch ({ name, message }) {
+			alert(`${name}\n${message}`)
+		}
 	}
 
 	saveLatest(term){

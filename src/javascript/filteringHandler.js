@@ -162,10 +162,12 @@ class filteringHandler {
 	resetCategoryFilter(isAll){
 		if(isAll) { this.#filters.category = Array.from(filteringHandler.defualtFilters) }
 		else { this.#filters.category = [] }
+		
+		this.#updateItemRollData()
 	}
 	
 	/**
-	 * based on the string and the boolean, either take the filter out or put it in
+	 * based on the string and the boolean, either take the filter out or put it in, then redo the item roll data
 	 * @param {string} category 
 	 * @param {boolean} isChecked 
 	 */
@@ -177,6 +179,8 @@ class filteringHandler {
 			const index = this.#filters.category.indexOf(category)
 			this.#filters.category.splice(index, 1);
 		}
+
+		this.#updateItemRollData()
 	}
 
 	/**
@@ -280,6 +284,9 @@ class filteringHandler {
 	 * @returns {*}
 	 */
 	static getRandomValue(array) {
+		if (array.length == 0){
+			throw new RangeError("you can't roll with nothing, check your filters")
+		}
 		let randomIndex = Math.floor(Math.random() * array.length);
 		return array[randomIndex];
 	}
