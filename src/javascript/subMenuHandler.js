@@ -33,6 +33,22 @@ class subMenuHandler{
             }
         }
     }
+
+    /**
+     * if a submenu is open, and someone clicks outside of it, close it.
+     * @param {Element} clickedElement specific element that was clicked.
+     * @returns {boolean} true if something was closed, otehrwise
+     */
+    closeByClickAnywhere(clickedElement){
+        if(this.#currentOpenID == "") { return false }
+
+        if(document.getElementById(this.#currentOpenID).contains(clickedElement)){
+            return false;
+        } else{
+            this.#newCurrent("")
+            return true
+        }
+    }
     
     /**
      * once a fully completed closing animation is done, cancel the animation and hide the element.

@@ -11,16 +11,15 @@
 
 <body>
     <header id="selector">
-            <img id="logo" src="assets/Gacha_Site_Logo.png" 
-                alt="Omni gacha logo">
-            <button id="homeButton" class="tabButton selectedButton">Home</button>
-            <button id="aboutButton" class="tabButton">About</button>
-            <button id="startsButton" class="tabButton">Starting</button>
-            <button id="itemsButton" class="tabButton">Gacha</button>
-            <button id="cursesButton" class="tabButton">Curses</button>
-            <button id="buildButton" class="tabButton">Build</button>
-            <button id="searchButton" class="tabButton">Search</button>
-            <button id="optionsButton">☰</button>
+        <img id="logo" src="assets/Gacha_Site_Logo.png" alt="Omni gacha logo">
+        <button id="homeButton" class="tabButton selectedButton">Home</button>
+        <button id="aboutButton" class="tabButton">About</button>
+        <button id="startsButton" class="tabButton">Starting</button>
+        <button id="itemsButton" class="tabButton">Gacha</button>
+        <button id="cursesButton" class="tabButton">Curses</button>
+        <button id="buildButton" class="tabButton">Build</button>
+        <button id="searchButton" class="tabButton">Search</button>
+        <button id="optionsButton">☰</button>
     </header>
     <main>
         <div id="optionsMenu">
@@ -51,14 +50,17 @@
                 <input type="text" id="optionsBuildsNewName" placeholder="enter name & press enter">
             </div>
             <div id="optionsBuildsDelete">
-                <button id="optionsBuildsDeleteButton"><h4>Delete Current Build</h3></button>
+                <button id="optionsBuildsDeleteButton">
+                    <h4>Delete Current Build</h3>
+                </button>
             </div>
         </div>
 
         <div id="home" class="tabcontent">
             <p>
             <h1>Welcome to the Omni Gacha!</h1>
-            <h2>You, who have stared into the infinite multiverse and been rewarded for it, now have access to eternity in the form of a gacha system.</h2>
+            <h2>You, who have stared into the infinite multiverse and been rewarded for it, now have access to eternity
+                in the form of a gacha system.</h2>
             <h2>Become all powerful, rebuild a dead world, kill the world, be the greatest hero, the worst villain, or
                 anywhere in between. The world is your playground now. The power is up to luck but yours to command. The
                 possibilities are endless, and fate is yours to make the best of.</h2>
@@ -649,82 +651,71 @@
                         <li value="0"><img src="/assets/items/tokens/RANDOMTICKET.png"></li>
                     </ul>
                 </div>
+
+                <div id="itemsCategoryFilter" class="typeFilter">
+                    <i>Categories</i>
+                    <span>
+                        <ul>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterAll" checked value="all">
+                                <label for="itemsCategoryFilterAll">All</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterAbility" checked value="Ability">
+                                <label for="itemsCategoryFilterAbility">Ability</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterArsenal" checked value="Arsenal">
+                                <label for="itemsCategoryFilterArsenal">Arsenal</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterConsumable" checked value="Consumable">
+                                <label for="itemsCategoryFilterConsumable">Consumable</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterFamiliar" checked value="Familiar">
+                                <label for="itemsCategoryFilterFamiliar">Familiar</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterFarmable" checked value="Farmable">
+                                <label for="itemsCategoryFilterFarmable">Farmable</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterNovelty" checked value="Novelty">
+                                <label for="itemsCategoryFilterNovelty">Novelty</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterPassive" checked value="Passive">
+                                <label for="itemsCategoryFilterPassive">Passive</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterRace" checked value="Race">
+                                <label for="itemsCategoryFilterRace">Race</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterSkill" checked value="Skill">
+                                <label for="itemsCategoryFilterSkill">Skill</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterVehicle" checked value="Vehicle">
+                                <label for="itemsCategoryFilterVehicle">Vehicle</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterWearable" checked value="Wearable">
+                                <label for="itemsCategoryFilterWearable">Wearable</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="itemsCategoryFilterWorld" checked value="World">
+                                <label for="itemsCategoryFilterWorld">World</label>
+                            </li>
+                        </ul>
+                    </span>
+                </div>
+                
             </div>
-            
+
             <div class="solidBackground">
                 <div>
-                    <div class="options">
-                        <span class="subElement">
-                            <span id="itemsCategoryFilter" class="typeFilter">
-                                <i>Categories</i>
-                                <span>
-                                    <ul>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterAll" checked value="all">
-                                            <label for="itemsCategoryFilterAll">All</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterAbility" checked
-                                                value="Ability">
-                                            <label for="itemsCategoryFilterAbility">Ability</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterArsenal" checked
-                                                value="Arsenal">
-                                            <label for="itemsCategoryFilterArsenal">Arsenal</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterConsumable" checked
-                                                value="Consumable">
-                                            <label for="itemsCategoryFilterConsumable">Consumable</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterFamiliar" checked
-                                                value="Familiar">
-                                            <label for="itemsCategoryFilterFamiliar">Familiar</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterFarmable" checked
-                                                value="Farmable">
-                                            <label for="itemsCategoryFilterFarmable">Farmable</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterNovelty" checked
-                                                value="Novelty">
-                                            <label for="itemsCategoryFilterNovelty">Novelty</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterPassive" checked
-                                                value="Passive">
-                                            <label for="itemsCategoryFilterPassive">Passive</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterRace" checked value="Race">
-                                            <label for="itemsCategoryFilterRace">Race</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterSkill" checked value="Skill">
-                                            <label for="itemsCategoryFilterSkill">Skill</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterVehicle" checked
-                                                value="Vehicle">
-                                            <label for="itemsCategoryFilterVehicle">Vehicle</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterWearable" checked
-                                                value="Wearable">
-                                            <label for="itemsCategoryFilterWearable">Wearable</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="itemsCategoryFilterWorld" checked value="World">
-                                            <label for="itemsCategoryFilterWorld">World</label>
-                                        </li>
-                                    </ul>
-                                </span>
-                            </span>
-                        </span>
-                    </div>
                     <table id="rollTable" class="itemsTable rollTable">
                         <caption>
                             <h2>Rolls</h2>

@@ -166,10 +166,6 @@ ul {
     z-index: 1;
 }
 
-.typeFilter > span {
-    display: none;
-}
-
 .typeFilter {
     background-color: var(--sub-element-color);
     position: relative;
@@ -181,10 +177,6 @@ ul {
     text-decoration: underline;
     font-style: normal;
     text-align: center;
-}
-
-.typeFilter:hover > span {
-    display: grid;
 }
 
 .innerElement {
@@ -713,4 +705,17 @@ canvas {
     margin: 0;
 
     cursor: pointer;
+}
+
+#itemsCategoryFilter{
+    display: none;
+    background-color: var(--sub-element-color);
+    position: absolute;
+    overflow-y: auto;
+    z-index: 3;
+
+    right: 0;
+    bottom: 0;
+    max-height: 80%;
+    width: 65%;
 }

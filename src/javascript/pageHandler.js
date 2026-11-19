@@ -31,16 +31,29 @@ class pageHandler {
 	/**
 	 * @type {subMenuHandler}
 	 */
-	itemsSubMenuGroup = new subMenuHandler({"itemTokenDropdown": {
-		"animation": [
-			{bottom: "-100%"},
-			{bottom: "0%"}
-		],
-		"options": {
-			duration: 350,
-			fill: "forwards"
-		}
-	}})
+	itemsSubMenuGroup = new subMenuHandler({
+		"itemTokenDropdown": {
+			"animation": [
+				{ bottom: "-100%" },
+				{ bottom: "0%" }
+			],
+			"options": {
+				duration: 350,
+				fill: "forwards"
+			}
+		},
+
+		"itemsCategoryFilter": {
+			"animation": [
+				{ bottom: "-80%" },
+				{ bottom: "0%" }
+			],
+			"options": {
+				duration: 350,
+				fill: "forwards"
+			}
+		},
+	})
 
 	/**
 	 * event for a table to dispatch when redraw is wanted. Alows better handling
@@ -108,6 +121,20 @@ class pageHandler {
 		else{
 			element.style.animationPlayState = "paused"
 		}
+	}
+
+	/**
+	 * for purposes of submenus sometimes clicking outside the box means you want to close the menu
+	 * this function is designed to used as the callback as a listener attached to the click listening space (body)
+	 * tells all the submenus to close whats currently open unless whats currently open is a submenu where currentTarget is a subelement.
+	 * also returns if clickTarget is a rectangleButton to allow it's event call to handle thigns
+	 * @param {Event} clickEvent
+	 */
+	globalClickListener(clickEvent){
+		const target = clickEvent.target
+		if(target.classList.contains("rectangleButton")) { return }
+
+		this.itemsSubMenuGroup.closeByClickAnywhere(target)
 	}
 
 	/**

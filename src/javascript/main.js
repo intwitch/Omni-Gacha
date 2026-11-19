@@ -109,8 +109,11 @@ function createAllEventHandlers(page) {
 	}
 
 	document.getElementById("itemTokenDropdown").addEventListener("click", (e) => {page.rankFilterChangeListener(e)})
-	document.getElementById("itemStarLevel").addEventListener("click", () => { page.itemsSubMenuGroup.toggle("itemTokenDropdown") })
-	//document.getElementById("itemTokenDropdown").addEventListener("animationiteration", () => {pageHandler.playPauseAnimation(document.getElementById("itemTokenDropdown"))})
+
+	document.body.addEventListener("click", (e) => { page.globalClickListener(e)}, true)
+	document.getElementById("itemStarLevel").addEventListener("click", (e) => { page.itemsSubMenuGroup.toggle("itemTokenDropdown", e) })
+	document.getElementById("itemCategorySelector").addEventListener("click", (e) => { page.itemsSubMenuGroup.toggle("itemsCategoryFilter", e) })
+	
 
 	document.getElementById("itemCopyRoll").addEventListener("click", () => {page.copyLatestItem()})
 
