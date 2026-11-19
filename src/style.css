@@ -146,6 +146,11 @@ main {
     height: 3em;
 }
 
+.selectedButton {
+    background-color: var(--selected-button-color) !important;
+    /* Is important blunt? yes. but I really don't care.*/
+}
+
 #backLink button{
     width: 5vw;
     height: 80%;

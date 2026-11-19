@@ -37,7 +37,7 @@ class pageHandler {
 			{bottom: "0%"}
 		],
 		"options": {
-			duration: 500,
+			duration: 350,
 			fill: "forwards"
 		}
 	}})
@@ -329,10 +329,17 @@ class pageHandler {
 	}
 
 	/**
-	 * 
+	 * change tab and change home row button colors to match currently selected
 	 * @param {string} targetTabID 
+	 * @param {Event} event
 	 */
-	changeTabTo(targetTabID) {
+	changeTabTo(targetTabID, event) {
+		//change button
+		const className = "selectedButton"
+		document.querySelector("." + className).classList.remove(className)
+		event.target.classList.add(className)
+
+		//change tab
 		const newTab = document.getElementById(targetTabID)
 		for (let tab of document.querySelectorAll(".tabcontent")) {
 			tab.style.display = "none"

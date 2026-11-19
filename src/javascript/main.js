@@ -108,8 +108,6 @@ function createAllEventHandlers(page) {
 		table.addEventListener("tableRedrawRequest", (e) => { page.redrawSaveTableListener(e, "curses") })
 	}
 
-	document.getElementById("contentOptions").addEventListener("change", () => {page.changeTabButtonListener()})
-
 	document.getElementById("itemTokenDropdown").addEventListener("click", (e) => {page.rankFilterChangeListener(e)})
 	document.getElementById("itemStarLevel").addEventListener("click", () => { page.itemsSubMenuGroup.toggle("itemTokenDropdown") })
 	//document.getElementById("itemTokenDropdown").addEventListener("animationiteration", () => {pageHandler.playPauseAnimation(document.getElementById("itemTokenDropdown"))})
@@ -117,16 +115,16 @@ function createAllEventHandlers(page) {
 	document.getElementById("itemCopyRoll").addEventListener("click", () => {page.copyLatestItem()})
 
 	const homeButton = document.getElementById("homeButton");
-	homeButton.addEventListener("click", () => {page.changeTabTo("home") });
+	homeButton.addEventListener("click", (e) => {page.changeTabTo("home", e) });
 	
 	document.getElementById("logo").addEventListener("click", function () { homeButton.click() }) //mirror above event
 
-	document.getElementById("aboutButton").addEventListener("click", () => {page.changeTabTo("about")});
-	document.getElementById("startsButton").addEventListener("click", () => {page.changeTabTo("starts")})
-	document.getElementById("itemsButton").addEventListener("click", () => {page.changeTabTo("items")});
-	document.getElementById("cursesButton").addEventListener("click", () => {page.changeTabTo("curses")});
-	document.getElementById("buildButton").addEventListener("click", () => {page.changeTabTo("build")});
-	document.getElementById("searchButton").addEventListener("click", () => {page.changeTabTo("search")});
+	document.getElementById("aboutButton").addEventListener("click", (e) => {page.changeTabTo("about", e)});
+	document.getElementById("startsButton").addEventListener("click", (e) => {page.changeTabTo("starts", e)})
+	document.getElementById("itemsButton").addEventListener("click", (e) => {page.changeTabTo("items", e)});
+	document.getElementById("cursesButton").addEventListener("click", (e) => {page.changeTabTo("curses", e)});
+	document.getElementById("buildButton").addEventListener("click", (e) => {page.changeTabTo("build", e)});
+	document.getElementById("searchButton").addEventListener("click", (e) => {page.changeTabTo("search", e)});
 
 	document.getElementById("itemRollButton").addEventListener("click", () => {page.roll("items")});
 	document.getElementById("saveButton").addEventListener("click", () => {page.saveLatest("items")});
