@@ -719,3 +719,7 @@ canvas {
     max-height: 80%;
     width: 65%;
 }
+
+#items{
+    padding: 0;
+}
