@@ -252,6 +252,9 @@ class pageHandler {
 			return
 		}
 
+		eventTarget.parentElement.querySelector("img.selectedToken").classList.remove("selectedToken")
+		eventTarget.querySelector("img").classList.add("selectedToken")
+
 		this.#filteringHandler.updateRankFilter(value)
 	}
 
