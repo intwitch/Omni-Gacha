@@ -723,3 +723,20 @@ canvas {
 #items{
     padding: 0;
 }
+.token{
+    animation: tokenSpin 5s linear 0s infinite;
+    animation-play-state: paused;
+}
+
+@keyframes tokenSpin {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
+.token:hover{
+    animation-play-state: running !important;
+}
