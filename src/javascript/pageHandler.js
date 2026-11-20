@@ -77,7 +77,7 @@ class pageHandler {
 	 * event for a table to dispatch when redraw is wanted. Alows better handling
 	 * @type {event}
 	 */
-	static tableRedrawRequest = new Event("tableRedrawRequest")
+	static redrawRequest = new Event("redrawRequest")
 
 	/**
 	 * async build a lot of important async things.
@@ -493,7 +493,7 @@ class pageHandler {
 		let classLookup = ".saveTable"
 		if(term == "items" | term == "curses") classLookup += `.${term}Table`
 		for(let table of document.querySelectorAll(classLookup)){
-			table.dispatchEvent(pageHandler.tableRedrawRequest)
+			table.dispatchEvent(pageHandler.redrawRequest)
 		}
 	}
 
@@ -573,8 +573,8 @@ class pageHandler {
 			this.#history[term].unshift(result)
 
 			// history[0] is the current item
-			document.querySelector(`.historyTable.${term}Table`).dispatchEvent(pageHandler.tableRedrawRequest)
-			rollTable.dispatchEvent(pageHandler.tableRedrawRequest)
+			document.querySelector(`.historyTable.${term}Table`).dispatchEvent(pageHandler.redrawRequest)
+			rollTable.dispatchEvent(pageHandler.redrawRequest)
 		}
 		catch ({ name, message }) {
 			alert(`${name}\n${message}`)

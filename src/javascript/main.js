@@ -96,17 +96,17 @@ function createAllEventHandlers(page) {
 	const searchItemsTable = document.getElementById("searchItemsTable")
 	const searchCursesTable = document.getElementById("searchCursesTable")
 
-	itemsRollTable.addEventListener("tableRedrawRequest", (e) => { page.redrawRollTableListener(e, "items") })
-	cursesRollTable.addEventListener("tableRedrawRequest", (e) => { page.redrawRollTableListener(e, "curses") })
-	itemsHistoryTable.addEventListener("tableRedrawRequest", (e) => { page.redrawHistoryTableListener(e, "items") })
-	cursesHistoryTable.addEventListener("tableRedrawRequest", (e) => { page.redrawHistoryTableListener(e, "curses") })
-	searchItemsTable.addEventListener("tableRedrawRequest", (e) => { page.redrawSearchTableListener(e, "items") })
-	searchCursesTable.addEventListener("tableRedrawRequest", (e) => { page.redrawSearchTableListener(e, "curses") })
+	itemsRollTable.addEventListener("redrawRequest", (e) => { page.redrawRollTableListener(e, "items") })
+	cursesRollTable.addEventListener("redrawRequest", (e) => { page.redrawRollTableListener(e, "curses") })
+	itemsHistoryTable.addEventListener("redrawRequest", (e) => { page.redrawHistoryTableListener(e, "items") })
+	cursesHistoryTable.addEventListener("redrawRequest", (e) => { page.redrawHistoryTableListener(e, "curses") })
+	searchItemsTable.addEventListener("redrawRequest", (e) => { page.redrawSearchTableListener(e, "items") })
+	searchCursesTable.addEventListener("redrawRequest", (e) => { page.redrawSearchTableListener(e, "curses") })
 	for(let table of itemsSaveTables){
-		table.addEventListener("tableRedrawRequest", (e) => { page.redrawSaveTableListener(e, "items") })
+		table.addEventListener("redrawRequest", (e) => { page.redrawSaveTableListener(e, "items") })
 	}
 	for(let table of cursesSaveTables){
-		table.addEventListener("tableRedrawRequest", (e) => { page.redrawSaveTableListener(e, "curses") })
+		table.addEventListener("redrawRequest", (e) => { page.redrawSaveTableListener(e, "curses") })
 	}
 
 	document.getElementById("itemTokenDropdown").addEventListener("click", (e) => {page.rankFilterChangeListener(e)})
@@ -150,6 +150,6 @@ function createAllEventHandlers(page) {
 	document.getElementById("optionsBuildsNewName").addEventListener("keydown", (e) => { page.createNewBuildEventHandler(e) })
 	document.getElementById("optionsBuildsDeleteButton").addEventListener("click", (e) => { page.deleteCurrentBuildListener(e) })
 
-	document.getElementById("searchItemsButton").addEventListener("click", (e) => { searchItemsTable.dispatchEvent(pageHandler.tableRedrawRequest) })
-	document.getElementById("searchCursesButton").addEventListener("click", (e) => { searchCursesTable.dispatchEvent(pageHandler.tableRedrawRequest) })
+	document.getElementById("searchItemsButton").addEventListener("click", (e) => { searchItemsTable.dispatchEvent(pageHandler.redrawRequest) })
+	document.getElementById("searchCursesButton").addEventListener("click", (e) => { searchCursesTable.dispatchEvent(pageHandler.redrawRequest) })
 };
