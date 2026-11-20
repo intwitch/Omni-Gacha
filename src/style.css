@@ -3,8 +3,6 @@
     --unselected-button-color: #7A4988;
     --selected-button-color: #710193;
 
-    --tint: #00000066;
-
     --sub-element-color: #1E293B;
     --transparent-sub-element: #1E293B79;
 
@@ -18,6 +16,10 @@
     --SSrank: #F06292;
     --SSSrank: #CD00CD;
     --EXrank: #FFEB3B;
+}
+
+html{
+    scroll-padding-top: 5em;
 }
 
 table, th, td {
@@ -457,7 +459,6 @@ canvas {
 
 .EXrank, .goldColor{
     background-color: var(--EXrank);
-    color: black;
 }
 
 .darkGreenColor{
@@ -568,7 +569,7 @@ canvas {
 }
 
 .transparentBackground{
-    background-color: var(--tint);
+    background-color: #000000AA;
     padding: 0;
     padding-bottom: auto;
     margin: 1em 1em;
@@ -723,9 +724,33 @@ canvas {
 #items{
     padding: 0;
 }
-.token{
-    animation: tokenSpin 5s linear 0s infinite;
-    animation-play-state: paused;
+
+#about {
+    text-wrap: balance;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+#aboutTop a{
+    color: #CCC;
+}
+
+#aboutTop > div{
+    width: fit-content;
+    padding: 0;
+}
+
+#aboutTop{
+    display: flex;
+}
+
+.largeText{
+    font-size: large;
+    text-align: center;
+}
+
+#about img{
+    height: 2em;
+    width: 2em;
 }
 
 @keyframes tokenSpin {
@@ -737,6 +762,11 @@ canvas {
     }
 }
 
-.token:hover{
-    animation-play-state: running !important;
+.token:hover, .selectedToken{
+    animation: tokenSpin 5s linear 0s infinite;
+}
+
+
+.widthFitContent{
+    width: fit-content;
 }
