@@ -49,6 +49,16 @@ class subMenuHandler{
             return true
         }
     }
+
+    /**
+     * get the elements prefered display mode
+     * @param {String} elementID 
+     * @returns {String} block, flex, etc
+     */
+    getStyle(elementID){
+        const displayType = this.#properties[elementID].options.display
+        return displayType ? displayType : "block"
+    }
     
     /**
      * once a fully completed closing animation is done, cancel the animation and hide the element.
@@ -73,7 +83,7 @@ class subMenuHandler{
         this.#currentOpenID = elementID
         const element = document.getElementById(elementID)
         
-        element.style.display = "block"
+        element.style.display = this.getStyle(elementID)
         this.#properties[elementID].status = element.animate(this.#properties[elementID].animation, this.#properties[elementID].options)
     }
 

@@ -50,9 +50,27 @@ class pageHandler {
 			],
 			"options": {
 				duration: 350,
-				fill: "forwards"
+				fill: "forwards",
 			}
 		},
+	})
+
+	/**
+	 * @type {subMenuHandler}
+	 * options menu. normally this class is used for multiple but uhhhhhh, I'm not rewriting that code.
+	 */
+	optionsMenu = new subMenuHandler({
+		"optionsMenu": {
+			"animation": [
+				{ right: "-20%"},
+				{ right: "0"}
+			],
+			"options": {
+				duration: 150,
+				fill: "forwards",
+				display: "flex"
+			}
+		}
 	})
 
 	/**
@@ -82,46 +100,6 @@ class pageHandler {
 		this.#filteringHandler = filteringHandler
 		this.#buildsOptions = buildsOptionsHandler
 	}
-	
-
-	/**
-	 * display the options menu
-	 */
-	static openOptions() {
-		document.getElementById("optionsMenu").style.display = "flex"
-	}
-
-	/**
-	 * close the coptions menu
-	 */
-	static closeOptions() {
-		document.getElementById("optionsMenu").style.display = "none"
-	}
-
-	/**
-	 * if display is block, switch to none.
-	 * otherwise, switch to block.
-	 * @param {HTMLElement} menu menu to toggle display for
-	 */
-	static toggleMenu(menu){
-		const currentlyOn = (menu.style.display == "block")
-		if(currentlyOn) { menu.style.display = "none"}
-		else{ menu.style.display = "block" }
-	}
-
-	/**
-	 * 
-	 * @param {HTMLElement} element element to toggle play pause on
-	 * @param {boolean} doNotPause do not pause if thats what it would toggle to
-	 */
-	static playPauseAnimation(element, doNotPause = false){
-		if(element.style.animationPlayState != "running" || doNotPause){
-			element.style.animationPlayState = "running"
-		}
-		else{
-			element.style.animationPlayState = "paused"
-		}
-	}
 
 	/**
 	 * for purposes of submenus sometimes clicking outside the box means you want to close the menu
@@ -132,9 +110,10 @@ class pageHandler {
 	 */
 	globalClickListener(clickEvent){
 		const target = clickEvent.target
-		if(target.classList.contains("rectangleButton")) { return }
+		if(target.classList.contains("menuButton")) { return }
 
 		this.itemsSubMenuGroup.closeByClickAnywhere(target)
+		this.optionsMenu.closeByClickAnywhere(target)
 	}
 
 	/**
@@ -196,8 +175,7 @@ class pageHandler {
 		nsfwElement.checked = NSFW
 		nsfwOnlyElement.checked = NSFWOnly
 
-		if(NSFW || NSFWOnly) nsfwOnlyElement.display = "hide";
-		else nsfwOnlyElement.display = "block"
+		nsfwOnlyElement.parentElement.style.visibility = nsfwElement.checked ? "visible" : "hidden"
 
 		this.#filteringHandler.updateContentFilter()
 	}
@@ -207,12 +185,16 @@ class pageHandler {
 	 * @param {Event} event 
 	 */
 	contentOptionsChangeListener(event){
-		const nsfwElement = event.currentTarget.getElementById("nsfwCheckbox")
-		const nsfwOnlyElement = event.currentTarget.getElementById("nsfwOnlyCheckbox")
+		const nsfwElement = document.getElementById("nsfwCheckbox")
+		const nsfwOnlyElement = document.getElementById("nsfwOnlyCheckbox")
 
-		if(nsfwElement.checked) nsfwOnlyElement.style.visibility = "hidden"
+		if(event.target.parentElement.contains(nsfwElement)){
+			const checked = nsfwElement.checked
+			nsfwOnlyElement.parentElement.style.visibility = checked ? "visible" : "hidden"
+			nsfwOnlyElement.checked = checked ? nsfwOnlyElement.checked : false
+		}
 
-		this.#buildsOptions.changeOptionMultiple({"key": nsfw, "value": nsfwElement.checked}, {"key": nsfwOnly, "value": nsfwOnlyElement.checked})
+		this.#buildsOptions.changeOptionMultiple({"NSFW": nsfwElement.checked, "NSFWOnly": nsfwOnlyElement.checked})
 		this.#filteringHandler.updateContentFilter()
 	}
 
@@ -335,10 +317,11 @@ class pageHandler {
 		if (this.#buildsOptions.getOption("buildsArray").indexOf(value) != -1) {
 			alert(`"${value}" already a build`)
 			return;
-		}
+		} else event.target.value = ""
 
 		this.#buildsOptions.createNewBuild(value)
 		this.populateBuildSelector()
+		this.redrawAllSaveTables()
 	}
 
 	/**

@@ -42,8 +42,10 @@ class gachaBuildsOptionsHandler {
 	*/
 	createNewBuild(newBuild) {
 		this.#optionsValues.buildsArray.push(newBuild)
-		this.#buildsValues[newBuild].items = []
-		this.#buildsValues[newBuild].curses = []
+		this.#buildsValues[newBuild] = {
+			"items": [],
+			"curses": []
+		}
 
 		this.switchBuild(newBuild)
 	}
@@ -56,7 +58,7 @@ class gachaBuildsOptionsHandler {
 		const select = document.getElementById("optionsBuildSelector")
 		select.value = value
 
-		optionsValues.build = value
+		this.#optionsValues.build = value
 		this.saveOptions();
 	}
 
@@ -83,14 +85,11 @@ class gachaBuildsOptionsHandler {
 	/**
 	 * change multiple options at once
 	 * if none provided simply return and don't save
-	 * @param  {...{key: string, value: string|boolean}} pairs 
+	 * @param  {{...key: string, ...value: string|boolean}} 
 	 */
-	changeOptionMultiple(...pairs) {
-		if (pairs.length == 0) {
-			return;
-		}
-		for (let pair of pairs) {
-			this.#optionsValues[pair.key] = pair.value
+	changeOptionMultiple(pairs) {
+		for (let key in pairs) {
+			this.changeOption(key, pairs[key])
 		}
 		this.saveOptions()
 	}

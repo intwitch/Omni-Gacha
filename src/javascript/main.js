@@ -111,7 +111,7 @@ function createAllEventHandlers(page) {
 
 	document.getElementById("itemTokenDropdown").addEventListener("click", (e) => {page.rankFilterChangeListener(e)})
 
-	document.body.addEventListener("click", (e) => { page.globalClickListener(e)}, true)
+	document.body.querySelector("main").addEventListener("click", (e) => { page.globalClickListener(e)}, true)
 	document.getElementById("itemStarLevel").addEventListener("click", (e) => { page.itemsSubMenuGroup.toggle("itemTokenDropdown", e) })
 	document.getElementById("itemCategorySelector").addEventListener("click", (e) => { page.itemsSubMenuGroup.toggle("itemsCategoryFilter", e) })
 	
@@ -142,10 +142,10 @@ function createAllEventHandlers(page) {
 	document.getElementById("itemsCategoryFilterAll").addEventListener("change", (e) => { page.categoryFilterAllChangeListener(e) })
 	
 
-	document.getElementById("optionsButton").addEventListener("click", () => { pageHandler.openOptions })
-	document.getElementById("optionsClose").addEventListener("click", () => { pageHandler.closeOptions })
+	document.getElementById("optionsButton").addEventListener("click", () => { page.optionsMenu.toggle("optionsMenu") })
 
 	document.getElementById("optionsBackgroundToggle").addEventListener("change", (e) => { page.backgroundImageOptionChangeListener(e) })
+	document.getElementById("contentOptions").addEventListener("change", (e) => {page.contentOptionsChangeListener(e)})
 	document.getElementById("optionsBuildSelector").addEventListener("change", (e) => { page.switchBuildEventHandler(e) })
 	document.getElementById("optionsBuildsNewName").addEventListener("keydown", (e) => { page.createNewBuildEventHandler(e) })
 	document.getElementById("optionsBuildsDeleteButton").addEventListener("click", (e) => { page.deleteCurrentBuildListener(e) })

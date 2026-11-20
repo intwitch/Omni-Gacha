@@ -104,10 +104,10 @@ class filteringHandler {
 	 * update the filtered data, then update the roll data
 	 */
 	updateContentFilter() {
-		const nsfw = this.#buildsOptions.getOption("NSFWOnly")
+		const nsfw = this.#buildsOptions.getOption("NSFW")
 		const nsfwOnly = this.#buildsOptions.getOption("NSFWOnly")
 
-		if(nsfw && !nsfw) for(let key in this.#data.raw){ 
+		if(nsfw && !nsfwOnly) for(let key in this.#data.raw){ 
 			this.#data.filtered[key] = Array.from(this.#data.raw[key])
 		}
 		else for(let key in this.#data.raw){

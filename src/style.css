@@ -487,16 +487,17 @@ canvas {
 }
 
 #optionsMenu{
-    height: 100vh;
-    width: 20vw;
+    width: 20%;
+    height: 100%;
     padding: 0 0;
     margin: 0 auto 0 0;
     position: fixed;
-    top: 0;
     right: 0;
-    z-index: 3;
+
+    z-index: 10;
     background-color: #52527A;
     overflow-y: auto;
+    overflow-x: hidden;
     
     display: flex;
     flex-direction: column;
@@ -550,18 +551,11 @@ canvas {
     margin: 0 0.5em;
 }
 
-#optionsClose, #optionsBuildsCreate{
+#optionsBuildsCreate{
     width: fit-content;
     background-color: white;
     font-weight: bold;
     font-size: large;
-}
-
-#optionsClose {
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: red;
 }
 
 #optionsBuildsNewName{
@@ -578,7 +572,7 @@ canvas {
 .solidBackground{
     background-color: var(--main-background-color);
     margin-top: 0;
-    z-index: 10;
+    z-index: 9;
     position: relative;
 }
 
