@@ -124,7 +124,6 @@ function createAllEventHandlers(page) {
 	document.getElementById("logo").addEventListener("click", function () { homeButton.click() }) //mirror above event
 
 	document.getElementById("aboutButton").addEventListener("click", (e) => {page.changeTabTo("about", e)});
-	document.getElementById("startsButton").addEventListener("click", (e) => {page.changeTabTo("starts", e)})
 	document.getElementById("itemsButton").addEventListener("click", (e) => {page.changeTabTo("items", e)});
 	document.getElementById("cursesButton").addEventListener("click", (e) => {page.changeTabTo("curses", e)});
 	document.getElementById("buildButton").addEventListener("click", (e) => {page.changeTabTo("build", e)});
