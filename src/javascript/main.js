@@ -16,6 +16,7 @@ window.onload = function () {
 		createAllEventHandlers(page)
 		page.createAllSortButtons()
 		page.applyAllOptions()
+		page.redrawAllSaveTables()
 	})
 }
 

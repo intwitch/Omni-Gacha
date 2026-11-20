@@ -108,8 +108,8 @@ class gachaTerm{
 	static nameToFull(name, rawTerms) {
 		if (typeof name != "string") return name;
 
-		for (term of rawTerms) {
-			if (data.get("name") == name) return data;
+		for (let term of rawTerms) {
+			if (term.get("name") == name) return term;
 		}
 
 		console.error(`${name} not found in raw data array. something has gone wrong`);

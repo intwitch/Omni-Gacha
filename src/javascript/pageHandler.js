@@ -146,6 +146,11 @@ class pageHandler {
 		this.#initalizeContentOptionsElement()
 
 		this.populateBuildSelector();
+
+		if(this.#buildsOptions.getOption("isNew")){
+			this.#buildsOptions.removeIsNew()
+			this.#buildsOptions.saveAll()
+		}
 	}
 	/**
 	 * update the background image checkbox element

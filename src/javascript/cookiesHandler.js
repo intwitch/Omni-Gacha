@@ -11,6 +11,7 @@ export {
 class cookiesHandler {
 	#buildsValues
 	#optionsValues
+
 	/**
 	 * create the cookie handler class.
 	 * @param {object} buildsValues reference to buildsValues object
@@ -20,9 +21,8 @@ class cookiesHandler {
 		this.#buildsValues = buildsValues
 		this.#optionsValues = optionsValues
 	}
+	
 
-	
-	
 
 	/**
 	 * 
@@ -61,7 +61,8 @@ class cookiesHandler {
 		let returnValues = {}
 
 		try {
-			const json = JSON.parse(await cookieStore.get("builds").values)
+			const rawCookie = await cookieStore.get("builds")
+			const json = JSON.parse(rawCookie.value)
 			for (let build in json) {
 				let buildValues = {
 					"items": [],
@@ -75,7 +76,7 @@ class cookiesHandler {
 					buildValues.curses.push(gachaCurse.nameToFull(curse, rawData.curses));
 				}
 
-				returnValues[build] = buildValue
+				returnValues[build] = buildValues
 			}
 			console.log("cookies got!");
 		}
@@ -105,14 +106,18 @@ class cookiesHandler {
 			"NSFWOnly": false
 		}
 		try {
-			const optionsResults = JSON.parse(await cookieStore.get("options").values)
+			const rawCookie = await cookieStore.get("options")
+			const optionsResults = JSON.parse(rawCookie.value)
 			console.log("options cookies got!")
 			for (let option in optionsResults) {
-				optionsValues[option] = optionsResults[options]
+				optionsValues[option] = optionsResults[option]
 			}
 		}
 		catch (error) {
+			// add on a bit of data here to carry along,
+			// if build is juyst default
 			console.log("options cookies not got!\n")
+			optionsValues["isNew"] = true
 		}
 
 		return optionsValues
@@ -131,6 +136,7 @@ class cookiesHandler {
 		for (let build in buildCookieResults) {
 			this.#buildsValues[build] = buildCookieResults[build]
 		}
+		
 		return;
 	}
 
@@ -148,6 +154,7 @@ class cookiesHandler {
 		}, function (reason) {
 			console.error("saving cookies failed");
 			console.error(reason);
+			throw new Error(reason)
 		});
 	}
 }

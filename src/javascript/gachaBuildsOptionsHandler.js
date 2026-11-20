@@ -113,6 +113,16 @@ class gachaBuildsOptionsHandler {
 	getOption(key) {
 		return this.#optionsValues[key]
 	}
+	
+	/**
+	 * the is new property is used to save a brand new options cookie for new users
+	 * obviously once we have things set up we don't want it anymore
+	 * this function removes it
+	 * @returns {boolean} true on delete. see delete operator returns
+	 */
+	removeIsNew(){
+		return delete this.#optionsValues["isNew"]
+	}
 
 	/**
 	 * 
@@ -237,8 +247,8 @@ class gachaBuildsOptionsHandler {
 	 * save everything
 	 */
 	saveAll() {
-		this.saveBuilds
-		this.saveOptions
+		this.saveBuilds()
+		this.saveOptions()
 	}
 	/**
 	 * save builds
