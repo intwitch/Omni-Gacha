@@ -38,6 +38,55 @@ class gachaItem extends gachaTerm {
             nsfw: array[20] == "TRUE",
         }
     }
+    /**
+     * values to consider as false
+     */
+    static falseValues = {
+        growthType: "N/A",
+        growthRate: "N/A",
+        restock: "N/A",
+        returnValue: "N/A",
+        gift: false,
+        nsfw: false,
+    }
+
+    static formattedKeys = {
+        name: "Name",
+        series: "Series",
+        description: "Description",
+        category: "Category",
+        gender: "Gender",
+        magic: "Magic",
+        memetic: "Memetic",
+        might: "Might",
+        mind: "Mind",
+        motion: "Motion",
+        moxie: "Moxie",
+        mutation: "Mutation",
+        myth: "Myth",
+        stats: "Stats",
+        rank: "Rank",
+        growthType: "Growth Type",
+        growthRate: "Growth Rate",
+        restock: "Restock",
+        returnValue: "Return",
+        gift: "Gift",
+        nsfw: "NSFW"
+    }
+
+    /**
+     * if a keys given value is truthy
+     * @param {string} key
+     * @param {string|number|boolean}
+     * @returns {boolean}
+     */
+    static isTruthy(key, value){
+        return (this.falseValues[key] != value)
+    }
+
+    static formatKey(key){
+        return this.formattedKeys[key]
+    }
 
     /**
      * 
@@ -51,8 +100,6 @@ class gachaItem extends gachaTerm {
         this.tags = new itemTags(tags)
     }
 
-    
-
     /**
      * convert an item to a string
      * @returns {string}
@@ -60,7 +107,7 @@ class gachaItem extends gachaTerm {
     toString() {
         let sfw = ""
         if (super.get("nsfw")) sfw = " | NSFW"
-        return `${super.get("name")} | ${super.get("series")}\nRank ${super.get("series")} | ${super.get("category")}${sfw}\n${super.get("description")}`
+        return `${super.get("name")} | ${super.get("series")} | Rank ${super.get("rank")} | ${super.get("category")}${sfw}\n${super.get("description")}`
     }
 
     /**
@@ -72,6 +119,15 @@ class gachaItem extends gachaTerm {
     toBasicForm(){
         const basicValues = [super.get("name"), super.get("series"), super.get("description"), super.get("category")]
         return super.toBasicForm(basicValues)
+    }
+
+    getTrueFormattedValues(...keys){
+        const values = {}
+        for(let key of keys){ 
+            if(gachaItem.isTruthy(key, super.get(key))){
+            values[key] = super.get(key)
+        }}
+        return values
     }
 
     /**

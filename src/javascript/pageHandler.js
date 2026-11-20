@@ -447,6 +447,34 @@ class pageHandler {
 		this.#redrawTableBody(e.currentTarget, [this.#history[term][0].toFullRow()])
 	}
 
+	redrawItemGachaDisplay(){
+		//Display basic
+		const item = this.#history.items[0]
+		document.querySelector("#itemGachaDisplayBasic > p").innerText = item.toString()
+
+		//display stats
+		const statsGridSpans = document.querySelectorAll("#itemGachaDisplayStats span")
+		const stats = item.getMultiple("magic", "memetic", "might", "mind", "motion", "moxie", "mutation", "myth")
+		for(let i = 0, span = 1; i < stats.length; i++){
+			statsGridSpans[i*2 + 1].innerText = stats[i]
+		}
+
+		//display the other propertes
+		const other = document.getElementById("itemGachaDisplayOther")
+		const otherKeyValues = item.getTrueFormattedValues("growthType", "growthRate", "restock", "returnValue")
+		let formattedOther = ""
+		for(let key in otherKeyValues){
+			formattedOther += `${gachaItem.formatKey(key)}: ${otherKeyValues[key]} | `
+		}
+		formattedOther += gachaItem.isTruthy("gift", item.get("gift")) ? `Giftable | ` : ""
+		formattedOther += gachaItem.isTruthy("nsfw", item.get("nsfw")) ? `${gachaItem.formatKey("nsfw")} | ` : ""
+		formattedOther = formattedOther.slice(0, -3)
+		other.innerText = formattedOther
+
+		//display tags
+		document.getElementById("itemGachaDisplayTags").innerText = item.tags.toString()
+	}
+
 	/**
 	 * get the proper search string for search to use
 	 * @param {string} term 
@@ -567,14 +595,14 @@ class pageHandler {
 	 */
 	roll(term) {
 		try {
-			const rollTable = document.querySelector(`.rollTable.${term}Table`)
+			const rollDisplay = (term == "items") ? document.getElementById("itemGachaDisplay") : document.querySelector(`.rollTable.${term}Table`)
 			const result = this.#filteringHandler.getRandomTerm(term)
 
 			this.#history[term].unshift(result)
 
 			// history[0] is the current item
 			document.querySelector(`.historyTable.${term}Table`).dispatchEvent(pageHandler.redrawRequest)
-			rollTable.dispatchEvent(pageHandler.redrawRequest)
+			rollDisplay.dispatchEvent(pageHandler.redrawRequest)
 		}
 		catch ({ name, message }) {
 			alert(`${name}\n${message}`)

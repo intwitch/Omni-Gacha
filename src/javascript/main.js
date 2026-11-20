@@ -87,7 +87,6 @@ function arrayMerge(sourceArrays) {
  */
 function createAllEventHandlers(page) {
 
-	const itemsRollTable = document.querySelector(".rollTable.itemsTable")
 	const cursesRollTable = document.querySelector(".rollTable.cursesTable")
 	const itemsHistoryTable = document.querySelector(".historyTable.itemsTable")
 	const cursesHistoryTable = document.querySelector(".historyTable.cursesTable")
@@ -96,7 +95,8 @@ function createAllEventHandlers(page) {
 	const searchItemsTable = document.getElementById("searchItemsTable")
 	const searchCursesTable = document.getElementById("searchCursesTable")
 
-	itemsRollTable.addEventListener("redrawRequest", (e) => { page.redrawRollTableListener(e, "items") })
+	const itemGachaDisplay = document.getElementById("itemGachaDisplay")
+
 	cursesRollTable.addEventListener("redrawRequest", (e) => { page.redrawRollTableListener(e, "curses") })
 	itemsHistoryTable.addEventListener("redrawRequest", (e) => { page.redrawHistoryTableListener(e, "items") })
 	cursesHistoryTable.addEventListener("redrawRequest", (e) => { page.redrawHistoryTableListener(e, "curses") })
@@ -108,6 +108,8 @@ function createAllEventHandlers(page) {
 	for(let table of cursesSaveTables){
 		table.addEventListener("redrawRequest", (e) => { page.redrawSaveTableListener(e, "curses") })
 	}
+
+	itemGachaDisplay.addEventListener("redrawRequest", () => {page.redrawItemGachaDisplay()})
 
 	document.getElementById("itemTokenDropdown").addEventListener("click", (e) => {page.rankFilterChangeListener(e)})
 
@@ -129,7 +131,7 @@ function createAllEventHandlers(page) {
 	document.getElementById("buildButton").addEventListener("click", (e) => {page.changeTabTo("build", e)});
 	document.getElementById("searchButton").addEventListener("click", (e) => {page.changeTabTo("search", e)});
 
-	document.getElementById("itemRollButton").addEventListener("click", () => {page.roll("items")});
+	document.getElementById("itemRollButton").addEventListener("click", () => { page.roll("items") });
 	document.getElementById("saveButton").addEventListener("click", () => {page.saveLatest("items")});
 	document.getElementById("cursesRollButton").addEventListener("click", () => {page.roll("curses")});
 	document.getElementById("cursesSaveButton").addEventListener("click", () => {page.saveLatest("curses")});

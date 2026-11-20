@@ -328,7 +328,7 @@ header{
     position: sticky;
     top: 0;
     background-color: var(--sub-element-color);
-    z-index: 2;
+    z-index: 20;
     margin-top: 0;
     width: 100%;
 }
@@ -763,4 +763,81 @@ canvas {
 
 .widthFitContent{
     width: fit-content;
+}
+
+#itemGachaDisplay{
+    padding: 0;
+    background-color: var(--sub-element-color);
+    text-align: center;
+
+    position: absolute;
+    left: 8.5%;
+    right: 8.5%;
+    top: 28%;
+    bottom: 50%;
+    z-index: 3;
+
+    overflow-y: hidden;
+    overflow-x: hidden;
+
+    transition: all 0.3s ease-in-out 0s;
+}
+
+#itemGachaDisplay:hover{
+    left: -20%;
+    right: -20%;
+    bottom: 0%;
+    top: 0%;
+
+    overflow-y: auto;
+}
+
+#itemGachaDisplayBasic{
+    width: 100%;
+    height: fit-content;
+}
+
+#itemGachaDisplayBasic, #itemGachaDisplay > p{
+    padding: 0;
+    margin: 0;
+}
+
+#itemGachaDisplayAll{
+    display: none;
+    height: fit-content;
+}
+
+#itemGachaDisplay:hover #itemGachaDisplayAll{
+    display: block;
+}
+
+#itemGachaDisplayAll table p{
+    margin: 0.5em;
+}
+
+#itemGachaDisplayTables{
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: center;
+}
+
+#itemGachaDisplayStats{
+    text-align: center;
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-auto-flow: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2em;
+
+    margin: 0 auto;
+    padding: 0.2em;
+    width: fit-content;
+
+    background-color: #AAA;
+}
+
+#itemGachaDisplayStats span{
+    background-color: #000077;
 }

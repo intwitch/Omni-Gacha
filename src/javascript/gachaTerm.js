@@ -28,6 +28,19 @@ class gachaTerm{
 
     /**
      * 
+     * @param {...string} keys
+     * @returns {[string|number|boolean]} value of that key
+     */
+    getMultiple(...keys){
+        const values = []
+        for(let key of keys){
+            values.push(this.get(key))
+        }
+        return values;
+    }
+
+    /**
+     * 
      * @param {string} key 
      * @param {string|number|boolean} value value to set
      * @returns {string|number|boolean} value

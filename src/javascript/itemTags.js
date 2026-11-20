@@ -17,6 +17,19 @@ class itemTags{
         "tome": false
     }
 
+    static properNames = {
+        "tech": "Tech",
+        "magitech": "Magi-Tech",
+        "magicGeneric": "Magic Generic",
+        "magicEast": "Magic East",
+        "magicWest": "Magic West",
+        "beast": "Beast",
+        "human": "Human",
+        "mech": "Mech",
+        "inanimate": "Inanimate",
+        "tome": "Tome"
+    }
+
     /**
      * given an array of booleans, construct the tags.
      * order does matter. done this way bc this is how the spreadsheet ends up sending them.
@@ -50,6 +63,14 @@ class itemTags{
     }
 
     /**
+     * replace internal camelCase name with user friendly string
+     * @param {string} key 
+     */
+    static getProperName(key){
+        return this.properNames[key]
+    }
+
+    /**
      * 
      * @param {string} key 
      * @returns {boolean|undefined} value if found, undefeinied if not
@@ -77,8 +98,8 @@ class itemTags{
         let string = ""
 
         for(let tag of this.getAllTrue()){
-            string += `${tag} `
+            string += `${itemTags.getProperName(tag)} | `
         }
-        return string.trim()
+        return string.slice(0,-3)
     }
 }
