@@ -2,11 +2,12 @@ require('dotenv').config({ path: '.env'});
 require('url').URL
 
 const fs = require('node:fs')
+const fsp = require('node:fs/promises')
 const https = require('https')
 
 //setup get request
 const spreadsheetID = "1YxfI5xpi_q5IEi0L2-3fW_GzCba1SnpS_nOzWVIBwO4"
-const ranges = ["\'Item List\'!A:V"
+const ranges = ["\'Item List\'!A:AG"
     ,"\'Curses\'!A:H"]
 
 const url = encodeURI(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetID}/values:batchGet?key=${process.env.SHEETSAPIKEY}&ranges=${ranges[0]}&ranges=${ranges[1]}`)
@@ -16,7 +17,7 @@ var result = ""
 
 // function for filter to call
 function filterData(value, index, array) {
-    if( value.at(-1) === "FALSE" || value[0] === "" || value[1] === "" || value[2] === ""){
+    if( value.at(21) == "FALSE"){
         return false;
     }
     else return true;
@@ -28,11 +29,7 @@ function buildData() {
     console.log("Finished API Request")
 
     var itemsData = result.valueRanges[0].values.filter(filterData);
-    var cursesData = result.valueRanges[1].values.filter(filterData);
-
-    for(item of itemsData){
-        item.splice(-1)
-    }
+    var cursesData = result.valueRanges[1].values
 
     
     //remove header values
@@ -54,7 +51,7 @@ function buildData() {
         curses: cursesData
     });
     //overwrite is desireable. Files shouldn't be tracked as they will be built when the site deploys.
-    fs.writeFile('docs/data/values.json', finalJson, callback)
+    fs.writeFile('src/data/values.json', finalJson, callback)
 }
 
 //minor error handling in file write

@@ -3,8 +3,6 @@
     --unselected-button-color: #7A4988;
     --selected-button-color: #710193;
 
-    --tint: #00000066;
-
     --sub-element-color: #1E293B;
     --transparent-sub-element: #1E293B79;
 
@@ -18,6 +16,10 @@
     --SSrank: #F06292;
     --SSSrank: #CD00CD;
     --EXrank: #FFEB3B;
+}
+
+html{
+    scroll-padding-top: 5em;
 }
 
 table, th, td {
@@ -111,7 +113,7 @@ body {
     margin: 0;
     height: fit-content;
 
-    background-image: url("assets/Omni_Gacha_Background.webp");
+    background-image: url("/assets/Omni_Gacha_Background.webp");
     background-size: cover;
     background-attachment: fixed;
     background-position: top center;
@@ -146,6 +148,11 @@ main {
     height: 3em;
 }
 
+.selectedButton {
+    background-color: var(--selected-button-color) !important;
+    /* Is important blunt? yes. but I really don't care.*/
+}
+
 #backLink button{
     width: 5vw;
     height: 80%;
@@ -161,10 +168,6 @@ ul {
     z-index: 1;
 }
 
-.typeFilter > span {
-    display: none;
-}
-
 .typeFilter {
     background-color: var(--sub-element-color);
     position: relative;
@@ -176,10 +179,6 @@ ul {
     text-decoration: underline;
     font-style: normal;
     text-align: center;
-}
-
-.typeFilter:hover > span {
-    display: grid;
 }
 
 .innerElement {
@@ -329,7 +328,7 @@ header{
     position: sticky;
     top: 0;
     background-color: var(--sub-element-color);
-    z-index: 2;
+    z-index: 20;
     margin-top: 0;
     width: 100%;
 }
@@ -460,7 +459,6 @@ canvas {
 
 .EXrank, .goldColor{
     background-color: var(--EXrank);
-    color: black;
 }
 
 .darkGreenColor{
@@ -489,16 +487,17 @@ canvas {
 }
 
 #optionsMenu{
-    height: 100vh;
-    width: 20vw;
+    width: 20%;
+    height: 100%;
     padding: 0 0;
     margin: 0 auto 0 0;
     position: fixed;
-    top: 0;
     right: 0;
-    z-index: 3;
+
+    z-index: 10;
     background-color: #52527A;
     overflow-y: auto;
+    overflow-x: hidden;
     
     display: flex;
     flex-direction: column;
@@ -552,18 +551,11 @@ canvas {
     margin: 0 0.5em;
 }
 
-#optionsClose, #optionsBuildsCreate{
+#optionsBuildsCreate{
     width: fit-content;
     background-color: white;
     font-weight: bold;
     font-size: large;
-}
-
-#optionsClose {
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: red;
 }
 
 #optionsBuildsNewName{
@@ -571,7 +563,7 @@ canvas {
 }
 
 .transparentBackground{
-    background-color: var(--tint);
+    background-color: #000000AA;
     padding: 0;
     padding-bottom: auto;
     margin: 1em 1em;
@@ -579,6 +571,9 @@ canvas {
 
 .solidBackground{
     background-color: var(--main-background-color);
+    margin-top: 0;
+    z-index: 9;
+    position: relative;
 }
 
 .noTopPadding{
@@ -620,3 +615,229 @@ canvas {
     justify-content: center;
 }
 
+.gachaMachine{
+    width: fit-content;
+    height: 70vh;
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+}
+
+.gachaMachine > img{
+    object-fit: contain;
+    width: min-content;
+    height: 100%;
+    margin: 0;
+}
+
+.gachaMachine button{
+    background-color: #FF000000;
+    border: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+}
+
+#itemRollButton{
+    top: 56%;
+    left: 73.5%;
+    height: 19%;
+    width: 19%;
+    z-index: 1;
+}
+
+.gachaMachine .rectangleButton{
+    width: 15%;
+    height: 6%;;
+}
+
+#saveButton{
+    top: 52.5%;
+    left: 34%;
+}
+
+#itemStarLevel{
+    top: 52.5%;
+    left: 51%;
+}
+
+#itemCopyRoll{
+    top: 60%;
+    left: 34%;
+}
+
+#itemCategorySelector{
+    top: 60%;
+    left: 51%;
+}
+
+#itemAdjust{
+    top: 67.5%;
+    left: 34%;
+}
+
+#itemFilters{
+    top:67.5%;
+    left: 51%;
+}
+
+#itemTokenDropdown{
+    display: none;
+    background-color: var(--sub-element-color);
+    position: absolute;
+    bottom: 0%;
+    left: 0%;
+    z-index: 3;
+
+    overflow-y: auto;
+    height: 90%;
+    width: 25%;
+}
+
+#itemTokenDropdown img{
+    height: 3.7em;
+    width: 3.7em;
+    margin: 0;
+
+    cursor: pointer;
+}
+
+#itemsCategoryFilter{
+    display: none;
+    background-color: var(--sub-element-color);
+    position: absolute;
+    overflow-y: auto;
+    z-index: 3;
+
+    right: 0;
+    bottom: 0;
+    max-height: 80%;
+    width: 65%;
+}
+
+#items{
+    padding: 0;
+}
+
+#about {
+    text-wrap: balance;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+#aboutTop a{
+    color: #CCC;
+}
+
+#aboutTop > div{
+    width: fit-content;
+    padding: 0;
+}
+
+#aboutTop{
+    display: flex;
+}
+
+.largeText{
+    font-size: large;
+    text-align: center;
+}
+
+#about img{
+    height: 2em;
+    width: 2em;
+}
+
+@keyframes tokenSpin {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
+.token:hover, .selectedToken{
+    animation: tokenSpin 5s linear 0s infinite;
+}
+
+
+.widthFitContent{
+    width: fit-content;
+}
+
+#itemGachaDisplay{
+    padding: 0;
+    background-color: var(--sub-element-color);
+    text-align: center;
+
+    position: absolute;
+    left: 8.5%;
+    right: 8.5%;
+    top: 28%;
+    bottom: 50%;
+    z-index: 3;
+
+    overflow-y: hidden;
+    overflow-x: hidden;
+
+    transition: all 0.3s ease-in-out 0s;
+}
+
+#itemGachaDisplay:hover{
+    left: -20%;
+    right: -20%;
+    bottom: 0%;
+    top: 0%;
+
+    overflow-y: auto;
+}
+
+#itemGachaDisplayBasic{
+    width: 100%;
+    height: fit-content;
+}
+
+#itemGachaDisplayBasic, #itemGachaDisplay > p{
+    padding: 0;
+    margin: 0;
+}
+
+#itemGachaDisplayAll{
+    display: none;
+    height: fit-content;
+}
+
+#itemGachaDisplay:hover #itemGachaDisplayAll{
+    display: block;
+}
+
+#itemGachaDisplayAll table p{
+    margin: 0.5em;
+}
+
+#itemGachaDisplayTables{
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: center;
+}
+
+#itemGachaDisplayStats{
+    text-align: center;
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-auto-flow: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2em;
+
+    margin: 0 auto;
+    padding: 0.2em;
+    width: fit-content;
+
+    background-color: #AAA;
+}
+
+#itemGachaDisplayStats span{
+    background-color: #000077;
+}

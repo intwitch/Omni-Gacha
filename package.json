@@ -14,14 +14,18 @@
   "author": "",
   "type": "commonjs",
   "main": "",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
-    "test": "",
-    "start": "node dataBuild.js"
+    "test": "vitest",
+    "dev": "vite --port 4000",
+    "viteBuild": "vite build",
+    "getData": "node build.js",
+    "start": "npm run getData && npm run viteBuild"
   },
   "dependencies": {
     "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   }
 }
