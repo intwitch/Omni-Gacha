@@ -46,7 +46,7 @@ class filteringHandler {
 		]
 	}
 
-	#filters = filteringHandler.defualtFilters
+	#filters = structuredClone(filteringHandler.defualtFilters)
 	
 	/**
 	 * static async function to load and parse the json data
@@ -160,7 +160,7 @@ class filteringHandler {
 	 * @param {boolean} isAll 
 	 */
 	resetCategoryFilter(isAll){
-		if(isAll) { this.#filters.category = Array.from(filteringHandler.defualtFilters) }
+		if(isAll) { this.#filters.category = Array.from(filteringHandler.defualtFilters.category) }
 		else { this.#filters.category = [] }
 		
 		this.#updateItemRollData()
@@ -270,7 +270,7 @@ class filteringHandler {
 	static textValueFilter(filterArray, key) {
 		let filterFunctionCreator = function (term) {
 			const value = term.get(key).toString().toLowerCase();
-			for (filter of filterArray) {
+			for (let filter of filterArray) {
 				if (value.includes(filter.toLowerCase())) return true
 			}
 			return false;
