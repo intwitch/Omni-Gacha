@@ -151,6 +151,14 @@ function createAllEventHandlers(page) {
 	document.getElementById("optionsBuildsNewName").addEventListener("keydown", (e) => { page.createNewBuildEventHandler(e) })
 	document.getElementById("optionsBuildsDeleteButton").addEventListener("click", (e) => { page.deleteCurrentBuildListener(e) })
 
+	document.getElementById("searchItemsOptions").addEventListener("keydown", (e) => {
+		if(e.key == "Enter") searchItemsTable.dispatchEvent(pageHandler.redrawRequest)
+	})
+	document.getElementById("searchCursesOptions").addEventListener("keydown", (e) => {
+		if(e.key == "Enter") searchCursesTable.dispatchEvent(pageHandler.redrawRequest)
+	})
+	
+
 	document.getElementById("searchItemsButton").addEventListener("click", (e) => { searchItemsTable.dispatchEvent(pageHandler.redrawRequest) })
 	document.getElementById("searchCursesButton").addEventListener("click", (e) => { searchCursesTable.dispatchEvent(pageHandler.redrawRequest) })
 };
