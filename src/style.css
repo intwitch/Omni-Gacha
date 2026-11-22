@@ -647,37 +647,38 @@ canvas {
 }
 
 .gachaMachine .rectangleButton{
-    width: 15%;
-    height: 6%;;
+    width: 14.7%;
+    height: 5.3%;
+    background-color: #FF0000AA;
 }
 
 #saveButton{
-    top: 52.5%;
-    left: 34%;
+    top: 52.9%;
+    left: 34.3%;
 }
 
 #itemStarLevel{
-    top: 52.5%;
+    top: 52.9%;
     left: 51%;
 }
 
 #itemCopyRoll{
-    top: 60%;
-    left: 34%;
+    top: 60.3%;
+    left: 34.3%;
 }
 
 #itemCategorySelector{
-    top: 60%;
+    top: 60.3%;
     left: 51%;
 }
 
 #itemAdjust{
-    top: 67.5%;
-    left: 34%;
+    top: 67.7%;
+    left: 34.3%;
 }
 
 #itemFilters{
-    top:67.5%;
+    top:67.7%;
     left: 51%;
 }
 
