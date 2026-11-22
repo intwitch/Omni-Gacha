@@ -494,7 +494,13 @@ class pageHandler {
 				break;
 		}
 
-		return document.getElementById(idLookup + "Advanced").value
+		const searchString = 
+		`name:${document.getElementById(idLookup+"Name").value} ` +
+		`series:${document.getElementById(idLookup+"Series").value} ` +
+		`description:${document.getElementById(idLookup+"Description").value}` +
+		document.getElementById(idLookup + "Advanced").value
+
+		return searchString
 	}
 
 	/**
