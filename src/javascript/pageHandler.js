@@ -494,12 +494,18 @@ class pageHandler {
 				break;
 		}
 
-		const searchString = 
-		`name:${document.getElementById(idLookup+"Name").value} ` +
-		`series:${document.getElementById(idLookup+"Series").value} ` +
-		`description:${document.getElementById(idLookup+"Description").value}` +
-		document.getElementById(idLookup + "Advanced").value
+		const nameValue = document.getElementById(idLookup+"Name").value
+		const seriesValue = document.getElementById(idLookup+"Series").value
+		const descriptionValue = document.getElementById(idLookup+"Description").value
+		const advancedValue = document.getElementById(idLookup + "Advanced").value
 
+		let searchString = ""
+		searchString += nameValue ? `name:${nameValue} ` : ""
+		searchString += seriesValue ? `series:${seriesValue} ` : ""
+		searchString += descriptionValue ? `description:${descriptionValue} ` : ""
+		searchString += advancedValue
+		searchString.trim()
+		
 		return searchString
 	}
 
