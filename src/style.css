@@ -649,7 +649,7 @@ canvas {
 .gachaMachine .rectangleButton{
     width: 14.7%;
     height: 5.3%;
-    background-color: #FF0000AA;
+    background-color: 0000;
 }
 
 #saveButton{
@@ -680,6 +680,10 @@ canvas {
 #itemFilters{
     top:67.7%;
     left: 51%;
+}
+
+.rectangleButton:active{
+    background-color: #0005;
 }
 
 #itemTokenDropdown{
