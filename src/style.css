@@ -37,6 +37,11 @@ table caption h2 {
     margin-left: 1em;
 }
 
+table a {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 span {
     padding: 5px;
     padding-bottom: 1px;

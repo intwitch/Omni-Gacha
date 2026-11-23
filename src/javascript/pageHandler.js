@@ -389,6 +389,15 @@ class pageHandler {
 
 		for(let i = 0; i < dataArray.length; i++){
 			const row = dataArray[i].toFullRow()
+			/**bodge for copy name hyperlink, it works, this is entire function is gonna get killed*/
+			const copyLink = document.createElement("a")
+			copyLink.innerText = row.firstElementChild.innerText
+			row.firstElementChild.innerText = ""
+			row.firstElementChild.appendChild(copyLink)
+			copyLink.addEventListener("click", () => {
+				pageHandler.copyItem(dataArray[i])
+			})
+			/**this is horrible */
 			const button = document.createElement("button")
 			row.appendChild(document.createElement("td")).appendChild(button)
 
@@ -633,7 +642,7 @@ class pageHandler {
 
 	copyLatestItem(){
 		try{
-			this.copyItem(this.#history.items[0])
+			pageHandler.copyItem(this.#history.items[0])
 		}
 		catch(e){
 			console.log("tried to copy nothing: " + e.name)
@@ -641,7 +650,7 @@ class pageHandler {
 	}
 
 
-	copyItem(item){
+	static copyItem(item){
 		navigator.clipboard.writeText(item.toString())
 	}
 }
