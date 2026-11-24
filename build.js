@@ -35,6 +35,10 @@ function buildData() {
     //remove header values
     itemsData.splice(0, 1)
     cursesData.splice(0, 1)
+
+    cursesData = cursesData.filter(function(value, index, array){
+        return !(value[0] == "" || value[1] == "" || value[2] == "")
+    })
     
     console.log(`final data obtained.\nItems: ${itemsData.length}\nCurses: ${cursesData.length}`)
     
