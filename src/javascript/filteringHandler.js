@@ -57,7 +57,7 @@ class filteringHandler {
 	 * }>}
 	 */
 	static async loadParseJSON() {
-		const rawfetch = await fetch(valuesURL)
+		const rawfetch = await fetch(valuesURL, {"cache": "no-cache"})
 		const values = await rawfetch.json()
 
 		const itemsArray = []
