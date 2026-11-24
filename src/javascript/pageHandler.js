@@ -509,9 +509,9 @@ class pageHandler {
 		const advancedValue = document.getElementById(idLookup + "Advanced").value
 
 		let searchString = ""
-		searchString += nameValue ? `name:${nameValue} ` : ""
-		searchString += seriesValue ? `series:${seriesValue} ` : ""
-		searchString += descriptionValue ? `description:${descriptionValue} ` : ""
+		searchString += nameValue ? `"name:${nameValue}" ` : ""
+		searchString += seriesValue ? `"series:${seriesValue}" ` : ""
+		searchString += descriptionValue ? `"description:${descriptionValue}" ` : ""
 		searchString += advancedValue
 		searchString.trim()
 		
